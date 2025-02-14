@@ -1,0 +1,256 @@
+/* Estilos generales para el contenedor del componente */
+.tablaContainer {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  margin: 0 auto;
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Contenedor de la barra de acciones y filtrado */
+.ContenedorDeBotonesDeOpciones {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+/* Estilo para el input de filtrado */
+.filtrado {
+  margin-right: auto;
+  display: flex;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+
+}
+
+.selectFiltro {
+  border: 0px transparent;
+  outline: none;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.filtro {
+  border: 0px transparent;
+  padding: 10px 15px;
+  font-size: 14px;
+  width: 100%;
+  max-width: 300px;
+  transition: border-color 0.3s ease;
+  border-left: 1px solid #d1d5db;
+}
+
+.filtro:focus {
+  outline: none;
+}
+
+/* Botones adicionales */
+.contenedorBtnAdicionales {
+  display: flex;
+  gap: 10px;
+}
+
+/* Estilo para el botón de exportar */
+.botonExportar {
+  padding: 10px 20px;
+  background-color: var(--sidebar-bg);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 3px;
+  user-select: none;
+  font-size: medium;
+  text-transform: capitalize;
+  margin-left: 10px;
+
+}
+
+.botonExportar:hover {
+  /* background-color: #45a049; */
+}
+
+.ctabla {
+  min-width: 100%;
+  overflow-x: auto;
+}
+
+/* Tabla */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+.tabla thead tr {
+  background-color: var(--sidebar-bg);
+  user-select: none;
+
+
+}
+
+.tabla th,
+.tabla td {
+  padding: 12px 15px;
+  text-align: left;
+  /* border-bottom: 1px solid #e0e0e0; */
+  border: 1px solid #e0e0e0;
+}
+
+.tabla th {
+  color: #ffffff;
+  cursor: pointer;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tabla tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tabla tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Indicador de ordenación */
+.indicadorOrden {
+  margin-left: 5px;
+  font-size: 12px;
+  /* color: #777; */
+  color: #ffffff;
+}
+
+/* Acciones */
+.acciones {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 5px;
+}
+
+.botonAccion {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.botonAccion:hover {
+  opacity: 0.9;
+}
+
+/* Paginación */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.paginacion button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+
+
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.paginacion button:hover {
+  background-color: var(--sidebar-bg);
+  color: white;
+}
+
+.paginacion button:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+
+.paginaActiva {
+  background-color: var(--sidebar-bg) !important;
+  font-weight: bold;
+  color: white;
+}
+
+/* Total registros */
+.contenedorTotalDeRegistro {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Hacer la tabla scrollable en pantallas pequeñas */
+@media (max-width: 768px) {
+  .tablaContainer {
+    padding: 10px;
+  }
+
+  .tabla {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Suaviza el scroll en dispositivos móviles */
+    border: 1px solid #e0e0e0;
+  }
+
+  .filtrado {
+    width: 100%;
+  }
+
+  .filtro {
+    max-width: none;
+  }
+
+  .paginacion {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .contenedorTotalDeRegistro {
+    font-size: 12px;
+  }
+
+  .filtrado {
+    margin-bottom: 10px;
+  }
+}
+
+/* Diseño ultra pequeño */
+@media (max-width: 480px) {
+  .botonExportar {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .botonAccion {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+
+  .filtrado input {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  
+}
