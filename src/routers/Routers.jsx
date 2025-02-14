@@ -7,6 +7,8 @@ import Logout from "../pages/Logout/Logout";
 import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
 import Contactos from "../pages/GestionConstactos/Contactos/Contactos";
 import ContactosVer from "../pages/GestionConstactos/ContactosVer/ContactosVer";
+import Etiquetas from "../pages/GestionConstactos/Etiquetas/Etiquetas";
+import EtiquetasVer from "../pages/GestionConstactos/EtiquetasVer/EtiquetasVer";
 
 // Carga diferida de las páginas
 const Login = lazy(() => import("../pages/Login/Login"));
@@ -29,14 +31,16 @@ function Routers() {
         <Route path="/logout" element={<Logout />} />
 
         {/* Rutas protegidas: requieren autenticación */}
-        <Route element={<DashboardLayout />}>
         <Route element={<ProtectedRoute />}>
+        <Route element={<DashboardLayout />}>
           <Route path="/" element={<Inicio />} />
-          <Route path="/gestion/contactos" element={<Contactos />} />
+          <Route element={<PermissionRoute requiredPermission="usuarios:lectura" />}>
+           <Route path="/gestion/contactos" element={<Contactos />} />
+          </Route>
           <Route path="/gestion/contactos/ver/:id" element={<ContactosVer />} />
-          {/* <Route path="/gestion/contactos/documentos" element={<DocumentosLista />} />
           <Route path="/gestion/etiquetas" element={<Etiquetas />} />
           <Route path="/gestion/etiquetas/ver/:id" element={<EtiquetasVer />} />
+          {/* <Route path="/gestion/contactos/documentos" element={<DocumentosLista />} />
 
           <Route path="/gestion/vehiculo" element={<Vehiculo />} />
           <Route path="/gestion/vehiculos/ver/:id" element={<VehiculosVer />} />
@@ -48,11 +52,11 @@ function Routers() {
           <Route path="/gestion/permisos/ver/:id" element={<PermisosVer />} /> */}
 
           {/* Rutas que requieren permisos específicos: se valida "usuarios:lectura" */}
-          {/* <Route element={<PermissionRoute requiredPermission="usuarios:lectura" />}>
-            <Route path="/usuarios" element={<Usuarios />} />
-          </Route> */}
+        
         </Route>
         </Route>
+
+
 
         {/* Ruta para acceso no autorizado */}
         <Route

@@ -67,7 +67,7 @@
     height: 1000px;
 } */
 
-@media (min-width: 768px) {
+@media (min-width: 868px) {
     .sidebar {
         position: fixed;
         transform: translateX(-100%);
@@ -80,7 +80,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 868px) {
 
     .sidebar {
         width: 100%;

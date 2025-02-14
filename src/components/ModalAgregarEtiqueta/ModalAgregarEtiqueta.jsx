@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
-import api from "../../services/apiService";
+import { apiManager } from "../../api/apiManager";
 
 function ModalAgregarEtiqueta({ cerrarModal }) {
   const [nuevaEtiqueta, setNuevaEtiqueta] = useState({
@@ -19,8 +19,8 @@ function ModalAgregarEtiqueta({ cerrarModal }) {
     e.preventDefault();
 
     try {
-      const response = await api.post("/etiquetas", nuevaEtiqueta);
-      console.log("Nueva etiqueta agregada:", response.data);
+      const response = await apiManager.addEtiqueta(nuevaEtiqueta);
+      console.log("Nueva etiqueta agregada:", response);
       cerrarModal();
     } catch (error) {
       console.error("Error al agregar etiqueta:", error);

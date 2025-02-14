@@ -3,7 +3,6 @@ import styles from "../../../styles/ModalFormulario.module.css";
 import Tabla from "../../../components/Tabla/Tabla";
 import { transformarDatos } from "../../../utils/transformarDatos"; // Función para transformar datos
 import ModalAgregarContacto from "../../../components/ModalAgregarContacto/ModalAgregarContacto";
-import api from "../../../services/apiService"; // Importa tu servicio de API
 import Loader from "../../../components/Loader/Loader";
 import { useParams } from "react-router-dom";
 

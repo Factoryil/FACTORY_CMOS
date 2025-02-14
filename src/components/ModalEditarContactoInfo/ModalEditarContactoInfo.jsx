@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
-import api from "../../services/apiService"; 
+import { apiManager } from "../../api/apiManager";
 
 function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {} }) {
   const tiposIdentificacion = [
@@ -38,8 +38,8 @@ function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {}
 
     try {
       // Se asume que el ID del contacto se encuentra en contactData.ID_CONTACTOS
-      const response = await api.put(`/contactos/${contactData.ID_CONTACTOS}`, dataToUpdate);
-      console.log(response.data); // Verifica los datos en la consola
+      const response = await apiManager.editContactosInfo(contactData.ID_CONTACTOS, dataToUpdate);
+      console.log(response); // Verifica los datos en la consola
 
       // Si la actualización es exitosa, se refresca la información en el componente padre
       onUpdate();

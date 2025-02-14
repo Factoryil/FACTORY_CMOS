@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
-import api from "../../services/apiService"; // Asegúrate de tener esta importación para la API
+import { apiManager } from "../../api/apiManager";
 
 function ModalEditarContactoImagen({ cerrarModal, contactId, onUpdate = () => {} }) {
   const [imagen, setImagen] = useState(null);
@@ -21,9 +21,9 @@ function ModalEditarContactoImagen({ cerrarModal, contactId, onUpdate = () => {}
     formData.append("URL_IMAGEN", imagen);
   
     try {
-      const response = await api.post(`/contacto/imagen/${contactId}`, formData);
+      const response = await apiManager.editContactosImagen(contactId, formData);
   
-      console.log("Imagen actualizada con éxito:", response.data);
+      console.log("Imagen actualizada con éxito:", response);
   
       // Llamar a onUpdate después de actualizar la imagen
       onUpdate();

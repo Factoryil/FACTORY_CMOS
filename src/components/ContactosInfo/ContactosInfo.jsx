@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ContactosInfo.module.css';
 import imagen from '../../assets/img/imagen.jpg';
-// import ModalEditarContactoInfo from '../ModalEditarContactoInfo/ModalEditarContactoInfo';
-// import ModalEditarContactoImagen from '../ModalEditarContactoImagen/ModalEditarContactoImagen';
+import ModalEditarContactoInfo from '../ModalEditarContactoInfo/ModalEditarContactoInfo';
+import ModalEditarContactoImagen from '../ModalEditarContactoImagen/ModalEditarContactoImagen';
 import { url } from '../../data/url'; // Asegúrate de que la ruta sea la correcta
 import { apiManager } from '../../api/apiManager';
 
@@ -32,8 +32,8 @@ const ContactosInfo = ({ id }) => {
   // Asegúrate de que handleUpdate está correctamente definido y se pasa al ModalEditarContactoImagen
   const handleUpdate = async () => {
     try {
-      const response = await api.get(`/contactos/${id}`);
-      setData(response.data);
+      const response = await apiManager.contactosID(id);
+      setData(response);
     } catch (error) {
       console.error("Error al obtener la información actualizada:", error);
     }
@@ -93,23 +93,21 @@ const ContactosInfo = ({ id }) => {
         </div>
       </div>
 
-      {/* Modal de edición de la información */}
-      {/* {mostrarModal && (
+      {mostrarModal && (
         <ModalEditarContactoInfo
           cerrarModal={() => setMostrarModal(false)}
           contactData={data}
           onUpdate={handleUpdate} // Llamar a handleUpdate después de la actualización
         />
-      )} */}
+      )}
 
-      {/* Modal para cambiar la imagen */}
-      {/* {isImageModalOpen && (
+      {isImageModalOpen && (
         <ModalEditarContactoImagen
           cerrarModal={() => setIsImageModalOpen(false)}
           contactId={id}
           onUpdate={handleUpdate}  // Asegurar que se pasa el prop correctamente
         />
-      )} */}
+      )}
 
     </div>
   );

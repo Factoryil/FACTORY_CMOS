@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../styles/ModalFormulario.module.css";
-import api from "../../../services/apiService";
 import Loader from "../../../components/Loader/Loader";
 import ModalAgregarEtiqueta from "../../../components/ModalAgregarEtiqueta/ModalAgregarEtiqueta";
 import Tabla from "../../../components/Tabla/Tabla";
 import { transformarDatos } from "../../../utils/transformarDatos";
+import { apiManager } from "../../../api/apiManager";
 
 // Mapeo de las claves originales a los nombres que queremos mostrar en la tabla
 const mapeoColumnas = {
@@ -27,8 +27,8 @@ function Etiquetas() {
   const obtenerEtiquetas = async () => {
     try {
       setCargando(true);
-      const response = await api.get("/etiquetas");
-      setEtiquetas(response.data);
+      const response = await apiManager.etiquetas();
+      setEtiquetas(response);
       setCargando(false);
     } catch (error) {
       console.error("Error al obtener etiquetas:", error);
