@@ -1,163 +1,145 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './VehiculoInfo.module.css';
 import imagen from '../../assets/img/imagen.jpg';
+// import ModalEditarContactoInfo from '../ModalEditarContactoInfo/ModalEditarContactoInfo';
+// import ModalEditarContactoImagen from '../ModalEditarContactoImagen/ModalEditarContactoImagen';
+import { url } from '../../data/url'; // Asegúrate de que la ruta sea la correcta
+import { apiManager } from '../../api/apiManager';
+import ModalEditarVehiculoImagen from '../ModalEditarVehiculoImagen/ModalEditarVehiculoImagen';
 
-const VehiculoInfo = ({ data, onUpdate = () => {} }) => {
+const VehiculoInfo = ({ id }) => {
+  // data["PLACA"] = "TLL961"
+  // data["MARCA"] = "[Marca del vehículo]"
+  // data["MODELO"] = "[Modelo del vehículo]"
+  // data["SERVICIO"] = "[Servicio del vehículo]"
+  // data["IMAGEN"] = "[URL de imagen del vehículo]"
+  // data["ULTIMO_PROPIETARIO"] = "[Nombre del último propietario]"
+  // data["VENCIMIENTO_PROPIETARIO"] = "[Fecha de vencimiento propietario]"
+  // data["ESTADO_PROPIETARIO"] = "[Estado del propietario]"
+  // data["ULTIMO_CLIENTE"] = "[Nombre del último cliente]"
+  // data["VENCIMIENTO_CLIENTE"] = "[Fecha de vencimiento cliente]"
+  // data["ESTADO_CLIENTE"] = "[Estado del cliente]"
 
-  data["PLACA"] = "TLL961"
-  data["PROVEEDORCONTRATO"] = "[Fecha o 'Sin contrato']"
-  data["CLIENTE"] = "[Nombre del cliente] (Si está alquilado, si no 'Disponible')"
-  data["CLIENTECONTRATO"] = "[Fecha o 'No alquilado']"
-  data["ESTADOOPERATIVIDAD"] = "[Disponible / En Taller / En Afectación]"
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);  // Nuevo estado para el modal de imagen
-  const [formData, setFormData] = useState({
-    nombre: data["NOMBRE_COMPLETO"] || "",
-    tipoIdentificacion: data["TIPO_IDENTIFICACION"] || "",
-    numeroIdentificacion: data["NUMERO_IDENTIFICACION"] || "",
-    correo: data["CORREO_ELECTRONICO"] || "",
-    telefono: data["TELEFONO"] || ""
-  });
+  useEffect(() => {
+    const fetchVehiculo = async () => {
+      try {
+        setLoading(true);
+        const response = await apiManager.vehiculoID(id);
+        
+        setData(response[0]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error al obtener la información del vehículo:', error);
+        setLoading(false);
+      }
+    };
 
-  const [imageFile, setImageFile] = useState(null);  // Estado para la imagen
+    fetchVehiculo();
+  }, [id]);
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Asegúrate de que handleUpdate está correctamente definido y se pasa al ModalEditarContactoImagen
+  const handleUpdate = async () => {
+    try {
+      const response = await apiManager.vehiculoID(id);
+      setData(response[0]);
+    } catch (error) {
+      console.error("Error al obtener la información actualizada:", error);
+    }
   };
 
-  const handleImageChange = (e) => {
-    setImageFile(e.target.files[0]);  // Al seleccionar una imagen, guardamos el archivo en el estado
-  };
+  if (loading) {
+    return <div>Cargando información...</div>;
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Aquí no realizamos ninguna llamada a la API, simplemente actualizamos los datos localmente
-    console.log('Datos actualizados:', formData);
-    onUpdate(formData); // Se simula la actualización de datos
-    setIsModalOpen(false); // Cierra el modal luego de la actualización
-  };
+  if (!data) {
+    return <div>No se encontró información para este vehículo.</div>;
+  }
+
+  const imageUrl = data.imagen ? `${url}/${data.imagen}` : imagen;
 
   return (
     <div className={styles['contenedor-info-vehiculo']}>
       <div className={styles['contenedor-info-vehiculo-imagen']}>
-        <img src={data["URL_IMAGEN"] || imagen } alt={data["PLACA"]} />
-        <button className={styles['boton-editar-imagen']} onClick={() => setIsImageModalOpen(true)}>
+        <img src={imageUrl} alt={data.PLACA} />
+        <button
+          className={styles['boton-editar-imagen']}
+          onClick={() => setIsImageModalOpen(true)}
+        >
           Cambiar Imagen
         </button>
       </div>
       <div className={styles['contenedor-info-contenido']}>
         <div className={styles['contenedor-info-contenido-titulo']}>
-          <h2>{data["PLACA"]}</h2>
-          <button className={styles['boton-editar']} onClick={() => setIsModalOpen(true)}>
+          <h2>{data.placa}</h2>
+          {/* <button
+            className={styles['boton-editar']}
+            onClick={() => setMostrarModal(true)}
+          >
             Editar
-          </button>
+          </button> */}
         </div>
         <div className={styles['contenedor-info-contenido-detalles']}>
           <div className={styles['contenedor-info-contenido-detalles-item']}>
-            <span>Proveedor</span>
-            <span>{data["Proveedor"]}</span>
+            <span>Marca</span>
+            <span>{data.marca || 'Sin información'}</span>
           </div>
           <div className={styles['contenedor-info-contenido-detalles-item']}>
-            <span>Vence Contrato Proveedor</span>
-            <span>{data["PROVEEDORCONTRATO"]}</span>
+            <span>Modelo</span>
+            <span>{data.modelo || 'Sin información'}</span>
           </div>
           <div className={styles['contenedor-info-contenido-detalles-item']}>
-            <span>Cliente</span>
-            <span>{data["CLIENTE"]}</span>
+            <span>Servicio</span>
+            <span>{data.servicio || 'Sin información'}</span>
           </div>
           <div className={styles['contenedor-info-contenido-detalles-item']}>
-            <span>Vence Alquiler</span>
-            <span>{data["CLIENTECONTRATO"]}</span>
+            <span>Último Propietario</span>
+            <span>{data.ultimo_propietario || 'Sin información'}</span>
           </div>
           <div className={styles['contenedor-info-contenido-detalles-item']}>
-            <span>Estado Operativo</span>
-            <span>{data["ESTADOOPERATIVIDAD"]}</span>
+            <span>Vencimiento Propietario</span>
+            <span>{data.vencimiento_propietario || 'Sin información'}</span>
+          </div>
+          <div className={styles['contenedor-info-contenido-detalles-item']}>
+            <span>Estado Propietario</span>
+            <span>{data.estado_propietario || 'Sin información'}</span>
+          </div>
+          <div className={styles['contenedor-info-contenido-detalles-item']}>
+            <span>Último Cliente</span>
+            <span>{data.ultimo_cliente || 'Sin información'}</span>
+          </div>
+          <div className={styles['contenedor-info-contenido-detalles-item']}>
+            <span>Vencimiento Cliente</span>
+            <span>{data.vencimiento_cliente || 'Sin información'}</span>
+          </div>
+          <div className={styles['contenedor-info-contenido-detalles-item']}>
+            <span>Estado Cliente</span>
+            <span>{data.estado_cliente || 'Sin información'}</span>
           </div>
         </div>
       </div>
 
-      {/* MODAL DE EDICIÓN */}
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <h2>Editar Usuario</h2>
-            <form onSubmit={handleSubmit}>
-              <label>Nombre Completo:</label>
-              <input 
-                type="text" 
-                name="nombre" 
-                value={formData.nombre} 
-                onChange={handleInputChange} 
-                required 
-              />
-
-              <label>Tipo Identificación:</label>
-              <input 
-                type="text" 
-                name="tipoIdentificacion" 
-                value={formData.tipoIdentificacion} 
-                onChange={handleInputChange} 
-                required 
-              />
-
-              <label>Número Identificación:</label>
-              <input 
-                type="text" 
-                name="numeroIdentificacion" 
-                value={formData.numeroIdentificacion} 
-                onChange={handleInputChange} 
-                required 
-              />
-
-              <label>Correo Electrónico:</label>
-              <input 
-                type="email" 
-                name="correo" 
-                value={formData.correo} 
-                onChange={handleInputChange} 
-                required 
-              />
-
-              <label>Teléfono:</label>
-              <input 
-                type="text" 
-                name="telefono" 
-                value={formData.telefono} 
-                onChange={handleInputChange} 
-                required 
-              />
-
-              <div className={styles.modalButtons}>
-                <button type="submit" className={styles.saveButton}>Guardar</button>
-                <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {mostrarModal && (
+        // <ModalEditarContactoInfo
+        //   cerrarModal={() => setMostrarModal(false)}
+        //   contactData={data}
+        //   onUpdate={handleUpdate}
+        // />
+        <div>Modal de edición</div>
       )}
 
-      {/* MODAL DE CAMBIO DE IMAGEN */}
       {isImageModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <h2>Cambiar Imagen de Usuario</h2>
-            <form>
-              <label>Cargar Nueva Imagen:</label>
-              <input 
-                type="file" 
-                name="URL_IMAGEN" 
-                onChange={handleImageChange} 
-                accept="image/jpeg, image/png" 
-              />
-              <div className={styles.modalButtons}>
-                <button type="button" className={styles.saveButton} onClick={() => setIsImageModalOpen(false)}>Guardar Imagen</button>
-                <button type="button" className={styles.cancelButton} onClick={() => setIsImageModalOpen(false)}>Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <ModalEditarVehiculoImagen
+          cerrarModal={() => setIsImageModalOpen(false)}
+          vehiculoId={data.id}
+          onUpdate={handleUpdate}
+        />
       )}
+
     </div>
   );
 };

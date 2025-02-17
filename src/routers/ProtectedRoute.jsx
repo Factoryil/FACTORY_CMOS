@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { esTokenValido } from "../utils/authUtils";
 import { apiManager } from "../api/apiManager";
+import Loader from "../components/Loader/Loader";
 
 const ProtectedRoute = () => {
   const [verificado, setVerificado] = useState(null);
@@ -23,7 +24,7 @@ const ProtectedRoute = () => {
   }, []);
 
   if (cargando) {
-    return <div>Cargando...</div>;
+    return <Loader />;
   }
 
   const valido = esTokenValido();

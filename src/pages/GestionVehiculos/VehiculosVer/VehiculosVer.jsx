@@ -1,72 +1,47 @@
-import React, { useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styles from "./VehiculosVer.module.css";
 import VehiculoInfo from "../../../components/VehiculoInfo/VehiculoInfo";
-import Operatividad from "../../../components/Operatividad/Operatividad";
-import VehiculoProveedor from "../../../components/VehiculoProveedor/VehiculoProveedor";
+import FichaTecnica from "../../../components/FichaTecnica/FichaTecnica";
+import Propietario from "../../../components/Propietario/Propietario";
+import Cliente from "../../../components/Cliente/Cliente";
 
-function VehiculosVer() {
+function ContactosVer() {
   const { id } = useParams();
-  const [activeTab, setActiveTab] = useState("FichaTecnica");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const paramsTab = new URLSearchParams(location.search).get("tab") || "ficha_tecnica";
+  const [activeTab, setActiveTab] = useState(paramsTab);
 
-  const contacto = {
-    id,
-    nombre: "Juan Pérez",
-    correo: "juan.perez@example.com",
-    telefono: "123456789",
-    permisos: [1, 3] // IDs de permisos asignados
+  const changeTab = (tab) => {
+    setActiveTab(tab);
+    navigate(`?tab=${tab}`);
   };
 
-  const usuario = {
-    username: "javiechat",
-    nombre: "Juan Pérez",
-    correo: "puedeserotrocorreo@gmail.com",
-    rol: "cliente"
-  };
+  useEffect(() => {
+    setActiveTab(paramsTab);
+  }, [location.search]);
 
   return (
     <div className={styles.contenedor}>
-      <VehiculoInfo data={contacto} />
-
+      <VehiculoInfo id={id} />
       <div className={styles.tabs}>
-        
-        <button
-          onClick={() => setActiveTab("FichaTecnica")}
-          className={`${styles.tab} ${activeTab === 'FichaTecnica' ? styles.active : ''}`}
-        >
-          <i className="fas fa-file-alt"></i>
-          Ficha Tecnica
+        <button onClick={() => changeTab("ficha_tecnica")} className={`${styles.tab} ${activeTab === 'ficha_tecnica' ? styles.active : ''}`}>
+          <i className="fas fa-file-alt"></i> ficha tecnica
         </button>
-        <button 
-          onClick={() => setActiveTab("Documentacion")}
-          className={`${styles.tab} ${activeTab === 'Documentacion' ? styles.active : ''}`}
-        >
-          <i className="fas fa-tags"></i>
-          Documentacion
+        <button onClick={() => changeTab("Propietario")} className={`${styles.tab} ${activeTab === 'Propietario' ? styles.active : ''}`}>
+          <i className="fas fa-file-alt"></i> Propietario
         </button>
-        <button 
-          onClick={() => setActiveTab("operatividad")}
-          className={`${styles.tab} ${activeTab === 'operatividad' ? styles.active : ''}`}
-        >
-          <i className="fas fa-user-shield"></i> 
-          operatividad
-        </button>
-
-        <button 
-          onClick={() => setActiveTab("Proveedor")}
-          className={`${styles.tab} ${activeTab === 'Proveedor' ? styles.active : ''}`}
-        >
-         <i className="fas fa-user"></i>
-         Proveedor
+        <button onClick={() => changeTab("Cliente")} className={`${styles.tab} ${activeTab === 'Cliente' ? styles.active : ''}`}>
+          <i className="fas fa-user"></i> Cliente
         </button>
       </div>
 
-      {activeTab === "FichaTecnica" && <div> </div>}
-      {activeTab === "Documentacion" && <div> </div>}
-      {activeTab === "operatividad" && <Operatividad />}
-      {activeTab === "Proveedor" && <VehiculoProveedor />}
+      {activeTab === "ficha_tecnica" && <FichaTecnica id={id} />}
+      {activeTab === "Propietario" && <Propietario id={id} />}
+      {activeTab === "Cliente" && <Cliente id={id} />}
     </div>
   );
 }
 
-export default VehiculosVer;
+export default ContactosVer;

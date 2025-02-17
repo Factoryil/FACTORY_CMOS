@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ContactoEtiquetas.module.css";
-import api from "../../services/apiService"; // Asegúrate de que este archivo API esté configurado
+import { apiManager } from "../../api/apiManager";
 
 function ContactoEtiquetas({ contactoID }) {
   console.log(contactoID);
@@ -12,8 +12,8 @@ function ContactoEtiquetas({ contactoID }) {
   // Función para obtener todas las etiquetas disponibles
   const obtenerEtiquetas = async () => {
     try {
-      const response = await api.get("/etiquetas"); // Endpoint para obtener todas las etiquetas
-      setEtiquetas(response.data);
+      const response = await apiManager.etiquetas(); // Endpoint para obtener todas las etiquetas
+      setEtiquetas(response);
     } catch (error) {
       console.error("Error al obtener las etiquetas:", error);
     }
@@ -22,8 +22,8 @@ function ContactoEtiquetas({ contactoID }) {
   // Función para obtener las etiquetas asignadas al usuario/contacto
   const obtenerEtiquetasUsuario = async () => {
     try {
-      const response = await api.get(`/union-etiquetas/contacto/${contactoID}`); // Endpoint para obtener las etiquetas de un contacto
-      setEtiquetasUsuario(response.data); // Establecer las etiquetas activas para este contacto
+      const response = await apiManager.unionDeEtiquetaContactoID(contactoID); // Endpoint para obtener las etiquetas de un contacto
+      setEtiquetasUsuario(response); // Establecer las etiquetas activas para este contacto
     } catch (error) {
       console.error("Error al obtener las etiquetas del usuario:", error);
     }
@@ -36,10 +36,10 @@ function ContactoEtiquetas({ contactoID }) {
       
       if (existeEtiqueta) {
         // Desactivar etiqueta
-        await api.delete(`/union-etiquetas/${idEtiqueta}/${contactoID}`);
+        await apiManager.desactivarEtiquetaContacto(idEtiqueta,contactoID);
       } else {
         // Activar etiqueta usando POST /union-etiquetas con body {id_etiqueta, id_contacto}
-        await api.post("/union-etiquetas", { id_etiqueta: idEtiqueta, id_contacto: contactoID });
+        await apiManager.activarEtiquetaContacto({ id_etiqueta: idEtiqueta, id_contacto: contactoID });
       }
 
       // Refrescar las etiquetas del contacto después de la actualización

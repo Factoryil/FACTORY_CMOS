@@ -9,6 +9,12 @@ import Contactos from "../pages/GestionConstactos/Contactos/Contactos";
 import ContactosVer from "../pages/GestionConstactos/ContactosVer/ContactosVer";
 import Etiquetas from "../pages/GestionConstactos/Etiquetas/Etiquetas";
 import EtiquetasVer from "../pages/GestionConstactos/EtiquetasVer/EtiquetasVer";
+import Usuarios from "../pages/GestionUsuarios/Usuarios/Usuarios";
+import Roles from "../pages/GestionUsuarios/Roles/Roles";
+import Permisos from "../pages/GestionUsuarios/Permisos/Permisos";
+import Loader from "../components/Loader/Loader";
+import Vehiculo from "../pages/GestionVehiculos/Vehiculo/Vehiculo";
+import VehiculosVer from "../pages/GestionVehiculos/VehiculosVer/VehiculosVer";
 
 // Carga diferida de las páginas
 const Login = lazy(() => import("../pages/Login/Login"));
@@ -17,9 +23,7 @@ const Inicio = lazy(() => import("../pages/Inicio/Inicio"));
 
 // Componente de carga mientras se cargan los componentes diferidos
 const Loading = () => (
-  <div style={{ textAlign: "center", marginTop: "20px" }}>
-    <h2>Cargando...</h2>
-  </div>
+  <Loader />
 );
 
 function Routers() {
@@ -27,8 +31,13 @@ function Routers() {
     <Suspense fallback={<Loading />}>
       <Routes>
         {/* Rutas públicas */}
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/logout" element={<Logout />} />
+        <Route element={<DashboardLayout />}>
+        <Route path="/login" element={<Login />} />
+
+        </Route>
+
 
         {/* Rutas protegidas: requieren autenticación */}
         <Route element={<ProtectedRoute />}>
@@ -40,15 +49,18 @@ function Routers() {
           <Route path="/gestion/contactos/ver/:id" element={<ContactosVer />} />
           <Route path="/gestion/etiquetas" element={<Etiquetas />} />
           <Route path="/gestion/etiquetas/ver/:id" element={<EtiquetasVer />} />
+          <Route path="/gestion/usuarios" element={<Usuarios />} />
+          <Route path="/gestion/roles" element={<Roles />} />
+          <Route path="/gestion/permisos" element={<Permisos />} />
+          <Route path="/gestion/vehiculos" element={<Vehiculo />} />
+          <Route path="/gestion/vehiculos/ver/:id" element={<VehiculosVer />} />
+          
           {/* <Route path="/gestion/contactos/documentos" element={<DocumentosLista />} />
 
-          <Route path="/gestion/vehiculo" element={<Vehiculo />} />
-          <Route path="/gestion/vehiculos/ver/:id" element={<VehiculosVer />} />
           <Route path="/gestion/vehiculos/documentos" element={<DocumentosVehiculos />} />
           
 
           <Route path="/gestion/usuarios" element={<Usuarios />} />
-          <Route path="/gestion/permisos" element={<Permisos />} />
           <Route path="/gestion/permisos/ver/:id" element={<PermisosVer />} /> */}
 
           {/* Rutas que requieren permisos específicos: se valida "usuarios:lectura" */}

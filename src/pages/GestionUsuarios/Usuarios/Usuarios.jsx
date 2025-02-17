@@ -3,7 +3,7 @@ import styles from "../../../styles/ModalFormulario.module.css";
 import Tabla from "../../../components/Tabla/Tabla";
 import { transformarDatos } from "../../../utils/transformarDatos";
 import ModalAgregarUsuario from "../../../components/ModalAgregarUsuario/ModalAgregarUsuario";
-import api from "../../../services/apiService";
+import { apiManager } from "../../../api/apiManager";
 
 const botonesAcciones = [
   { nombre: "Ver", link: "/gestion/contactos/ver/", icono: "fas fa-eye", color: "blue" }
@@ -25,8 +25,8 @@ function Usuarios() {
   // Función para obtener los usuarios
   const obtenerUsuarios = async () => {
     try {
-      const response = await api.get("/usuarios");
-      setUsuarios(response.data);
+      const response = await apiManager.usuarios();
+      setUsuarios(response);
     } catch (error) {
       console.error("Error al obtener usuarios:", error);
       setError("Error al cargar los usuarios.");

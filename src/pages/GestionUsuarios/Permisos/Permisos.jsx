@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../styles/ModalFormulario.module.css";
-import api from "../../../services/apiService";
 import Loader from "../../../components/Loader/Loader";
 import ModalAgregarPermiso from "../../../components/ModalAgregarPermiso/ModalAgregarPermiso";
 import Tabla from "../../../components/Tabla/Tabla";
 import { transformarDatos } from "../../../utils/transformarDatos";
+import { apiManager } from "../../../api/apiManager";
 
 // Mapeo de las claves originales a los nombres que queremos mostrar en la tabla
 const mapeoColumnas = {
@@ -26,8 +26,8 @@ function Permisos() {
   const obtenerPermisos = async () => {
     try {
       setCargando(true);
-      const response = await api.get("/permisos");
-      setPermisos(response.data);
+      const response = await apiManager.permisos();
+      setPermisos(response);
       setCargando(false);
     } catch (error) {
       console.error("Error al obtener permisos:", error);

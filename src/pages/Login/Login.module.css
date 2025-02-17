@@ -1,0 +1,130 @@
+/* Estilos generales */
+.body {
+    font-family: 'Arial', sans-serif;
+    /* background: #f4f7f6; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100dvh - 105px);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.contenedorLogoCmos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contenedorLogoCmos img {
+    width: 90px;
+}
+
+/* Contenedor principal del formulario */
+.formContainer {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    max-width: 400px;
+    width: 90%;
+    padding: 30px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+}
+
+.formContainer:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Sombra más suave al hacer hover */
+}
+
+/* Tarjeta interna del formulario */
+.formCard {
+    text-align: center;
+}
+
+.h2 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Estilos para etiquetas */
+.label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #444;
+    font-size: 14px;
+    text-align: left;
+}
+
+/* Estilo para inputs */
+.input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
+    outline: none;
+}
+
+/* Estilo de botones */
+.button {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.button:hover {
+    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    transform: scale(1.02);
+}
+
+/* Texto para alternar formularios */
+.formSwitch {
+    color: #6a11cb;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.formSwitch:hover {
+    text-decoration: underline;
+    color: #2575fc;
+}
+
+.inputWrapper {
+    position: relative;
+}
+  
+.togglePassword {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-70%);
+    cursor: pointer;
+    color: #6a11cb;
+    font-size: 18px;
+  }
+  
+  

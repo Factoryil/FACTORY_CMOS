@@ -37,8 +37,10 @@
 
 .sidebar-menu a.active,
 .sidebar-menu button.active {
-    border-left: 4px solid #4caf50;
+    border-left: 4px solid #4caf50 !important;
+    background-color: var(--submenu-bg);
 }
+
 
 .submenu {
     display: none;

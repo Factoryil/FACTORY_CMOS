@@ -3,7 +3,8 @@
     margin-bottom: 10px;
     text-align: center;
   }
-  
+
+
   .addButton2 {
     padding: 10px 20px;
     background-color: var(--sidebar-bg);
@@ -75,6 +76,16 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
   }
+  .modal2 {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+
+
   
   .modal h2 {
     margin-bottom: 15px;
@@ -89,6 +100,36 @@
   }
   
   .modal input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .modal2 h2 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+  .prueba2 {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+
+  }
+  
+  .prueba {
+    width: 50%;
+  }
+  
+  .modal2 label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .modal2 input {
     width: 100%;
     padding: 8px;
     margin-top: 5px;

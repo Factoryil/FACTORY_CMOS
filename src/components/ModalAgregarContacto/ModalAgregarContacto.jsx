@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
 import { apiManager } from "../../api/apiManager";
+import { useNavigate } from "react-router-dom";
 
 function ModalAgregarContacto({ cerrarModal }) {
+
+  const navigate = useNavigate();
+
   const tiposIdentificacion = [
     { value: "CC", label: "Cédula" },
     { value: "NIT", label: "Número de Identificación Tributaria" },
@@ -55,6 +59,22 @@ function ModalAgregarContacto({ cerrarModal }) {
 
       // Llamada a la API para agregar el nuevo contacto
       const response = await apiManager.addContactos(formData);
+
+      console.log(response);
+      
+    
+       // Si la respuesta contiene error
+       if (response.error) {
+        console.error("Error al agregar el contacto:", response.error);
+        // Aquí puedes mostrar un mensaje de error o hacer otro manejo
+        return;
+      }
+      
+      // Si la creación fue exitosa, se espera que response contenga { mensaje, ID_CONTACTOS }
+      if (response.ID_CONTACTOS) {
+        navigate(`/gestion/contactos/ver/${response.ID_CONTACTOS}`);
+      }
+      
 
     } catch (error) {
       console.error("Error al agregar el contacto:", error);

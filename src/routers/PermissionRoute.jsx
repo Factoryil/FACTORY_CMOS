@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { datosToken } from "../utils/authUtils";
 import { apiManager } from "../api/apiManager";
+import Loader from "../components/Loader/Loader";
 
 const PermissionRoute = ({ requiredPermission }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -20,7 +21,7 @@ const PermissionRoute = ({ requiredPermission }) => {
 
   // Mientras se comprueba la verificación, se muestra un mensaje de carga
   if (hasPermission === null) {
-    return <div>Cargando permisos...</div>;
+    return <Loader />;
   }
 
   // Si no tiene permiso, redirige a una ruta "No autorizado"

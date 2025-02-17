@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import styles from "../../../styles/ModalFormulario.module.css";
 import Tabla from "../../../components/Tabla/Tabla";
 import { transformarDatos } from "../../../utils/transformarDatos"; // Función para transformar datos
-import ModalAgregarContacto from "../../../components/ModalAgregarContacto/ModalAgregarContacto";
+// import ModalAgregarContacto from "../../../components/ModalAgregarContacto/ModalAgregarContacto";
 import Loader from "../../../components/Loader/Loader";
 import { useParams } from "react-router-dom";
+import { apiManager } from "../../../api/apiManager";
 
 // Mapeo de las claves originales a los nombres que queremos mostrar en la tabla
 const mapeoColumnas = {
@@ -30,11 +31,11 @@ function EtiquetasVer() {
   const obtenerContactos = async () => {
     try {
       setCargando(true);
-      const response = await api.get(`/union-etiquetas/etiqueta/${id}`); // Suponiendo que la API tiene este endpoint
-      if (response.data.length === 0) {
+      const response = await apiManager.contactosEtiquetidoID(id); // Suponiendo que la API tiene este endpoint
+      if (response.length === 0) {
         // setError("No se encontraron contactos para esta etiqueta.");
       } else {
-        setContactos(response.data); // Se guardan los contactos obtenidos
+        setContactos(response); // Se guardan los contactos obtenidos
       }
       setCargando(false);
     } catch (error) {
@@ -70,7 +71,7 @@ function EtiquetasVer() {
 
   return (
     <div className={styles.contactos}>
-      <h2 className={styles.titulo}>Lista de Contactos con la etiqueta {contactos[0]?.nombre_etiqueta}</h2>
+      <h2 className={styles.titulo}>Lista de Contactos con la etiqueta</h2>
 
       {contactos.length === 0 ? (
        <div>
@@ -99,9 +100,9 @@ function EtiquetasVer() {
 
 
 
-      {mostrarModal && (
-        <ModalAgregarContacto cerrarModal={handleModalClose} />
-      )}
+      {/* {mostrarModal && (
+        // <ModalAgregarContacto cerrarModal={handleModalClose} />
+      )} */}
     </div>
   );
 }

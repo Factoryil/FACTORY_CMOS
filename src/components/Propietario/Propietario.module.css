@@ -1,13 +1,13 @@
-.clientesContainer {
+.propietariosContainer {
   padding: 20px;
-  background-color: #f1f5f9; /* Un tono más claro para diferenciar */
+  background-color: #f9f9f9;
 }
 
-.clientesSection {
+.propietariosSection {
   margin: 0 auto;
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 
@@ -18,11 +18,11 @@
   margin-bottom: 15px;
 }
 
-.addClienteButton {
-  background-color: #2d89ef;
+.addPropietarioButton {
+  background-color: #2575fc;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   padding: 10px 16px;
   cursor: pointer;
   font-size: 14px;
@@ -32,43 +32,43 @@
   transition: background-color 0.3s ease;
 }
 
-.addClienteButton:hover {
-  background-color: #1e5bbf;
+.addPropietarioButton:hover {
+  background-color: #6a11cb;
 }
 
 .tableWrapper {
   overflow-x: auto;
 }
 
-.clientesTable {
+.propietariosTable {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
 
-.clientesTable th,
-.clientesTable td {
+.propietariosTable th,
+.propietariosTable td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: left;
   font-size: 14px;
 }
 
-.clientesTable th {
-  background-color: #2d89ef;
+.propietariosTable th {
+  background-color: #2575fc;
   color: #fff;
 }
 
-.clientesTable tr:nth-child(even) {
-  background-color: #f9fafb;
+.propietariosTable tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
-.clientesTable tr:hover {
-  background-color: #eef2f7;
+.propietariosTable tr:hover {
+  background-color: #e9e9e9;
 }
 
 .actionButton {
-  background-color: #1e5bbf;
+  background-color: #6a11cb;
   border: none;
   color: #fff;
   padding: 6px 10px;
@@ -80,7 +80,7 @@
 }
 
 .actionButton1 {
-  background-color: #34d399;
+  background-color: #55cb11;
   border: none;
   color: #fff;
   padding: 6px 10px;
@@ -91,7 +91,7 @@
   transition: background-color 0.3s ease;
 }
 .actionButton2 {
-  background-color: #fbbf24;
+  background-color: #cba011;
   border: none;
   color: #fff;
   padding: 6px 10px;
@@ -103,7 +103,7 @@
 }
 
 .actionButton:hover {
-  background-color: #2563eb;
+  background-color: #2575fc;
 }
 .tbbotones {
   display: flex;

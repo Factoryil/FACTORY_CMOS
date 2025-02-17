@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
-import api from "../../services/apiService";
+import { apiManager } from "../../api/apiManager";
 
 function ModalAgregarPermiso({ cerrarModal }) {
   const [nuevoPermiso, setNuevoPermiso] = useState({
@@ -20,8 +20,8 @@ function ModalAgregarPermiso({ cerrarModal }) {
     e.preventDefault();
 
     try {
-      const response = await api.post("/permisos", nuevoPermiso);
-      console.log("Nuevo permiso agregado:", response.data);
+      const response = await apiManager.addPermiso(nuevoPermiso);
+      console.log("Nuevo permiso agregado:", response);
       cerrarModal();
     } catch (error) {
       console.error("Error al agregar permiso:", error);

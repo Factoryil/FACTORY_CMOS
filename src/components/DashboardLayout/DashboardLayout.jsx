@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom"
-// import "./layout.css";
+import { Outlet } from "react-router-dom";
 import "../../styles/global.css";
 import styles from "./DashboardLayout.module.css";
 import MenuDashboard from "../MenuDashboard/MenuDashboard";
@@ -8,33 +7,38 @@ import MenuDashboard from "../MenuDashboard/MenuDashboard";
 function DashboardLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const toggleMenu = () => {
-      setIsMenuOpen(!isMenuOpen);
-    };
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Función para cerrar el menú en pantallas de 867px o menos
+  const closeMenu = () => {
+    if (window.matchMedia("(max-width: 867px)").matches) {
+      setIsMenuOpen(false);
+    }
+  };
 
   return (
-    <div className={styles.dashboard} >
-
+    <div className={styles.dashboard}>
       <nav className={`${styles.sidebar} ${isMenuOpen ? styles.open : ""}`}>
-        <MenuDashboard />
-    </nav>
+        <MenuDashboard onMenuItemClick={closeMenu} />
+      </nav>
 
-
-    <div className={styles.content}>
-      <header className={styles.header_content}>
-        <div className={styles.btn_menu_content} onClick={toggleMenu}>
-          <i className="fas fa-bars"></i>
+      <div className={styles.content}>
+        <header className={styles.header_content}>
+          <div className={styles.btn_menu_content} onClick={toggleMenu}>
+            <i className="fas fa-bars"></i>
+          </div>
+          <div className={styles.jbizsign_content}>
+            <span>CMOCS</span>
+          </div>
+        </header>
+        <div className={styles.main_content}>
+          <Outlet />
         </div>
-        <div className={styles.jbizsign_content}>
-          <span>CMOCS</span>
-        </div>
-      </header>
-      <div className={styles.main_content}>
-        <Outlet />
       </div>
     </div>
-  </div>
-  )
+  );
 }
 
-export default DashboardLayout
+export default DashboardLayout;

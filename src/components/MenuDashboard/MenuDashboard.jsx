@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./menucss.css";
 import { menuItems } from "../../data/menuItems";
 import { apiManager } from "../../api/apiManager";
 import { datosToken } from "../../utils/authUtils";
 
-const MenuDashboard = () => {
+const MenuDashboard = ({ onMenuItemClick }) => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(null);
   const [openSubmenu, setOpenSubmenu] = useState(null);
@@ -33,65 +33,89 @@ const MenuDashboard = () => {
     if (!matched) setActiveLink(null);
   }, [location]);
 
-  // Obtiene y filtra el menú según los permisos del usuario, refrescando periódicamente
-  useEffect(() => {
-    const token = datosToken();
-    if (!token || !token.usuario || !token.usuario.ID_USUARIO) {
-      // console.error("Token inválido o faltan datos de usuario:", token);
-      setFilteredMenuItems(menuItems); // Fallback: mostrar todo
-      setLoading(false);
-      return;
+  // Extrae el token y el ID del usuario de forma segura
+  const token = datosToken();
+  const userId = token?.usuario?.ID_USUARIO;
+
+  // Función que decide si un ítem debe mostrarse según sus propiedades y los permisos del usuario
+  const canShowItem = (item, permisosSet) => {
+    // Si el ítem se marca como "public" o "publicOnly", se muestra solo si NO está autenticado
+    if (item.public || item.publicOnly) {
+      return !userId;
     }
+    if (item.requiredPermission) {
+      // Si se requiere permiso, se muestra solo si el usuario está autenticado y tiene el permiso
+      if (!userId) return false;
+      return permisosSet.has(item.requiredPermission);
+    }
+    // Si no tiene propiedades de control, se muestra siempre
+    return true;
+  };
 
-    const fetchPermissions = async () => {
+  // Función recursiva para filtrar los ítems (y subítems) del menú
+  const filterItems = (items, permisosSet) => {
+    return items
+      .map(item => {
+        if (!canShowItem(item, permisosSet)) return null;
+        const newItem = { ...item };
+        if (item.submenu) {
+          newItem.submenu = filterItems(item.submenu, permisosSet);
+          // Si el submenú queda vacío, descartamos el item completo
+          if (newItem.submenu.length === 0) return null;
+        }
+        return newItem;
+      })
+      .filter(Boolean);
+  };
+
+  // Función para obtener y filtrar los permisos (usamos useCallback para estabilidad)
+  const fetchPermissions = useCallback(async () => {
+    let permisosSet = new Set();
+    if (userId) {
       try {
-        const permisos = await apiManager.getUserPermissions(token.usuario.ID_USUARIO);
-        // console.log("Permisos del usuario:", permisos);
-        // Se espera que cada permiso tenga propiedades MODULO y TIPO
-        const permisosSet = new Set(permisos.map(p => `${p.MODULO}:${p.TIPO}`));
-        // console.log("Set de permisos:", permisosSet);
-
-        const filtered = menuItems
-          .map(item => {
-            // Si el ítem no requiere permiso o se tiene el permiso, se mantiene
-            if (!item.requiredPermission || permisosSet.has(item.requiredPermission)) {
-              if (item.submenu) {
-                const filteredSubmenu = item.submenu.filter(subItem =>
-                  !subItem.requiredPermission || permisosSet.has(subItem.requiredPermission)
-                );
-                // Solo se muestra el ítem si tiene al menos un subítem permitido
-                return filteredSubmenu.length > 0 ? { ...item, submenu: filteredSubmenu } : null;
-              }
-              return item;
-            }
-            return null;
-          })
-          .filter(Boolean);
-
-        // console.log("Menú filtrado:", filtered);
-        setFilteredMenuItems(filtered);
+        const permisos = await apiManager.getUserPermissions(userId);
+        permisosSet = new Set(permisos.map(p => `${p.MODULO}:${p.TIPO}`));
       } catch (error) {
-        // console.error("Error al obtener permisos del usuario:", error);
-        setFilteredMenuItems(menuItems); // Fallback en caso de error
-      } finally {
-        setLoading(false);
+        // Si ocurre un error, dejamos permisosSet vacío
       }
-    };
+    }
+    const filtered = filterItems(menuItems, permisosSet);
+    setFilteredMenuItems(filtered);
+    setLoading(false);
+  }, [userId]);
 
-    // Ejecutar la función inmediatamente
+  // Ejecuta la actualización de permisos al montar y cada 30 segundos
+  useEffect(() => {
     fetchPermissions();
-
-    // Establecer un intervalo para refrescar los permisos cada 30 segundos
     const intervalId = setInterval(fetchPermissions, 30000);
-
-    // Limpiar el intervalo al desmontar el componente
     return () => clearInterval(intervalId);
-  }, [datosToken().usuario.ID_USUARIO]);
+  }, [fetchPermissions]);
 
+  // Escucha un evento personalizado para actualizar inmediatamente los permisos
+  useEffect(() => {
+    const handlePermissionsChanged = () => {
+      fetchPermissions();
+    };
+    window.addEventListener("permissionsChanged", handlePermissionsChanged);
+    return () => {
+      window.removeEventListener("permissionsChanged", handlePermissionsChanged);
+    };
+  }, [fetchPermissions]);
+
+  // Maneja el clic en un ítem del menú o submenú
   const handleLinkClick = (menuIndex, subIndex = null) => {
-    const linkIdentifier = subIndex !== null ? `${menuIndex}-${subIndex}` : `${menuIndex}`;
+    const linkIdentifier =
+      subIndex !== null ? `${menuIndex}-${subIndex}` : `${menuIndex}`;
     setActiveLink(linkIdentifier);
     setOpenSubmenu(subIndex === null ? null : menuIndex);
+
+    // Usa matchMedia para detectar pantallas de 867px o menos y cierra el menú
+    if (
+      window.matchMedia("(max-width: 867px)").matches &&
+      typeof onMenuItemClick === "function"
+    ) {
+      onMenuItemClick();
+    }
   };
 
   const handleSubmenuToggle = (index) => {
@@ -110,7 +134,7 @@ const MenuDashboard = () => {
     <ul className="menudashboard sidebar-menu">
       {filteredMenuItems.map((item, menuIndex) => (
         <li key={menuIndex} className={`has-submenu ${openSubmenu === menuIndex ? "open" : ""}`}>
-          { !item.submenu?.length ? (
+          {!item.submenu?.length ? (
             <Link
               to={item.path}
               className={`item ${activeLink === `${menuIndex}` ? "active" : ""}`}

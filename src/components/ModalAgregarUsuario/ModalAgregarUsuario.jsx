@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
-import api from "../../services/apiService";
+import { apiManager } from "../../api/apiManager";
 
 function ModalAgregarUsuario({ cerrarModal }) {
-  // Opciones de roles para el campo NOMBRE_ROL
-  const rolesDisponibles = [
-    { value: "admin", label: "Administrador" },
-    { value: "usuario", label: "Usuario" },
-    { value: "Supervisor", label: "Supervisor" },
-  ];
+  // Estado para roles obtenidos de la API
+  const [roles, setRoles] = useState([]);
 
   // Opciones de estado según el ENUM de la tabla (Activo, Inactivo)
   const estadosDisponibles = [
@@ -22,7 +18,7 @@ function ModalAgregarUsuario({ cerrarModal }) {
     NOMBRE_ROL: "",
     PASSWORD: "",
     ID_CONTACTOS: "",
-    URL_IMAGEN: null, // aunque este campo se enviará a través del FormData, lo dejamos en null aquí
+    URL_IMAGEN: null, // Se enviará a través del FormData
     ESTADO: "Activo",
   });
 
@@ -33,14 +29,26 @@ function ModalAgregarUsuario({ cerrarModal }) {
   useEffect(() => {
     const obtenerContactos = async () => {
       try {
-        const response = await api.get("/contactos");
-        setContactos(response.data);
+        const response = await apiManager.contactosSinUsuarios();
+        setContactos(response);
       } catch (error) {
         console.error("Error al obtener los contactos:", error);
       }
     };
-
     obtenerContactos();
+  }, []);
+
+  // Obtiene los roles desde la API para poblar el select de NOMBRE_ROL
+  useEffect(() => {
+    const obtenerRoles = async () => {
+      try {
+        const response = await apiManager.roles(); // Asegúrate de que este endpoint esté configurado
+        setRoles(response);
+      } catch (error) {
+        console.error("Error al obtener los roles:", error);
+      }
+    };
+    obtenerRoles();
   }, []);
 
   // Maneja los cambios en los inputs (excepto el de imagen)
@@ -68,7 +76,7 @@ function ModalAgregarUsuario({ cerrarModal }) {
     formData.append("CORREO_ELECTRONICO", nuevoUsuario.CORREO_ELECTRONICO);
     formData.append("NOMBRE_ROL", nuevoUsuario.NOMBRE_ROL);
     formData.append("PASSWORD", nuevoUsuario.PASSWORD);
-    // Convertimos el ID_CONTACTOS a número (ya que la tabla espera un INT)
+    // Convertir a número el ID_CONTACTOS, ya que la tabla espera un INT
     formData.append("ID_CONTACTOS", parseInt(nuevoUsuario.ID_CONTACTOS, 10));
     formData.append("ESTADO", nuevoUsuario.ESTADO);
     if (imagen) {
@@ -76,8 +84,8 @@ function ModalAgregarUsuario({ cerrarModal }) {
     }
 
     try {
-      const response = await api.post("/usuarios", formData);
-      console.log("Nuevo usuario agregado:", response.data);
+      const response = await apiManager.addUsuario(formData);
+      console.log("Nuevo usuario agregado:", response);
       cerrarModal();
     } catch (error) {
       console.error("Error al agregar usuario:", error);
@@ -125,9 +133,9 @@ function ModalAgregarUsuario({ cerrarModal }) {
             required
           >
             <option value="">Seleccione un rol</option>
-            {rolesDisponibles.map((rol) => (
-              <option key={rol.value} value={rol.value}>
-                {rol.label}
+            {roles.map((rol) => (
+              <option key={rol.ID_ROL} value={rol.NOMBRE_ROL}>
+                {rol.NOMBRE_ROL}
               </option>
             ))}
           </select>

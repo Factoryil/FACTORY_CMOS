@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import ContactoInfo from "../../../components/ContactosInfo/ContactosInfo";
 import DocumentosContacto from "../../../components/DocumentosContacto/DocumentosContacto";
-// import ContactoEtiquetas from "../../../components/ContactoEtiquetas/ContactoEtiquetas";
+import ContactoEtiquetas from "../../../components/ContactoEtiquetas/ContactoEtiquetas";
 import styles from "./ContactosVer.module.css";
-// import UsuarioPermisos from "../../../components/UsuarioPermisos/UsuarioPermisos";
+import PropietarioVehiculos from "../../../components/PropietarioVehiculos/PropietarioVehiculos";
 
 function ContactosVer() {
   // Extraemos el id de la URL
@@ -47,18 +47,19 @@ function ContactosVer() {
           <i className="fas fa-tags"></i>
           Etiquetas
         </button>
+  
         <button 
-          onClick={() => changeTab("Usuario_y_permisos")}
-          className={`${styles.tab} ${activeTab === 'Usuario_y_permisos' ? styles.active : ''}`}
+          onClick={() => changeTab("Propietario")}
+          className={`${styles.tab} ${activeTab === 'Propietario' ? styles.active : ''}`}
         >
           <i className="fas fa-users-cog"></i>
-          Usuario y permisos
+          Propietario
         </button>
       </div>
 
       {activeTab === "Documentos" && <DocumentosContacto />}
-      {/* {activeTab === "Etiquetas" && <ContactoEtiquetas contactoID={id} />} */}
-      {/* {activeTab === "Usuario_y_permisos" && <UsuarioPermisos usuarioID={id} />} */}
+      {activeTab === "Etiquetas" && <ContactoEtiquetas contactoID={id} />}
+      {activeTab === "Propietario" && <PropietarioVehiculos id={id} />}
     </div>
   );
 }
