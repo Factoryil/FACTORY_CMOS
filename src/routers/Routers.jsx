@@ -71,7 +71,7 @@ function Routers() {
           <Route path="/gestion/mantenimientos/planes" element={<PlanesMantenimiento />} />
           <Route path="/gestion/plan-mantenimiento/ver/:planId" element={<PlanMantenimientoVer />} />
           
-          PlanMantenimientoVer
+          
           {/* <Route path="/gestion/contactos/documentos" element={<DocumentosLista />} />
 
           <Route path="/gestion/vehiculos/documentos" element={<DocumentosVehiculos />} />

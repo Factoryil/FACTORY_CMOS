@@ -69,7 +69,9 @@ function MantenimientosEjecutar({ placa }) {
           columnasVisibles={columnasVisibles}
           habilitarExportacion={true}
           nombreExcel={"Ejecucion_Mantenimiento"}
-          filasPorPagina={5}
+          habilitarPaginacion={false}
+          habilitarTotalRegistros={false}
+          // filasPorPagina={5}
         >
           <button onClick={() => setMostrarModal(true)} className={styles.addButton2}>
             Agregar Ejecución de Mantenimiento
