@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
 import { apiManager } from "../../api/apiManager";
+import ModalEditarGrupoMantenimientos from "../ModalEditarGrupoMantenimientos/ModalEditarGrupoMantenimientos";
 
 function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
   // Estado para elegir el tipo de asignación: "individual" o "grupo"
   const [tipoAsignacion, setTipoAsignacion] = useState("individual");
 
-  // Estado para el nuevo registro; se usan dos campos: mantenimiento_id para individual y grupo_id para grupo
+  // Estado para el nuevo registro (para asignación individual)
   const [nuevoRegistro, setNuevoRegistro] = useState({
-    vehiculo_id: placa, // Usamos la placa como identificador del vehículo
+    vehiculo_id: placa, // Se recibe la placa; se convertirá en ID en el backend
     mantenimiento_id: "",
     grupo_id: "",
     periodicidad_km: "",
@@ -17,6 +18,7 @@ function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
   const [mantenimientos, setMantenimientos] = useState([]);
   const [grupos, setGrupos] = useState([]);
   const [assignedIds, setAssignedIds] = useState([]);
+  const [mostrarModalGrupo, setMostrarModalGrupo] = useState(false);
 
   // Cargar la lista de mantenimientos individuales disponibles
   useEffect(() => {
@@ -44,7 +46,7 @@ function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
     obtenerGrupos();
   }, []);
 
-  // Cargar las ejecuciones ya asignadas a este vehículo para filtrar opciones
+  // Cargar las ejecuciones ya asignadas al vehículo para filtrar opciones
   useEffect(() => {
     const obtenerEjecuciones = async () => {
       try {
@@ -62,12 +64,11 @@ function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
   const handleTipoChange = (e) => {
     const value = e.target.value;
     setTipoAsignacion(value);
-    // Reiniciamos los campos de selección según el tipo elegido
+    // Reiniciamos los campos correspondientes al cambiar de tipo
     setNuevoRegistro(prev => ({
       ...prev,
       mantenimiento_id: "",
       grupo_id: "",
-      // Reiniciamos también los campos opcionales si se cambia de tipo
       periodicidad_km: "",
       odometro_ultima: ""
     }));
@@ -83,23 +84,26 @@ function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
 
   const manejarEnvio = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("vehiculo_id", nuevoRegistro.vehiculo_id);
-    formData.append("tipo_asignacion", tipoAsignacion);
+
     if (tipoAsignacion === "individual") {
+      // Asignación individual: se envían los datos directamente
+      const formData = new FormData();
+      formData.append("vehiculo_id", nuevoRegistro.vehiculo_id);
       formData.append("mantenimiento_id", nuevoRegistro.mantenimiento_id);
       formData.append("periodicidad_km", nuevoRegistro.periodicidad_km);
       formData.append("odometro_ultima", nuevoRegistro.odometro_ultima);
+
+      try {
+        const response = await apiManager.addMantenimientoEjecutar(formData);
+        console.log("Ejecución de mantenimiento asignada:", response);
+        cerrarModal();
+        if (onUpdate) onUpdate();
+      } catch (error) {
+        console.error("Error al asignar ejecución de mantenimiento:", error);
+      }
     } else {
-      formData.append("grupo_id", nuevoRegistro.grupo_id);
-    }
-    try {
-      const response = await apiManager.addMantenimientoEjecutar(formData);
-      console.log("Ejecución de mantenimiento asignada:", response);
-      cerrarModal();
-      if (onUpdate) onUpdate();
-    } catch (error) {
-      console.error("Error al asignar ejecución de mantenimiento:", error);
+      // Para asignación de grupo, se abrirá el modal para editar detalles del grupo
+      setMostrarModalGrupo(true);
     }
   };
 
@@ -112,7 +116,7 @@ function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
   return (
     <div className={styles.modalOverlay} onClick={manejarCerrarModal}>
       <div className={styles.modal}>
-        <h2>Asignar Mantenimiento</h2>
+        <h2>Asignar Mantenimiento al Vehículo</h2>
         <form onSubmit={manejarEnvio}>
           <label htmlFor="tipoAsignacion">Tipo de Asignación</label>
           <select
@@ -181,25 +185,30 @@ function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
                 required
               >
                 <option value="">Seleccione un grupo de mantenimiento</option>
-                {grupos
-                  .filter(grupo => !assignedIds.includes(grupo.plan_mantenimiento_id))
-                  .map(grupo => (
-                    <option key={grupo.plan_mantenimiento_id} value={grupo.plan_mantenimiento_id}>
-                      {grupo.nombre_rutina}
-                    </option>
-                  ))}
+                {grupos.map(grupo => (
+                  <option key={grupo.plan_mantenimiento_id} value={grupo.plan_mantenimiento_id}>
+                    {grupo.nombre_rutina}
+                  </option>
+                ))}
               </select>
-              {grupos.filter(grupo => !assignedIds.includes(grupo.plan_mantenimiento_id)).length === 0 && (
+              {grupos.length === 0 && (
                 <p style={{ color: "red", fontSize: "14px" }}>
                   No hay grupos de mantenimiento disponibles para asignar.
                 </p>
               )}
+              <button
+                type="button"
+                className={styles.addButton2}
+                onClick={() => setMostrarModalGrupo(true)}
+              >
+                Editar Detalles del Grupo
+              </button>
             </>
           )}
 
           <div className={styles.modalButtons}>
             <button type="submit" className={styles.saveButton}>
-              Asignar
+              {tipoAsignacion === "individual" ? "Asignar Mantenimiento" : "Continuar"}
             </button>
             <button type="button" className={styles.cancelButton} onClick={cerrarModal}>
               Cancelar
@@ -207,6 +216,17 @@ function ModalAgregarMantenimientoEjecutar({ cerrarModal, placa, onUpdate }) {
           </div>
         </form>
       </div>
+      {mostrarModalGrupo && (
+        <ModalEditarGrupoMantenimientos
+          grupoId={nuevoRegistro.grupo_id}
+          placa={placa}
+          cerrarModal={() => {
+            setMostrarModalGrupo(false);
+            cerrarModal();
+            if (onUpdate) onUpdate();
+          }}
+        />
+      )}
     </div>
   );
 }

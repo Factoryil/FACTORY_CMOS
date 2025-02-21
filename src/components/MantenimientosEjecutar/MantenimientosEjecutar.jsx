@@ -8,8 +8,10 @@ import ModalAgregarMantenimientoEjecutar from "../ModalAgregarMantenimientoEjecu
 
 // Mapeo de claves para mostrar en la tabla
 const mapeoColumnas = {
-  mantenimiento_id: "Mantenimiento",
-  vehiculo_id: "Vehículo",
+  trabajo: "trabajo",
+  tipo_mantenimiento: "tipo mantenimiento",
+  // mantenimiento_id: "Mantenimiento",
+  // vehiculo_id: "Vehículo",
   periodicidad_km: "Periodicidad (km)",
   odometro_ultima: "Odómetro Último"
 };
@@ -19,15 +21,15 @@ function MantenimientosEjecutar({ placa }) {
   const [cargando, setCargando] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
 
-  // Función para obtener las ejecuciones filtradas por placa
+  // Función para obtener las ejecuciones (ya retornadas filtradas por la API)
   const obtenerEjecuciones = async () => {
     try {
       setCargando(true);
-      // Se asume que apiManager.ejecucionesMantenimiento() retorna todos los registros de mantenimiento_ejecutar
-      const response = await apiManager.ejecucionesMantenimiento();
-      // Filtramos solo los registros correspondientes a este vehículo
-      const filtrados = response.filter(ejec => ejec.vehiculo_id === placa);
-      setEjecuciones(filtrados);
+      // Se asume que apiManager.ejecucionesMantenimiento(placa) ya retorna los registros correspondientes a esa placa
+      const response = await apiManager.ejecucionesMantenimiento(placa);
+      console.log(response);
+      
+      setEjecuciones(response);
       setCargando(false);
     } catch (error) {
       console.error("Error al obtener ejecuciones de mantenimiento:", error);

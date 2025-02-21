@@ -28,6 +28,15 @@ export const apiManager = {
   // =====================================================
   // CONSULTAS GET (LISTAR / OBTENER)
   // =====================================================
+  ejecucionesMantenimiento: async (placa) => {
+    try {
+      const response = await api.get(`/mantenimiento-ejecutar/placa/${placa}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
   contactos: async () => {
     try {
       const response = await api.get("/contactos");
@@ -418,6 +427,14 @@ export const apiManager = {
   addPermiso: async (datos) => {
     try {
       const response = await api.post("/permisos", datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addMantenimientoEjecutar: async (datos) => {
+    try {
+      const response = await api.post("/mantenimiento-ejecutar", datos);
       return response.data;
     } catch (error) {
       throw error;
