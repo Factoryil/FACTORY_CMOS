@@ -39,15 +39,7 @@ function ModalAgregarPermiso({ cerrarModal }) {
       <div className={styles.modal}>
         <h2>Agregar Nuevo Permiso</h2>
         <form onSubmit={manejarEnvio}>
-          <label htmlFor="descripcion">Descripción</label>
-          <input
-            type="text"
-            id="descripcion"
-            name="DESCRIPCION"
-            value={nuevoPermiso.DESCRIPCION}
-            onChange={manejarCambio}
-            required
-          />
+
 
           <label htmlFor="tipo">Tipo</label>
           <select
@@ -77,6 +69,18 @@ function ModalAgregarPermiso({ cerrarModal }) {
             <option value="reportes">Reportes</option>
             <option value="configuración">Configuración</option>
           </select>
+
+          <label htmlFor="descripcion">Descripción</label>
+          <textarea 
+            type="text"
+            id="descripcion"
+            name="DESCRIPCION"
+            value={nuevoPermiso.DESCRIPCION}
+            onChange={manejarCambio}
+            required
+            className={styles.texarean1}
+            
+          />
 
           <div className={styles.modalButtons}>
             <button type="submit" className={styles.saveButton}>

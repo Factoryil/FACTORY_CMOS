@@ -52,6 +52,7 @@ function ModalAgregarRol({ cerrarModal }) {
             value={nuevoRol.DESCRIPCION}
             onChange={manejarCambio}
             required
+            className={styles.texarean1}
           />
 
           <div className={styles.modalButtons}>

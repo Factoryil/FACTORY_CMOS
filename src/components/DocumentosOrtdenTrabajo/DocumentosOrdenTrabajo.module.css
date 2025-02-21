@@ -1,4 +1,13 @@
-.titulo {
+.container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .titulo {
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
@@ -217,30 +226,58 @@
   border-radius: 5px;
 }
 
-.planInfo {
-  padding: 20px;              /* Espaciado interno */
-  margin-bottom: 20px;        /* Separación inferior */
-  border-radius: 8px;         /* Bordes redondeados */
-}
+  .tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tabla th,
+  .tabla td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .tabla th {
+    background-color: #f4f4f4;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .tabla tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .tabla td:nth-child(1) {
+    font-weight: bold; /* Estilo para la columna de numeración */
+  }
+  
+  .verBtn,
+  .eliminarBtn {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+  }
+  
+  .verBtn:hover,
+  .eliminarBtn:hover {
+    color: #0056b3;
+  }
+  
+  .eliminarBtn {
+    color: #e74c3c;
+  }
+  
+  .eliminarBtn:hover {
+    color: #c0392b;
+  }
+  
 
-.titulo {
-  font-size: 24px;            /* Tamaño de fuente grande para el título */
-  font-weight: bold;          /* Negrita */
-  color: #333;                /* Color oscuro para el texto */
-  margin-bottom: 10px;        /* Espacio debajo del título */
-}
-
-.planInfo p {
-  font-size: 16px;            /* Tamaño de fuente para párrafos */
-  color: #555;                /* Color gris suave */
-  line-height: 1.5;           
-  text-align: center;
-}
-
-.planInfo strong {
-  color: #000;                /* Texto en negrita más oscuro para resaltar */
-}
-
-.pcentro {
-  text-align: center;
-}
+  

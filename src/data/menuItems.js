@@ -41,6 +41,50 @@ export const menuItems = [
         path: "/gestion/vehiculos",
         requiredPermission: "usuarios:lectura",
       },
+      {
+        label: "Mediciones",
+        icon: "fas fa-tachometer-alt",
+        path: "/gestion/vehiculos/mediciones",
+        requiredPermission: "usuarios:lectura",
+      },
+    ],
+  },
+  {
+    label: "Gestión de Mantenimientos",
+    icon: "fas fa-tools",
+    requiredPermission: "usuarios:lectura", // Puedes ajustar el permiso si es necesario
+    submenu: [
+      {
+        label: "Planes de Mantenimiento",
+        icon: "fas fa-calendar-alt",
+        path: "/gestion/mantenimientos/planes",
+        requiredPermission: "usuarios:lectura",
+      },
+      {
+        label: "Trabajos de Mantenimiento",
+        icon: "fas fa-wrench",
+        path: "/gestion/mantenimientos/trabajos",
+        requiredPermission: "usuarios:lectura",
+      }
+    ],
+  },
+  {
+    label: "Gestión de Trabajos",
+    icon: "fas fa-tools",
+    requiredPermission: "usuarios:lectura",
+    submenu: [
+      {
+        label: "Órdenes de Trabajos",
+        icon: "fas fa-clipboard-list",
+        path: "/gestion/trabajos/ordenes-trabajo",
+        requiredPermission: "usuarios:lectura",
+      },
+      {
+        label: "Autorizaciones",
+        icon: "fas fa-check-circle",
+        path: "/gestion/trabajos/autorizaciones",
+        requiredPermission: "usuarios:lectura",
+      },
     ],
   },
   {

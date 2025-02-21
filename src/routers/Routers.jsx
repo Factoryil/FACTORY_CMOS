@@ -15,6 +15,13 @@ import Permisos from "../pages/GestionUsuarios/Permisos/Permisos";
 import Loader from "../components/Loader/Loader";
 import Vehiculo from "../pages/GestionVehiculos/Vehiculo/Vehiculo";
 import VehiculosVer from "../pages/GestionVehiculos/VehiculosVer/VehiculosVer";
+import OrdenesTrabajos from "../pages/GestionTrabajos/OrdenesTrabajos/OrdenesTrabajos";
+import Autorizaciones from "../pages/GestionTrabajos/Autorizaciones/Autorizaciones";
+import VerOrdenTrabajo from "../pages/GestionTrabajos/VerOrdenTrabajo/VerOrdenTrabajo";
+import Mediciones from "../pages/GestionVehiculos/Mediciones/Mediciones";
+import Mantenimientos from "../pages/GestionMantenimientos/Mantenimietos/Mantenimientos";
+import PlanesMantenimiento from "../pages/GestionMantenimientos/PlanesMantenimiento/PlanesMantenimiento";
+import PlanMantenimientoVer from "../pages/GestionMantenimientos/PlanMantenimientoVer/PlanMantenimientoVer";
 
 // Carga diferida de las páginas
 const Login = lazy(() => import("../pages/Login/Login"));
@@ -54,7 +61,17 @@ function Routers() {
           <Route path="/gestion/permisos" element={<Permisos />} />
           <Route path="/gestion/vehiculos" element={<Vehiculo />} />
           <Route path="/gestion/vehiculos/ver/:id" element={<VehiculosVer />} />
+          <Route path="/gestion/vehiculos/mediciones" element={<Mediciones />} />
+          <Route path="/gestion/trabajos/ordenes-trabajo" element={<OrdenesTrabajos />} />
+          <Route path="/gestion/trabajos/ordenes-trabajo/ver/:OT" element={<VerOrdenTrabajo />} />
+          <Route path="/gestion/trabajos/autorizaciones" element={<Autorizaciones />} />
+
+
+          <Route path="/gestion/mantenimientos/trabajos" element={<Mantenimientos />} />
+          <Route path="/gestion/mantenimientos/planes" element={<PlanesMantenimiento />} />
+          <Route path="/gestion/plan-mantenimiento/ver/:planId" element={<PlanMantenimientoVer />} />
           
+          PlanMantenimientoVer
           {/* <Route path="/gestion/contactos/documentos" element={<DocumentosLista />} />
 
           <Route path="/gestion/vehiculos/documentos" element={<DocumentosVehiculos />} />

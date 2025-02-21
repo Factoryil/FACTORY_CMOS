@@ -106,6 +106,7 @@
   text-align: left;
   /* border-bottom: 1px solid #e0e0e0; */
   border: 1px solid #e0e0e0;
+  /* border: 2PX SOLID RED; */
 }
 
 .tabla th {
@@ -133,15 +134,11 @@
 }
 
 /* Acciones */
-.acciones {
-  display: flex;
-  /* flex-direction: column; */
-  gap: 5px;
-}
+
 
 .botonAccion {
   padding: 8px 12px;
-  margin: 0 5px;
+  margin: 3px;
   border: none;
   border-radius: 4px;
   color: white;
@@ -252,6 +249,7 @@
     font-size: 12px;
     padding: 8px;
   }
+
 
   
 }

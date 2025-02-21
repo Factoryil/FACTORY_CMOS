@@ -5,6 +5,7 @@ import DocumentosContacto from "../../../components/DocumentosContacto/Documento
 import ContactoEtiquetas from "../../../components/ContactoEtiquetas/ContactoEtiquetas";
 import styles from "./ContactosVer.module.css";
 import PropietarioVehiculos from "../../../components/PropietarioVehiculos/PropietarioVehiculos";
+import PermisosContacto from "../../../components/PermisosContacto/PermisosContacto";
 
 function ContactosVer() {
   // Extraemos el id de la URL
@@ -55,11 +56,21 @@ function ContactosVer() {
           <i className="fas fa-users-cog"></i>
           Propietario
         </button>
+
+        <button 
+          onClick={() => changeTab("Permiso")}
+          className={`${styles.tab} ${activeTab === 'Permiso' ? styles.active : ''}`}
+        >
+          <i className="fas fa-tags"></i>
+          Permiso
+        </button>
       </div>
 
       {activeTab === "Documentos" && <DocumentosContacto />}
       {activeTab === "Etiquetas" && <ContactoEtiquetas contactoID={id} />}
       {activeTab === "Propietario" && <PropietarioVehiculos id={id} />}
+      {/* {activeTab === "Permiso" && <PermisosContacto contactoID={id} />} */}
+
     </div>
   );
 }

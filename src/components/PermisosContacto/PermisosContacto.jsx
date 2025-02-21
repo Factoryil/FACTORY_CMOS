@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./PermisosContacto.module.css";
 
-function PermisosContacto({ usuario, permisosAsignados }) {
+function PermisosContacto({ contactoID }) {
   // Simulamos permisos disponibles en el sistema
   const permisosDisponibles = [
     { id: 1, nombre: "Ver Reportes" },
