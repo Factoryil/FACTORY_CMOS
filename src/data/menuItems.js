@@ -1,20 +1,14 @@
 export const menuItems = [
   {
-    label: "Login",
-    icon: "fas fa-sign-in-alt",
-    path: "/login",
-    public: true, // Se muestra solo cuando NO está autenticado
-  },
-  {
     label: "Inicio",
     icon: "fas fa-home",
     path: "/",
-    requiredPermission: "usuarios:lectura", // Solo se muestra si el usuario tiene este permiso
+    requiredPermission: "usuarios:lectura",
   },
   {
     label: "Gestión de Contactos",
     icon: "fas fa-address-book",
-    requiredPermission: "usuarios:lectura", // Solo se muestra si el usuario tiene este permiso
+    requiredPermission: "usuarios:lectura",
     submenu: [
       {
         label: "Contactos",
@@ -51,8 +45,8 @@ export const menuItems = [
   },
   {
     label: "Gestión de Mantenimientos",
-    icon: "fas fa-tools",
-    requiredPermission: "usuarios:lectura", // Puedes ajustar el permiso si es necesario
+    icon: "fas fa-cogs", // Cambiado para reflejar mantenimiento
+    requiredPermission: "usuarios:lectura",
     submenu: [
       {
         label: "Planes de Mantenimiento",
@@ -65,12 +59,12 @@ export const menuItems = [
         icon: "fas fa-wrench",
         path: "/gestion/mantenimientos/trabajos",
         requiredPermission: "usuarios:lectura",
-      }
+      },
     ],
   },
   {
     label: "Gestión de Trabajos",
-    icon: "fas fa-tools",
+    icon: "fas fa-tasks", // Cambiado para reflejar gestión de tareas/trabajos
     requiredPermission: "usuarios:lectura",
     submenu: [
       {
@@ -100,7 +94,7 @@ export const menuItems = [
       },
       {
         label: "Roles",
-        icon: "fas fa-users",
+        icon: "fas fa-user-tag", // Alternativa para roles
         path: "/gestion/roles",
         requiredPermission: "usuarios:lectura",
       },
@@ -117,5 +111,11 @@ export const menuItems = [
     icon: "fas fa-sign-out-alt",
     path: "/logout",
     requiredPermission: "usuarios:lectura",
+  },
+  {
+    label: "Login",
+    icon: "fas fa-sign-in-alt",
+    path: "/login",
+    public: true,
   },
 ];

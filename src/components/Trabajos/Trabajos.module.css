@@ -1,15 +1,16 @@
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-textarea:-webkit-autofill:active,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus,
-select:-webkit-autofill:active {
+/* Evitar autofill */
+.itemFactura input:-webkit-autofill,
+.itemFactura input:-webkit-autofill:hover,
+.itemFactura input:-webkit-autofill:focus,
+.itemFactura input:-webkit-autofill:active,
+.itemFactura textarea:-webkit-autofill,
+.itemFactura textarea:-webkit-autofill:hover,
+.itemFactura textarea:-webkit-autofill:focus,
+.itemFactura textarea:-webkit-autofill:active,
+.itemFactura select:-webkit-autofill,
+.itemFactura select:-webkit-autofill:hover,
+.itemFactura select:-webkit-autofill:focus,
+.itemFactura select:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
   -webkit-text-fill-color: #000 !important;
   transition: background-color 5000s ease-in-out 0s;
@@ -25,12 +26,6 @@ select:-webkit-autofill:active {
   border-radius: 10px;
 }
 
-/* Título principal */
-h1 {
-  text-align: center;
-  font-size: 24px;
-  color: #333;
-}
 
 /* Encabezado de la factura (datos de taller y responsable) */
 .encabezadoFactura {
@@ -104,37 +99,35 @@ h1 {
   background-color: #45a049;
 }
 
+/* Contenedor con scroll horizontal para la lista de ítems */
+.listaItemsContainer {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Lista de ítems */
 .listaItems {
   margin-top: 30px;
   font-family: Arial, sans-serif;
+  min-width: 800px; /* Asegura que quepan todas las columnas */
 }
 
-/* Encabezado de la lista de ítems */
-.encabezado {
-  display: grid;
-  padding: 10px;
-  background-color: #f5f5f5;
-  font-weight: bold;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-/* Estilos para cada ítem de la "factura" */
+/* Encabezado e ítems de la lista */
+.encabezado,
 .itemFactura {
   display: grid;
   align-items: center;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
+  margin-bottom: 10px;
 }
 
-/* Clases para definir grid según si hay columna de acción */
+/* Grid con botón de acción (8 columnas: N°, Tipo, Nombre, Cantidad, Precio, Impuesto, Total, Acción) */
 .gridWithAction {
   grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr 1fr 1fr;
 }
 
+/* Grid sin botón de acción (7 columnas: N°, Tipo, Nombre, Cantidad, Precio, Impuesto, Total) */
 .gridWithoutAction {
   grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr 1fr;
 }
@@ -144,7 +137,7 @@ h1 {
   padding: 5px;
 }
 
-/* Estilos para los inputs, textareas y selects dentro de itemFactura */
+/* Estilos para inputs, textareas y selects dentro de la lista */
 .itemFactura input,
 .itemFactura select,
 .itemFactura textarea {
@@ -158,7 +151,6 @@ h1 {
   box-sizing: border-box;
 }
 
-/* Cuando el input/select/textarea está deshabilitado (factura guardada) */
 .itemFactura input:disabled,
 .itemFactura select:disabled,
 .itemFactura textarea:disabled {
@@ -169,7 +161,6 @@ h1 {
   color: inherit;
 }
 
-/* Evitar el outline y box-shadow al hacer focus */
 .itemFactura input:focus,
 .itemFactura select:focus,
 .itemFactura textarea:focus {
@@ -219,7 +210,7 @@ h1 {
   box-shadow: none;
 }
 
-/* Campo "nombre" en modo visualización */
+/* Modo visualización de "nombre" */
 .nombreText {
   padding: 5px;
   font-size: 14px;
@@ -237,7 +228,7 @@ h1 {
   padding: 0;
 }
 
-/* Contenedor para la sección de descuento */
+/* Contenedor para la sección de descuento global */
 .descuentoContainer {
   margin-top: 20px;
   display: flex;
@@ -315,13 +306,13 @@ h1 {
   background-color: #f9f9f9;
 }
 
-/* Contenedor para los botones de guardar/editar */
+/* Contenedor para botones de guardar/editar */
 .buttonsContainer {
   margin-top: 20px;
   text-align: center;
 }
 
-/* Estilos del Modal */
+/* Modal */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -374,15 +365,33 @@ h1 {
   margin-top: 10px;
 }
 
-/* Responsive */
+/* Responsive: ajustes en pantallas pequeñas */
 @media (max-width: 768px) {
   .facturaContainer {
     width: 95%;
   }
-  .encabezado {
-    grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr 1fr;
-  }
+  .encabezado,
   .itemFactura {
-    grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr 1fr;
+    font-size: 12px;
   }
+  /* Se mantiene el ancho mínimo para permitir scroll horizontal */
+}
+
+.actualizarItemBtn {
+  background-color: #3498db; /* Color azul */
+  color: #fff;
+  border: none;
+  padding: 4px 7px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 5px;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+}
+
+.actualizarItemBtn:hover {
+  background-color: #2980b9;
 }

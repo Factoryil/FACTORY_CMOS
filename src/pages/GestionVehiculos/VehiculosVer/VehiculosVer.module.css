@@ -11,9 +11,10 @@
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto; /* Permite desplazamiento horizontal */
-  border-bottom: 3px solid #ccc;
+  /* border-bottom: 3px solid #ccc; */
   margin-top: 10px;
   scrollbar-width: thin; /* Estiliza la barra de desplazamiento en Firefox */
+ 
 }
 
 /* Estiliza la barra de desplazamiento en navegadores basados en WebKit (Chrome, Edge, Safari) */

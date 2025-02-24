@@ -52,7 +52,8 @@ function Usuarios() {
   const columnasVisibles = Object.values(mapeoColumnas);
 
   return (
-    <div className={styles.usuarios}>
+   <div className="contenedor1">
+     <div className="contenedor2">
       <h2 className={styles.titulo}>Lista de Usuarios</h2>
       
       <Tabla
@@ -81,6 +82,7 @@ function Usuarios() {
         />
       )}
     </div>
+   </div>
   );
 }
 

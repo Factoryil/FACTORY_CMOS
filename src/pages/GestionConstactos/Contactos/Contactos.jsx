@@ -16,8 +16,17 @@ const mapeoColumnas = {
 };
 
 const botonesAcciones = [
-  { nombre: "Ver", link: "/gestion/contactos/ver/", icono: "fas fa-eye", color: "blue" }
+  { nombre: "Ver", link: "/gestion/contactos/ver/", icono: "fas fa-eye", color: "blue" },
+  {
+    nombre: 'Ver Detalle',
+    color: 'blue',
+    funcionAccion: (fila) => {
+      console.log('Datos de la fila:', fila);
+    },
+  },
 ];
+
+
 
 function Contactos() {
   const [contactos, setContactos] = useState([]);
@@ -30,9 +39,12 @@ function Contactos() {
       setCargando(true);
       const response = await apiManager.contactos();
       
-      // Suponiendo que la API retorna un array de contactos en response.data
-      setContactos(response);
-      
+      if (response.error) {
+        console.error(response.error);   
+      }else {
+        setContactos(response);
+
+      }     
       setCargando(false);
     } catch (error) {
       console.error("Error al obtener contactos:", error);
@@ -64,7 +76,7 @@ function Contactos() {
 
   if (contactos.length === 0) {
     return (
-      <div className={styles.contactos}>
+      <div className={styles.contenedor}>
         <h2 className={styles.titulo}>Lista de Contactos</h2>
         <button onClick={() => setMostrarModal(true)} className={styles.addButton3}>
           Agregar Contacto
@@ -76,7 +88,8 @@ function Contactos() {
   }
 
   return (
-    <div className={styles.contactos}>
+    <div className={styles.contenedor1}>
+      <div className={styles.contenedor2}>
       <h2 className={styles.titulo}>Lista de Contactos</h2>
 
       <Tabla
@@ -99,6 +112,7 @@ function Contactos() {
       {mostrarModal && (
         <ModalAgregarContacto cerrarModal={handleModalClose} />
       )}
+    </div>
     </div>
   );
 }

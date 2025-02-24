@@ -94,7 +94,8 @@ function Odometros() {
   };
 
   return (
-    <div className={styles.odometros}>
+    <div className="contenedor1">
+      <div className="contenedor2">
       <h2 className={styles.titulo}>Lista de Registros de Odómetro</h2>
       
       {/* Menú de Tabs */}
@@ -187,6 +188,7 @@ function Odometros() {
       {mostrarModal && activeTab === "actual" && (
         <ModalAgregarOdometro cerrarModal={handleModalClose} />
       )}
+    </div>
     </div>
   );
 }

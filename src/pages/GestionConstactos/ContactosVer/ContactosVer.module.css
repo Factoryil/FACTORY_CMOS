@@ -9,8 +9,12 @@
   justify-content: flex-start;
   border-bottom: 3px solid #ccc;
   margin-top: 10px;
-  flex-wrap: wrap;  /* Permite que los tabs se ajusten si es necesario */
-  overflow-x: auto; /* Habilita desplazamiento horizontal si el contenido excede el ancho */
+  flex-wrap: wrap;  
+  overflow-x: auto; 
+  background-color: var(--bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .tab {

@@ -13,9 +13,9 @@ const mapeoColumnas = {
   DESCRIPCION: "Descripción"
 };
 
-const botonesAcciones = [
-  { nombre: "Ver", link: "/gestion/permisos/ver/", icono: "fas fa-eye", color: "blue" }
-];
+// const botonesAcciones = [
+//   { nombre: "Ver", link: "/gestion/permisos/ver/", icono: "fas fa-eye", color: "blue" }
+// ];
 
 function Permisos() {
   const [permisos, setPermisos] = useState([]);
@@ -27,6 +27,8 @@ function Permisos() {
     try {
       setCargando(true);
       const response = await apiManager.permisos();
+      console.log(response);
+      
       setPermisos(response);
       setCargando(false);
     } catch (error) {
@@ -71,15 +73,16 @@ function Permisos() {
   const columnasVisibles = Object.values(mapeoColumnas);
 
   return (
-    <div className={styles.permisos}>
+    <div className="contenedor1">
+      <div className="contenedor2">
       <h2 className={styles.titulo}>Lista de Permisos</h2>
 
       <Tabla
         datos={datosTransformados}
         columnasVisibles={columnasVisibles}
-        mostrarAcciones={true}
+        // mostrarAcciones={true}
         columnaAccion="ID_PERMISO"
-        botonesAccion={botonesAcciones}
+        // botonesAccion={botonesAcciones}
         habilitarExportacion={true}
         nombreExcel={"Lista_permisos"}
         filasPorPagina={5}
@@ -90,6 +93,7 @@ function Permisos() {
       </Tabla>
 
       {mostrarModal && <ModalAgregarPermiso cerrarModal={handleModalClose} />}
+    </div>
     </div>
   );
 }

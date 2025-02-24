@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react'; 
-import { useNavigate, useLocation } from 'react-router-dom'; 
-import * as XLSX from 'xlsx'; 
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import * as XLSX from 'xlsx';
 import styles from './Tabla.module.css';
 
 const Tabla = ({
   children,
   datos,
+  mapeoColumnas, 
   mostrarAcciones,
   columnaAccion,
   botonesAccion,
@@ -18,18 +19,38 @@ const Tabla = ({
   columnasOmitidas = [],
   nombreExcel = "datos_tabla",
   habilitarTotalRegistros = true,
+  paginaActualInicial = 1,
+  onCambiarPagina,
+  incluirPaginacionEnURL = true,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
-  const paginaInicial = parseInt(queryParams.get("page"), 10) || 1;
-
-  const [paginaActual, setPaginaActual] = useState(paginaInicial);
+  const initialPage = incluirPaginacionEnURL
+    ? parseInt(queryParams.get("page"), 10) || 1
+    : paginaActualInicial;
+  const [paginaActual, setPaginaActual] = useState(initialPage);
   const [filtro, setFiltro] = useState("");
-  const [columnaSeleccionada, setColumnaSeleccionada] = useState("Todo"); 
+  const [columnaSeleccionada, setColumnaSeleccionada] = useState("Todo");
   const [columnaOrdenada, setColumnaOrdenada] = useState(null);
   const [ordenAscendente, setOrdenAscendente] = useState(true);
+
+  // Función para transformar los datos según el mapeo recibido
+  const transformarDatos = (datos, mapeo) => {
+    return datos.map((item) => {
+      const nuevoItem = {};
+      Object.keys(item).forEach((key) => {
+        // Si el mapeo tiene una traducción para la clave, se usa esa traducción;
+        // de lo contrario, se conserva el nombre original.
+        nuevoItem[mapeo[key] ? mapeo[key] : key] = item[key];
+      });
+      return nuevoItem;
+    });
+  };
+
+  // Si se proporciona mapeoColumnas, transformamos los datos; si no, usamos los datos originales.
+  const datosProcesados = mapeoColumnas ? transformarDatos(datos, mapeoColumnas) : datos;
 
   const ordenarDatos = (datos, columna, ascendente) => {
     if (!columna) return datos;
@@ -50,7 +71,7 @@ const Tabla = ({
     });
   };
 
-  const datosFiltrados = datos.filter((item) => {
+  const datosFiltrados = datosProcesados.filter((item) => {
     if (columnaSeleccionada === "Todo") {
       return Object.values(item).some((valor) =>
         valor?.toString().toLowerCase().includes(filtro.toLowerCase())
@@ -85,7 +106,12 @@ const Tabla = ({
   const cambiarPagina = (nuevaPagina) => {
     if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
       setPaginaActual(nuevaPagina);
-      navigate(`?page=${nuevaPagina}`);
+      if (onCambiarPagina) {
+        onCambiarPagina(nuevaPagina);
+      }
+      if (incluirPaginacionEnURL) {
+        navigate(`?page=${nuevaPagina}`);
+      }
     }
   };
 
@@ -120,6 +146,12 @@ const Tabla = ({
     XLSX.writeFile(wb, `${nombreExcel}.xlsx`);
   };
 
+  // Calcular las columnas a mostrar y su orden
+  const allKeys = Object.keys(datosProcesados[0]);
+  // Si se define columnasVisibles, se usa esa lista; de lo contrario, se muestran todas las columnas
+  const columnasAMostrar = columnasVisibles.length > 0 ? columnasVisibles : allKeys;
+  let columnasFinales = columnasAMostrar;
+
   return (
     <div className={styles.tablaContainer}>
       <div className={styles.ContenedorDeBotonesDeOpciones}>
@@ -131,15 +163,11 @@ const Tabla = ({
               onChange={(e) => setColumnaSeleccionada(e.target.value)}
             >
               <option value="Todo">Todo</option>
-              {Object.keys(datos[0])
-                .filter((columna) =>
-                  columnasVisibles.length === 0 || columnasVisibles.includes(columna)
-                )
-                .map((columna) => (
-                  <option key={columna} value={columna}>
-                    {columna}
-                  </option>
-                ))}
+              {columnasFinales.map((columna) => (
+                <option key={columna} value={columna}>
+                  {columna}
+                </option>
+              ))}
             </select>
             <input
               type="text"
@@ -150,7 +178,12 @@ const Tabla = ({
                 setFiltro(e.target.value);
                 if (habilitarPaginacion) {
                   setPaginaActual(1);
-                  navigate("?page=1");
+                  if (onCambiarPagina) {
+                    onCambiarPagina(1);
+                  }
+                  if (incluirPaginacionEnURL) {
+                    navigate("?page=1");
+                  }
                 }
               }}
             />
@@ -165,11 +198,10 @@ const Tabla = ({
       </div>
 
       <div className={styles.ctabla}>
-      <table className={styles.tabla}>
-        <thead>
-          <tr>
-            {Object.keys(datos[0]).map((key) => (
-              columnasVisibles.length === 0 || columnasVisibles.includes(key) ? (
+        <table className={styles.tabla}>
+          <thead>
+            <tr>
+              {columnasFinales.map((key) => (
                 <th
                   key={key}
                   className={`${habilitarOrdenamiento ? styles.ordenable : ''}`}
@@ -182,49 +214,51 @@ const Tabla = ({
                     </span>
                   )}
                 </th>
-              ) : null
-            ))}
-            {mostrarAcciones && <th>Acciones</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {datosPaginados.map((fila, index) => (
-            <tr key={index}>
-              {Object.entries(fila).map(([key, valor], i) => (
-                columnasVisibles.length === 0 || columnasVisibles.includes(key) ? (
-                  <td key={i}>{valor !== null && valor !== undefined ? valor : ''}</td>
-                ) : null
               ))}
-              {mostrarAcciones && (
-                <td className={styles.acciones}>
-                {botonesAccion.map((boton, index) => (
-                  <button
-                    key={index}
-                    onClick={(e) => {
-                      // Verificamos si la tecla Ctrl está presionada
-                      const url = `${boton.link}${fila[columnaAccion]}`;
-                      if (e.ctrlKey) {
-                        // Abrimos el enlace en una nueva pestaña
-                        window.open(url, "_blank");
-                      } else {
-                        // Redirigimos en la misma pestaña si no se presiona Ctrl
-                        navigate(url);
-                      }
-                    }}
-                    style={{ backgroundColor: boton.color }}
-                    className={`${styles.botonAccion} ${boton.icono ? styles.iconoBoton : ''}`}
-                  >
-                    {boton.icono && <i className={`fas ${boton.icono}`}></i>}
-                    {!boton.icono && boton.nombre}
-                  </button>
-                ))}
-              </td>
-              
-              )}
+              {mostrarAcciones && <th>Acciones</th>}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {datosPaginados.map((fila, index) => (
+              <tr key={index}>
+                {columnasFinales.map((key, i) => (
+                  <td key={i}>
+                    {fila[key] !== null && fila[key] !== undefined ? fila[key] : ''}
+                  </td>
+                ))}
+                {mostrarAcciones && (
+                  <td className={styles.acciones}>
+                    {botonesAccion.map((boton, index) => (
+                      <button
+                        key={index}
+                        onClick={(e) => {
+                          if (
+                            boton.funcionAccion &&
+                            typeof boton.funcionAccion === 'function'
+                          ) {
+                            boton.funcionAccion(fila);
+                          } else {
+                            const url = `${boton.link}${fila[columnaAccion]}`;
+                            if (e.ctrlKey) {
+                              window.open(url, "_blank");
+                            } else {
+                              navigate(url);
+                            }
+                          }
+                        }}
+                        style={{ backgroundColor: boton.color }}
+                        className={`${styles.botonAccion} ${boton.icono ? styles.iconoBoton : ''}`}
+                      >
+                        {boton.icono && <i className={`fas ${boton.icono}`}></i>}
+                        {!boton.icono && boton.nombre}
+                      </button>
+                    ))}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {habilitarPaginacion && (
@@ -235,7 +269,6 @@ const Tabla = ({
           >
             Anterior
           </button>
-
           {[...Array(totalPaginas).keys()].map((_, index) => (
             <button
               key={index}
@@ -245,7 +278,6 @@ const Tabla = ({
               {index + 1}
             </button>
           ))}
-
           <button
             onClick={() => cambiarPagina(paginaActual + 1)}
             disabled={paginaActual === totalPaginas}

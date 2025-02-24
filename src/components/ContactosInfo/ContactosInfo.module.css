@@ -11,14 +11,17 @@
     width: 210px;
     height: 230px;
     display: flex;
-    border-radius: 10px;
     overflow: hidden;
+    justify-content: center;
 }
+
 
 .contenedor-info-vehiculo-imagen img {
     width: 100%;
-    height: 70%;
+    height: 160px;
     background-color: rgb(204, 204, 204);
+    border-radius: 10px;
+
 }
 
 .contenedor-info-contenido {
@@ -102,6 +105,11 @@
         align-items: center;
     }
 
+    .contenedor-info-vehiculo-imagen {
+      /* border: 2px solid red; */
+      justify-content: center;
+    }
+
     .contenedor-info-contenido-titulo {
         display: flex;
         flex-direction: column;
@@ -133,20 +141,16 @@
 
 /* Botón Editar */
 .boton-editar {
-    background-color: #007bff;
+    background-color: var(--sidebar-bg);
     color: white;
     border: none;
     padding: 8px 12px;
     font-size: 14px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
     margin-left: auto;
   }
   
-  .boton-editar:hover {
-    background-color: #0056b3;
-  }
   
   /* Modal */
   .modalOverlay {
@@ -234,19 +238,14 @@
 
   /* Estilos para el botón de cambiar imagen */
 .boton-editar-imagen {
-  background-color: #4CAF50; /* Verde */
+  background-color: var(--sidebar-bg); /* Verde */
   color: white;
-  padding: 10px 20px;
+  padding: 10px;
   border: none;
   cursor: pointer;
   font-size: 14px;
   border-radius: 5px;
-  margin-top: 10px;
   transition: background-color 0.3s ease;
   position: absolute;
   bottom: 10px;
-}
-
-.boton-editar-imagen:hover {
-  background-color: #45a049; /* Un verde más oscuro */
 }

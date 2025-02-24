@@ -3,74 +3,101 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import ContactoInfo from "../../../components/ContactosInfo/ContactosInfo";
 import DocumentosContacto from "../../../components/DocumentosContacto/DocumentosContacto";
 import ContactoEtiquetas from "../../../components/ContactoEtiquetas/ContactoEtiquetas";
-import styles from "./ContactosVer.module.css";
 import PropietarioVehiculos from "../../../components/PropietarioVehiculos/PropietarioVehiculos";
 import PermisosContacto from "../../../components/PermisosContacto/PermisosContacto";
+import styles from "./ContactosVer.module.css";
+import { apiManager } from "../../../api/apiManager";
 
 function ContactosVer() {
-  // Extraemos el id de la URL
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Determinar la pestaña activa desde la URL, o por defecto "Documentos"
   const paramsTab = new URLSearchParams(location.search).get("tab") || "Documentos";
   const [activeTab, setActiveTab] = useState(paramsTab);
+  const [etiquetasUsuario, setEtiquetasUsuario] = useState([]);
 
-  // Cambiar la pestaña y actualizar la URL
+  useEffect(() => {
+    setActiveTab(paramsTab);
+  }, [location.search]);
+
   const changeTab = (tab) => {
     setActiveTab(tab);
-    navigate(`?tab=${tab}`); // Actualiza la URL con el parámetro 'tab'
+    navigate(`?tab=${tab}`);
   };
 
   useEffect(() => {
-    // Se asegura de que el estado 'activeTab' coincida con el valor de la URL
-    setActiveTab(paramsTab);
-  }, [location.search]); // Se actualiza si la URL cambia
+    const obtenerEtiquetasUsuario = async () => {
+      try {
+        const response = await apiManager.unionDeEtiquetaContactoID(id);
+        console.log(response);
+        setEtiquetasUsuario(response);
+      } catch (error) {
+        console.error("Error al obtener las etiquetas del usuario:", error);
+      }
+    };
+    if (id) {
+      obtenerEtiquetasUsuario();
+    }
+  }, [id]);
+
+  const mostrarPropietario = etiquetasUsuario.some(
+    (etiqueta) => etiqueta.etiqueta_nombre === "Propietario"
+  );
+  const mostrarPermiso = etiquetasUsuario.some(
+    (etiqueta) => etiqueta.etiqueta_nombre === "usuario"
+  );
 
   return (
     <div className={styles.contenedor}>
-      {/* Pasamos el id (o el objeto completo que incluye el id) a ContactoInfo */}
       <ContactoInfo id={id} />
 
       <div className={styles.tabs}>
         <button
           onClick={() => changeTab("Documentos")}
-          className={`${styles.tab} ${activeTab === 'Documentos' ? styles.active : ''}`}
+          className={`${styles.tab} ${activeTab === "Documentos" ? styles.active : ""}`}
         >
           <i className="fas fa-file-alt"></i>
           Documentos
         </button>
-        <button 
+        <button
           onClick={() => changeTab("Etiquetas")}
-          className={`${styles.tab} ${activeTab === 'Etiquetas' ? styles.active : ''}`}
+          className={`${styles.tab} ${activeTab === "Etiquetas" ? styles.active : ""}`}
         >
           <i className="fas fa-tags"></i>
           Etiquetas
         </button>
-  
-        <button 
-          onClick={() => changeTab("Propietario")}
-          className={`${styles.tab} ${activeTab === 'Propietario' ? styles.active : ''}`}
-        >
-          <i className="fas fa-users-cog"></i>
-          Propietario
-        </button>
 
-        <button 
-          onClick={() => changeTab("Permiso")}
-          className={`${styles.tab} ${activeTab === 'Permiso' ? styles.active : ''}`}
-        >
-          <i className="fas fa-tags"></i>
-          Permiso
-        </button>
+        {mostrarPropietario && (
+          <button
+            onClick={() => changeTab("Propietario")}
+            className={`${styles.tab} ${activeTab === "Propietario" ? styles.active : ""}`}
+          >
+            <i className="fas fa-users-cog"></i>
+            Propietario
+          </button>
+        )}
+
+        {mostrarPermiso && (
+          <button
+            onClick={() => changeTab("Permiso")}
+            className={`${styles.tab} ${activeTab === "Permiso" ? styles.active : ""}`}
+          >
+            <i className="fas fa-tags"></i>
+            Permiso
+          </button>
+        )}
       </div>
 
       {activeTab === "Documentos" && <DocumentosContacto />}
-      {activeTab === "Etiquetas" && <ContactoEtiquetas contactoID={id} />}
-      {activeTab === "Propietario" && <PropietarioVehiculos id={id} />}
-      {/* {activeTab === "Permiso" && <PermisosContacto contactoID={id} />} */}
-
+      {activeTab === "Etiquetas" && (
+        <ContactoEtiquetas 
+          contactoID={id} 
+          onEtiquetasUpdate={(nuevasEtiquetas) => setEtiquetasUsuario(nuevasEtiquetas)}
+        />
+      )}
+      {activeTab === "Propietario" && mostrarPropietario && <PropietarioVehiculos id={id} />}
+      {activeTab === "Permiso" && mostrarPermiso && <PermisosContacto contactoID={id} />}
     </div>
   );
 }

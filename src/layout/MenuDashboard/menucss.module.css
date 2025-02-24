@@ -1,0 +1,69 @@
+.menudashboard {
+  /* Puedes agregar estilos adicionales para el contenedor principal si lo requieres */
+}
+
+.sidebarMenu {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: white;
+  font-size: 16px;
+  background: none;
+  border: none;
+  width: 100%;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  border-left: 4px solid transparent;
+  cursor: pointer;
+}
+
+.item:hover {
+  background-color: var(--submenu-bg);
+  border-left: 4px solid #ffa500;
+}
+
+.active {
+  border-left: 4px solid #4caf50 !important;
+  background-color: var(--submenu-bg);
+}
+
+.itemIcon {
+  margin-right: 10px;
+}
+
+/* Ocultar el submenú por defecto */
+.submenu {
+  display: none;
+  padding-left: 25px;
+  list-style: none;
+}
+
+/* Mostrar el submenú cuando esté abierto */
+.submenuOpen {
+  display: block;
+}
+
+/* Estilos para el ícono del submenú */
+.submenuIcon {
+  margin-right: 0;
+  margin-left: auto;
+  transition: transform 0.3s;
+}
+
+.submenuIconOpen {
+  transform: rotate(180deg);
+}
+
+/* Clase para los elementos que contienen submenú */
+.hasSubmenu {
+  /* Puedes agregar estilos específicos si lo requieres */
+}
+
+.open {
+  /* Estilos adicionales para elementos abiertos si se necesitan */
+}

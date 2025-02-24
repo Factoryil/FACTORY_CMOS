@@ -1,3 +1,13 @@
+.contenedor1 {
+  padding: 20px;
+}
+
+.contenedor2 {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
 .titulo {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -227,7 +237,7 @@
   font-size: 24px;            /* Tamaño de fuente grande para el título */
   font-weight: bold;          /* Negrita */
   color: #333;                /* Color oscuro para el texto */
-  margin-bottom: 10px;        /* Espacio debajo del título */
+  padding-top: 20px;      /* Espacio debajo del título */
 }
 
 .planInfo p {

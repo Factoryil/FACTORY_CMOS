@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./menucss.css";
+import styles from "./menucss.module.css";
 import { menuItems } from "../../data/menuItems";
 import { apiManager } from "../../api/apiManager";
 import { datosToken } from "../../utils/authUtils";
@@ -12,47 +12,61 @@ const MenuDashboard = ({ onMenuItemClick }) => {
   const [filteredMenuItems, setFilteredMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Actualiza el enlace activo según la ruta actual
+  // Función auxiliar para determinar si un path es activo dado el path actual.
+  // Para "/" se exige igualdad exacta; para el resto, se considera activo si es igual o si currentPath inicia con itemPath + "/"
+  const isActive = (itemPath, currentPath) => {
+    if (itemPath === "/") {
+      return currentPath === "/";
+    } else {
+      return currentPath === itemPath || currentPath.startsWith(itemPath + "/");
+    }
+  };
+
+  // Actualiza el enlace activo basándose en el arreglo filtrado
   useEffect(() => {
     const currentPath = location.pathname;
-    let matched = false;
-    menuItems.forEach((item, menuIndex) => {
-      if (item.path === currentPath) {
-        setActiveLink(`${menuIndex}`);
-        matched = true;
+    let bestMatch = null;
+    let bestMatchLength = 0;
+    // Recorremos los items filtrados (los que se muestran realmente)
+    filteredMenuItems.forEach((item, fIndex) => {
+      if (item.path && isActive(item.path, currentPath)) {
+        if (item.path.length > bestMatchLength) {
+          bestMatch = `${fIndex}`;
+          bestMatchLength = item.path.length;
+        }
       }
       if (item.submenu) {
         item.submenu.forEach((subItem, subIndex) => {
-          if (subItem.path === currentPath) {
-            setActiveLink(`${menuIndex}-${subIndex}`);
-            matched = true;
+          if (subItem.path && isActive(subItem.path, currentPath)) {
+            if (subItem.path.length > bestMatchLength) {
+              bestMatch = `${fIndex}-${subIndex}`;
+              bestMatchLength = subItem.path.length;
+              setOpenSubmenu(fIndex); // Abrir el submenú correspondiente
+            }
           }
         });
       }
     });
-    if (!matched) setActiveLink(null);
-  }, [location]);
+    setActiveLink(bestMatch);
+  }, [location, filteredMenuItems]);
 
   // Extrae el token y el ID del usuario de forma segura
   const token = datosToken();
   const userId = token?.usuario?.ID_USUARIO;
 
-  // Función que decide si un ítem debe mostrarse según sus propiedades y los permisos del usuario
+  // Decide si un item debe mostrarse según sus propiedades y permisos del usuario
   const canShowItem = (item, permisosSet) => {
-    // Si el ítem se marca como "public" o "publicOnly", se muestra solo si NO está autenticado
     if (item.public || item.publicOnly) {
       return !userId;
     }
     if (item.requiredPermission) {
-      // Si se requiere permiso, se muestra solo si el usuario está autenticado y tiene el permiso
       if (!userId) return false;
       return permisosSet.has(item.requiredPermission);
     }
-    // Si no tiene propiedades de control, se muestra siempre
     return true;
   };
 
-  // Función recursiva para filtrar los ítems (y subítems) del menú
+  // Función recursiva para filtrar los items (y subitems) del menú
   const filterItems = (items, permisosSet) => {
     return items
       .map(item => {
@@ -60,7 +74,6 @@ const MenuDashboard = ({ onMenuItemClick }) => {
         const newItem = { ...item };
         if (item.submenu) {
           newItem.submenu = filterItems(item.submenu, permisosSet);
-          // Si el submenú queda vacío, descartamos el item completo
           if (newItem.submenu.length === 0) return null;
         }
         return newItem;
@@ -68,7 +81,7 @@ const MenuDashboard = ({ onMenuItemClick }) => {
       .filter(Boolean);
   };
 
-  // Función para obtener y filtrar los permisos (usamos useCallback para estabilidad)
+  // Obtiene y filtra los permisos (usamos useCallback para estabilidad)
   const fetchPermissions = useCallback(async () => {
     let permisosSet = new Set();
     if (userId) {
@@ -84,14 +97,14 @@ const MenuDashboard = ({ onMenuItemClick }) => {
     setLoading(false);
   }, [userId]);
 
-  // Ejecuta la actualización de permisos al montar y cada 30 segundos
+  // Actualiza permisos al montar y cada 30 segundos
   useEffect(() => {
     fetchPermissions();
     const intervalId = setInterval(fetchPermissions, 30000);
     return () => clearInterval(intervalId);
   }, [fetchPermissions]);
 
-  // Escucha un evento personalizado para actualizar inmediatamente los permisos
+  // Escucha un evento personalizado para actualizar permisos inmediatamente
   useEffect(() => {
     const handlePermissionsChanged = () => {
       fetchPermissions();
@@ -102,18 +115,14 @@ const MenuDashboard = ({ onMenuItemClick }) => {
     };
   }, [fetchPermissions]);
 
-  // Maneja el clic en un ítem del menú o submenú
+  // Maneja el clic en un item o subitem del menú
   const handleLinkClick = (menuIndex, subIndex = null) => {
-    const linkIdentifier =
-      subIndex !== null ? `${menuIndex}-${subIndex}` : `${menuIndex}`;
+    const linkIdentifier = subIndex !== null ? `${menuIndex}-${subIndex}` : `${menuIndex}`;
     setActiveLink(linkIdentifier);
     setOpenSubmenu(subIndex === null ? null : menuIndex);
 
-    // Usa matchMedia para detectar pantallas de 867px o menos y cierra el menú
-    if (
-      window.matchMedia("(max-width: 867px)").matches &&
-      typeof onMenuItemClick === "function"
-    ) {
+    // Cierra el menú si se está en pantalla pequeña
+    if (window.matchMedia("(max-width: 867px)").matches && typeof onMenuItemClick === "function") {
       onMenuItemClick();
     }
   };
@@ -131,37 +140,43 @@ const MenuDashboard = ({ onMenuItemClick }) => {
   }
 
   return (
-    <ul className="menudashboard sidebar-menu">
+    <ul className={`${styles.menudashboard} ${styles.sidebarMenu}`}>
       {filteredMenuItems.map((item, menuIndex) => (
-        <li key={menuIndex} className={`has-submenu ${openSubmenu === menuIndex ? "open" : ""}`}>
+        <li key={menuIndex} className={`${styles.hasSubmenu} ${openSubmenu === menuIndex ? styles.open : ""}`}>
           {!item.submenu?.length ? (
             <Link
               to={item.path}
-              className={`item ${activeLink === `${menuIndex}` ? "active" : ""}`}
+              className={`${styles.item} ${activeLink === `${menuIndex}` ? styles.active : ""}`}
               onClick={() => handleLinkClick(menuIndex)}
             >
-              <i className={item.icon}></i>
+              <i className={`${item.icon} ${styles.itemIcon}`}></i>
               <span>{item.label}</span>
             </Link>
           ) : (
             <>
               <button
-                className={`item ${openSubmenu === menuIndex ? "open" : ""}`}
+                className={`${styles.item} ${openSubmenu === menuIndex ? styles.open : ""} ${
+                  activeLink && activeLink.startsWith(`${menuIndex}-`) && openSubmenu !== menuIndex
+                    ? styles.active
+                    : ""
+                }`}
                 onClick={() => handleSubmenuToggle(menuIndex)}
               >
-                <i className={item.icon}></i>
+                <i className={`${item.icon} ${styles.itemIcon}`}></i>
                 <span>{item.label}</span>
-                <i className="fas fa-chevron-down submenu-icon"></i>
+                <i className={`fas fa-chevron-down ${styles.submenuIcon} ${
+                  openSubmenu === menuIndex ? styles.submenuIconOpen : ""
+                }`}></i>
               </button>
-              <ul className="submenu">
+              <ul className={`${styles.submenu} ${openSubmenu === menuIndex ? styles.submenuOpen : ""}`}>
                 {item.submenu.map((subItem, subIndex) => (
                   <li key={subIndex}>
                     <Link
                       to={subItem.path}
-                      className={`item ${activeLink === `${menuIndex}-${subIndex}` ? "active" : ""}`}
+                      className={`${styles.item} ${activeLink === `${menuIndex}-${subIndex}` ? styles.active : ""}`}
                       onClick={() => handleLinkClick(menuIndex, subIndex)}
                     >
-                      <i className={subItem.icon}></i>
+                      <i className={`${subItem.icon} ${styles.itemIcon}`}></i>
                       {subItem.label}
                     </Link>
                   </li>

@@ -60,9 +60,6 @@ function ModalAgregarContacto({ cerrarModal }) {
       // Llamada a la API para agregar el nuevo contacto
       const response = await apiManager.addContactos(formData);
 
-      console.log(response);
-      
-    
        // Si la respuesta contiene error
        if (response.error) {
         console.error("Error al agregar el contacto:", response.error);

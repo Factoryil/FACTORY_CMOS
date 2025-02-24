@@ -12,12 +12,12 @@ const mapeoColumnas = {
   DESCRIPCION: "Descripción"
 };
 
-const botonesAcciones = [
-  { nombre: "Ver", link: "/gestion/roles/ver/", icono: "fas fa-eye", color: "blue" },
-  // Puedes descomentar y adaptar los demás botones según necesites
-  // { nombre: "Editar", icono: "fas fa-edit", color: "orange" },
-  // { nombre: "Eliminar", icono: "fas fa-trash", color: "red" }
-];
+// const botonesAcciones = [
+//   { nombre: "Ver", link: "/gestion/roles/ver/", icono: "fas fa-eye", color: "blue" },
+//   // Puedes descomentar y adaptar los demás botones según necesites
+//   // { nombre: "Editar", icono: "fas fa-edit", color: "orange" },
+//   // { nombre: "Eliminar", icono: "fas fa-trash", color: "red" }
+// ];
 
 function Roles() {
   const [roles, setRoles] = useState([]);
@@ -75,15 +75,16 @@ function Roles() {
   const columnasVisibles = Object.values(mapeoColumnas);
 
   return (
-    <div className={styles.etiquetas}>
+    <div className="contenedor1">
+      <div className="contenedor2">
       <h2 className={styles.titulo}>Lista de Roles</h2>
 
       <Tabla
         datos={datosTransformados}
         columnasVisibles={columnasVisibles}
-        mostrarAcciones={true}
+        // mostrarAcciones={true}
         columnaAccion="ID_ROL"
-        botonesAccion={botonesAcciones}
+        // botonesAccion={botonesAcciones}
         habilitarExportacion={true}
         nombreExcel={"Lista_roles"}
         filasPorPagina={5}
@@ -94,6 +95,7 @@ function Roles() {
       </Tabla>
 
       {mostrarModal && <ModalAgregarRol cerrarModal={handleModalClose} />}
+    </div>
     </div>
   );
 }

@@ -58,8 +58,10 @@ const ContactosInfo = ({ id }) => {
           className={styles['boton-editar-imagen']}
           onClick={() => setIsImageModalOpen(true)}
         >
-          Cambiar Imagen
+          <i className="fas fa-edit"></i> Cambiar Imagen
         </button>
+
+
       </div>
       <div className={styles['contenedor-info-contenido']}>
         <div className={styles['contenedor-info-contenido-titulo']}>
@@ -68,7 +70,7 @@ const ContactosInfo = ({ id }) => {
             className={styles['boton-editar']}
             onClick={() => setMostrarModal(true)}
           >
-            Editar
+            <i className="fas fa-edit"></i> Editar
           </button>
         </div>
         <div className={styles['contenedor-info-contenido-detalles']}>

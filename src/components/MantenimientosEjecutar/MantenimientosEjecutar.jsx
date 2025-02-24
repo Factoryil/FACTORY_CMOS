@@ -8,8 +8,9 @@ import ModalAgregarMantenimientoEjecutar from "../ModalAgregarMantenimientoEjecu
 
 // Mapeo de claves para mostrar en la tabla
 const mapeoColumnas = {
-  trabajo: "trabajo",
-  tipo_mantenimiento: "tipo mantenimiento",
+  fecha_probable_vencimiento: "Fecha probable vencimiento", //
+  trabajo: "Trabajo",
+  tipo_mantenimiento: "Tipo mantenimiento",
   // mantenimiento_id: "Mantenimiento",
   // vehiculo_id: "Vehículo",
   periodicidad_km: "Periodicidad (km)",

@@ -37,14 +37,14 @@
 .header_content {
     height: var(--header-height);
     width: 100%;
-    background: white;
     display: flex;
     align-items: center;
-    padding: 0 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0%;
     z-index: 10;
+
+    box-shadow: 0 0 0.375rem 0.25rem rgba(161, 172, 184, 0.15);
+    background-color: rgba(255, 255, 255, 0.95);
 }
 
 .jbizsign_content {
@@ -54,12 +54,17 @@
 
 .main_content {
     min-height: calc(100vh - var(--header-height));
-    padding: 20px;
 }
 
 .btn_menu_content {
     cursor: pointer;
-    margin-right: 20px;
+    margin-right: 5px;
+    height: 100%;
+    width: 60px;
+    /* border: 2px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
 }
 

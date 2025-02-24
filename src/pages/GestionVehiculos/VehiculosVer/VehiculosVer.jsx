@@ -6,6 +6,7 @@ import FichaTecnica from "../../../components/FichaTecnica/FichaTecnica";
 import Propietario from "../../../components/Propietario/Propietario";
 import Cliente from "../../../components/Cliente/Cliente";
 import MantenimientosEjecutar from "../../../components/MantenimientosEjecutar/MantenimientosEjecutar";
+import OdometroSeguimiento from "../../../components/OdometroSeguimiento/OdometroSeguimiento";
 
 function ContactosVer() {
   const { id } = useParams();
@@ -67,8 +68,8 @@ function ContactosVer() {
         
         {activeTab === "documentacion" && <div>Aquí va la información de Documentación</div>}
         {activeTab === "inspecciones" && <div>Aquí va la información de Inspecciones</div>}
-        {activeTab === "odometro" && <div>Aquí va la información de Seguimiento de Odómetro</div>}
         {activeTab === "comparendos" && <div>Aquí va la información de Comparendos</div>}
+        {activeTab === "odometro" && <OdometroSeguimiento placa={id} />}
         {activeTab === "mantenimientos" && <MantenimientosEjecutar placa={id} />}
       </div>
     </div>

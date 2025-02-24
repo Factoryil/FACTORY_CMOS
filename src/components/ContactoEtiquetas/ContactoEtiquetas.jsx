@@ -2,62 +2,63 @@ import React, { useState, useEffect } from "react";
 import styles from "./ContactoEtiquetas.module.css";
 import { apiManager } from "../../api/apiManager";
 
-function ContactoEtiquetas({ contactoID }) {
-  console.log(contactoID);
-  
+function ContactoEtiquetas({ contactoID, onEtiquetasUpdate }) {
   const [etiquetas, setEtiquetas] = useState([]); // Todas las etiquetas disponibles
   const [etiquetasUsuario, setEtiquetasUsuario] = useState([]); // Etiquetas asignadas al contacto
   const [cargando, setCargando] = useState(true);
 
-  // Función para obtener todas las etiquetas disponibles
   const obtenerEtiquetas = async () => {
     try {
-      const response = await apiManager.etiquetas(); // Endpoint para obtener todas las etiquetas
+      const response = await apiManager.etiquetas();
       setEtiquetas(response);
     } catch (error) {
       console.error("Error al obtener las etiquetas:", error);
     }
   };
 
-  // Función para obtener las etiquetas asignadas al usuario/contacto
   const obtenerEtiquetasUsuario = async () => {
     try {
-      const response = await apiManager.unionDeEtiquetaContactoID(contactoID); // Endpoint para obtener las etiquetas de un contacto
-      setEtiquetasUsuario(response); // Establecer las etiquetas activas para este contacto
+      const response = await apiManager.unionDeEtiquetaContactoID(contactoID);
+      setEtiquetasUsuario(response);
+      // Notificamos al padre con la lista actualizada
+      if (onEtiquetasUpdate) onEtiquetasUpdate(response);
     } catch (error) {
       console.error("Error al obtener las etiquetas del usuario:", error);
     }
   };
 
-  // Función para cambiar el estado de una etiqueta para el contacto
   const toggleEtiqueta = async (idEtiqueta) => {
     try {
-      const existeEtiqueta = etiquetasUsuario.some((etiqueta) => etiqueta.id_etiqueta === idEtiqueta);
-      
+      const existeEtiqueta = etiquetasUsuario.some(
+        (etiqueta) => etiqueta.id_etiqueta === idEtiqueta
+      );
+
       if (existeEtiqueta) {
-        // Desactivar etiqueta
-        await apiManager.desactivarEtiquetaContacto(idEtiqueta,contactoID);
+        await apiManager.desactivarEtiquetaContacto(idEtiqueta, contactoID);
       } else {
-        // Activar etiqueta usando POST /union-etiquetas con body {id_etiqueta, id_contacto}
         await apiManager.activarEtiquetaContacto({ id_etiqueta: idEtiqueta, id_contacto: contactoID });
       }
-
-      // Refrescar las etiquetas del contacto después de la actualización
-      obtenerEtiquetasUsuario();
+      // Obtenemos las etiquetas actualizadas y notificamos al padre
+      const nuevasEtiquetasUsuario = await apiManager.unionDeEtiquetaContactoID(contactoID);
+      setEtiquetasUsuario(nuevasEtiquetasUsuario);
+      if (onEtiquetasUpdate) onEtiquetasUpdate(nuevasEtiquetasUsuario);
     } catch (error) {
       console.error("Error al cambiar el estado de la etiqueta:", error);
     }
   };
 
-  // Cargar datos al montar el componente
   useEffect(() => {
-    obtenerEtiquetas(); // Obtener todas las etiquetas
-    obtenerEtiquetasUsuario(); // Obtener las etiquetas del contacto
-    setCargando(false); // Finaliza el estado de carga
-  }, [contactoID]); // Solo se recarga si cambia el contacto
+    const params = new URLSearchParams(location.search);
+    const tab = params.get("tab");
+    if (tab === "Etiquetas") {
+      obtenerEtiquetas();
+      obtenerEtiquetasUsuario();
+      setCargando(false);
+    }
+  }, [contactoID, location.search]);
 
   if (cargando) {
-    return <div>Cargando...</div>; // Cargando mientras obtenemos los datos
+    return <div>Cargando...</div>;
   }
 
   return (

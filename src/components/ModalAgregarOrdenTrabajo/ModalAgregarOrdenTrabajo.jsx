@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
 import { apiManager } from "../../api/apiManager";
+import { useNavigate } from "react-router-dom";
 
 // Función para obtener la fecha y hora actual en hora colombiana (America/Bogota)
 function obtenerFechaColombiana() {
+  
   const now = new Date();
   const formatter = new Intl.DateTimeFormat("en-GB", {
     timeZone: "America/Bogota",
@@ -41,6 +43,8 @@ function obtenerFechaColombiana() {
 }
 
 function ModalAgregarOrdenTrabajo({ cerrarModal }) {
+  const navigate = useNavigate();
+
   const defaultDateTime = obtenerFechaColombiana();
 
   // Estado para almacenar los datos del nuevo registro de orden de trabajo.
@@ -50,6 +54,7 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
     prioridad: "Media",
     observacion: "",
     lectura: "",
+    estado_vehiculo: "Operativo", // Valor por defecto "Operativo"
     fecha_creacion: defaultDateTime, // Valor por defecto: fecha y hora en Colombia
   });
 
@@ -102,7 +107,8 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
       !nuevoOrdenTrabajo.id_vehiculo ||
       !nuevoOrdenTrabajo.prioridad ||
       !nuevoOrdenTrabajo.fecha_creacion ||
-      !nuevoOrdenTrabajo.lectura
+      !nuevoOrdenTrabajo.lectura ||
+      !nuevoOrdenTrabajo.estado_vehiculo
     ) {
       alert("Por favor, completa todos los campos requeridos.");
       return;
@@ -116,12 +122,21 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
     formData.append("prioridad", nuevoOrdenTrabajo.prioridad);
     formData.append("FECHA_ORDEN", nuevoOrdenTrabajo.fecha_creacion);
     formData.append("ODOMETRO", nuevoOrdenTrabajo.lectura);
+    formData.append("estado_vehiculo", nuevoOrdenTrabajo.estado_vehiculo);
 
     try {
-        
-        //   console.log(nuevoOrdenTrabajo);
       const response = await apiManager.addOrdenTrabajo(formData);
-      console.log("Registro de orden de trabajo agregado:", response);
+
+      if (response.error) {
+        console.error("Error al agregar el ot:", response.error);
+        return;
+      }
+
+      if (response.id) {
+        navigate(`/gestion/trabajos/ordenes-trabajo/ver/${response.id}`);
+      }
+      
+
       cerrarModal();
     } catch (error) {
       console.error("Error al agregar registro de orden de trabajo:", error);
@@ -178,6 +193,7 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
             onChange={manejarCambio}
             required
           />
+
           <label htmlFor="lectura">Lectura</label>
           <input
             type="number"
@@ -197,6 +213,18 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
             onChange={manejarCambio}
             required
           />
+
+          <label htmlFor="estado_vehiculo">Estado del Vehículo</label>
+          <select
+            id="estado_vehiculo"
+            name="estado_vehiculo"
+            value={nuevoOrdenTrabajo.estado_vehiculo}
+            onChange={manejarCambio}
+            required
+          >
+            <option value="Operativo">Operativo</option>
+            <option value="Taller">Taller</option>
+          </select>
 
           <div className={styles.modalButtons}>
             <button type="submit" className={styles.saveButton}>

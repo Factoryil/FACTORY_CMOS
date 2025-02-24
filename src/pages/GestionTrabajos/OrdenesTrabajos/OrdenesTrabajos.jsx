@@ -3,38 +3,46 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../../../styles/ModalFormulario.module.css";
 import Loader from "../../../components/Loader/Loader";
 import Tabla from "../../../components/Tabla/Tabla";
-import { transformarDatos } from "../../../utils/transformarDatos";
 import { apiManager } from "../../../api/apiManager";
 import ModalAgregarOrdenTrabajo from "../../../components/ModalAgregarOrdenTrabajo/ModalAgregarOrdenTrabajo";
 
-// Mapeo de las claves para mostrar en la tabla
+// Mapeo de claves para mostrar en la tabla (clave original → nombre deseado)
 const mapeoColumnas = {
   ID_OT: "OT",
+  ESTADO: "estado ot",
   placa: "placa",
   FECHA_ORDEN: "Fecha de orden",
   observacion: "observacion",
   odometro: "odometro",
   AUTORIZACION: "autorizacion",
-  ESTADO: "estado",
+  prioridad: "prioridad",
   ID_CLIENTE: "resp. pago",
   ID_TALLER: "Taller",
-  prioridad: "prioridad",
-  // FECHA_PROGRAMADA: "cita programada"
+  estado_vehiculo: "estado vehiculo"
 };
 
+// Botones de acción para la tabla
 const botonesAcciones = [
-  { nombre: "Ver", link: "/gestion/trabajos/ordenes-trabajo/ver/", icono: "fas fa-eye", color: "blue" },
-  // { nombre: "Editar", link: "/gestion/ordenes/editar/", icono: "fas fa-edit", color: "orange" }
+  {
+    nombre: "Ver",
+    link: "/gestion/trabajos/ordenes-trabajo/ver/",
+    icono: "fas fa-eye",
+    color: "blue"
+  }
 ];
 
 function OrdenesTrabajo() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Determinar el tab activo desde la URL (por defecto "actual")
+  // Tab activo (por defecto "actual")
   const queryParams = new URLSearchParams(location.search);
   const initialTab = queryParams.get("tab") || "actual";
   const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Estados para mantener la posición (página) de cada tabla
+  const [paginaActualActual, setPaginaActualActual] = useState(1);
+  const [paginaHistorico, setPaginaHistorico] = useState(1);
 
   const [ordenes, setOrdenes] = useState([]);
   const [cargando, setCargando] = useState(false);
@@ -45,8 +53,6 @@ function OrdenesTrabajo() {
     try {
       setCargando(true);
       const response = await apiManager.ordenesTrabajoActuales();
-      console.log(response);
-      
       setOrdenes(response);
       setCargando(false);
     } catch (error) {
@@ -68,14 +74,14 @@ function OrdenesTrabajo() {
     }
   };
 
-  // Actualizar el estado del tab según la URL
+  // Actualizar el tab activo cuando cambia la URL
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const tabFromUrl = query.get("tab") || "actual";
     setActiveTab(tabFromUrl);
   }, [location.search]);
 
-  // Cargar datos cuando cambie el tab activo
+  // Cargar datos según el tab activo
   useEffect(() => {
     if (activeTab === "actual") {
       obtenerOrdenesActuales();
@@ -90,7 +96,7 @@ function OrdenesTrabajo() {
     navigate(`?tab=${tab}`);
   };
 
-  // Actualizar datos cuando se cierra el modal (solo en el tab "actual")
+  // Actualizar datos al cerrar el modal (solo en el tab "actual")
   const handleModalClose = () => {
     setMostrarModal(false);
     if (activeTab === "actual") {
@@ -99,101 +105,94 @@ function OrdenesTrabajo() {
   };
 
   return (
-    <div className={styles.ordenes}>
-      <h2 className={styles.titulo}>Lista de Órdenes de Trabajo</h2>
-      
-      {/* Menú de Tabs */}
-      <div className={styles.tabs}>
-        <button
-          className={`${styles.tab} ${activeTab === "actual" ? styles.activeTab : ""}`}
-          onClick={() => handleTabClick("actual")}
-        >
-          Actual
-        </button>
-        <button
-          className={`${styles.tab} ${activeTab === "historico" ? styles.activeTab : ""}`}
-          onClick={() => handleTabClick("historico")}
-        >
-          Histórico
-        </button>
-      </div>
-      
-      {/* Área de contenido: el Loader se muestra solo en esta sección */}
-      <div className={styles.content}>
-        {/* Contenido para el tab "Actual" */}
-        {activeTab === "actual" && (
-          <>
-            {cargando ? (
-              <Loader />
-            ) : ordenes.length === 0 ? (
-              <div>
-                <p>No hay órdenes de trabajo.</p>
-                <button onClick={() => setMostrarModal(true)} className={styles.addButton3}>
-                  Agregar Orden de Trabajo
-                </button>
-              </div>
-            ) : (
-              (() => {
-                const datosTransformados = transformarDatos(ordenes, mapeoColumnas);
-                const columnasVisibles = Object.values(mapeoColumnas);
+    <div className="contenedor1">
+      <div className="contenedor2">
+        <h2 className={styles.titulo}>Lista de Órdenes de Trabajo</h2>
 
-                return (
-                  <Tabla
-                    datos={datosTransformados}
-                    columnasVisibles={columnasVisibles}
-                    mostrarAcciones={true}
-                    columnaAccion="OT"
-                    botonesAccion={botonesAcciones}
-                    habilitarExportacion={true}
-                    nombreExcel={"Lista_ordenes_trabajo"}
-                    filasPorPagina={5}
-                  >
-                    <button onClick={() => setMostrarModal(true)} className={styles.addButton2}>
-                      Agregar Orden de Trabajo
-                    </button>
-                  </Tabla>
-                );
-              })()
-            )}
-          </>
-        )}
+        {/* Menú de Tabs */}
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${activeTab === "actual" ? styles.activeTab : ""}`}
+            onClick={() => handleTabClick("actual")}
+          >
+            Actual
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "historico" ? styles.activeTab : ""}`}
+            onClick={() => handleTabClick("historico")}
+          >
+            Histórico
+          </button>
+        </div>
 
-        {/* Contenido para el tab "Histórico" */}
-        {activeTab === "historico" && (
-          <>
-            {cargando ? (
-              <Loader />
-            ) : ordenes.length === 0 ? (
-              <div>
-                <p>No hay órdenes de trabajo históricas.</p>
-              </div>
-            ) : (
-              (() => {
-                const datosTransformados = transformarDatos(ordenes, mapeoColumnas);
-                const columnasVisibles = Object.values(mapeoColumnas);
-                
-                return (
-                  <Tabla
-                    datos={datosTransformados}
-                    columnasVisibles={columnasVisibles}
-                    mostrarAcciones={true}
-                    columnaAccion="OT"
-                    botonesAccion={botonesAcciones}
-                    habilitarExportacion={true}
-                    nombreExcel={"Historico_ordenes_trabajo"}
-                    filasPorPagina={5}
-                  />
-                );
-              })()
-            )}
-          </>
+        {/* Área de contenido */}
+        <div className={styles.content}>
+          {activeTab === "actual" && (
+            <>
+              {cargando ? (
+                <Loader />
+              ) : ordenes.length === 0 ? (
+                <div>
+                  <p>No hay órdenes de trabajo.</p>
+                  <button onClick={() => setMostrarModal(true)} className={styles.addButton3}>
+                    Agregar Orden de Trabajo
+                  </button>
+                </div>
+              ) : (
+                <Tabla
+                  datos={ordenes}
+                  mapeoColumnas={mapeoColumnas}
+                  columnasVisibles={[ "OT", "placa", "Fecha de orden", "observacion", "odometro", "autorizacion", "estado ot", "prioridad", "resp. pago", "taller", "estado vehiculo"]}
+                  mostrarAcciones={true}
+                  columnaAccion="OT"
+                  botonesAccion={botonesAcciones}
+                  habilitarExportacion={true}
+                  nombreExcel={"Lista_ordenes_trabajo"}
+                  filasPorPagina={5}
+                  incluirPaginacionEnURL={false}
+                  paginaActualInicial={paginaActualActual}
+                  onCambiarPagina={setPaginaActualActual}
+                >
+                  <button onClick={() => setMostrarModal(true)} className={styles.addButton2}>
+                    Agregar Orden de Trabajo
+                  </button>
+                </Tabla>
+              )}
+            </>
+          )}
+
+          {activeTab === "historico" && (
+            <>
+              {cargando ? (
+                <Loader />
+              ) : ordenes.length === 0 ? (
+                <div>
+                  <p>No hay órdenes de trabajo históricas.</p>
+                </div>
+              ) : (
+                <Tabla
+                  datos={ordenes}
+                  mapeoColumnas={mapeoColumnas}
+                  columnasVisibles={["OT", "placa", "Fecha de orden", "observacion", "odometro", "autorizacion", "estado ot", "prioridad", "resp. pago", "taller", "estado vehiculo"]}
+                  mostrarAcciones={true}
+                  columnaAccion="OT"
+                  botonesAccion={botonesAcciones}
+                  habilitarExportacion={true}
+                  nombreExcel={"Historico_ordenes_trabajo"}
+                  filasPorPagina={5}
+                  incluirPaginacionEnURL={false}
+                  paginaActualInicial={paginaHistorico}
+                  onCambiarPagina={setPaginaHistorico}
+                />
+              )}
+            </>
+          )}
+        </div>
+
+        {mostrarModal && activeTab === "actual" && (
+          <ModalAgregarOrdenTrabajo cerrarModal={handleModalClose} />
         )}
       </div>
-
-      {/* Modal de agregar, solo en el tab "Actual" */}
-      {mostrarModal && activeTab === "actual" && (
-        <ModalAgregarOrdenTrabajo cerrarModal={handleModalClose} />
-      )}
     </div>
   );
 }

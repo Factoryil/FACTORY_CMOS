@@ -1,6 +1,74 @@
 import api from "./instance";
 
 export const apiManager = {
+
+
+  crearFactura: async (item) => {
+    try {
+      const response = await api.post("/otfactura", item);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  editarFactura: async (id, formData) => {
+    try {
+      const response = await api.post(`/otfactura-editar/${id}`, formData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  obtenerFacturaPorOT: async (id) => {
+    try {
+      const response = await api.get(`/otfactura/ot/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  editarItemTrabajo: async (id, formData) => {
+    try {
+      const response = await api.post(`/itemtrabajo-editar/${id}`, formData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  eliminarItemTrabajo: async (id) => {
+    try {
+      const response = await api.delete(`/itemtrabajo/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  obtenerItemTrabajoPorOT: async (ot) => {
+    try {
+      const response = await api.get(`/itemtrabajo/ot/${ot}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  crearItemTrabajo: async (item) => {
+    try {
+      const response = await api.post("/itemtrabajo", item);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  crearOtFactura: async (data) => {
+    try {
+      const response = await api.post("/otfactura", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   // =====================================================
   // AUTHENTICACIÓN Y TOKEN
   // =====================================================
@@ -36,6 +104,15 @@ export const apiManager = {
       throw error;
     }
   },
+
+  unionDePermisosContactoID: async (id) => {
+    try {
+      const response = await api.get(`/usuarios-contacto/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   
   contactos: async () => {
     try {
@@ -58,6 +135,15 @@ export const apiManager = {
   contactosID: async (id) => {
     try {
       const response = await api.get(`/contactos/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  permisos: async () => {
+    try {
+      const response = await api.get("/permisos");
       return response.data;
     } catch (error) {
       throw error;
@@ -187,6 +273,15 @@ export const apiManager = {
   getSoportes: async (ot) => {
     try {
       const response = await api.get(`/soportes-ot/ot/${ot}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  obtenerOdometroPorPlaca: async (ot) => {
+    try {
+      const response = await api.get(`/odometro-placa/${ot}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -472,6 +567,15 @@ export const apiManager = {
     }
   },
 
+  updateEstado: async (id, datos) => {
+    try {
+      const response = await api.post(`/ordenes-trabajo-editar/${id}`, datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   editPropietarioInfo: async (idRegistro, datos) => {
     try {
       const response = await api.post(`/union-vehiculo-propietario/${idRegistro}`, datos);
@@ -519,4 +623,21 @@ export const apiManager = {
       throw error;
     }
   },
+
+  desactivarPermisoContacto: async (idPermiso, contactoID) => {
+    try {
+      const response = await api.delete(`/union-usuarios-permisos/${idPermiso}/${contactoID}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  activarPermisoContacto: async (datos) => {
+    try {
+      const response = await api.post("/union-usuarios-permisos", datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 };

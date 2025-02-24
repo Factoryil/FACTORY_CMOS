@@ -82,7 +82,8 @@ function Vehiculo() {
   const columnasVisibles = Object.values(mapeoColumnas);
 
   return (
-    <div className={styles.etiquetas}>
+    <div className="contenedor1">
+      <div className="contenedor2">
       <h2 className={styles.titulo}>Lista de Vehiculos</h2>
 
 
@@ -102,6 +103,7 @@ function Vehiculo() {
       </Tabla>
 
       {mostrarModal && <ModalAgregarVehiculo cerrarModal={handleModalClose} />}
+    </div>
     </div>
   );
 }

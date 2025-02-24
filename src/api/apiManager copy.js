@@ -1,6 +1,25 @@
 import api from "./instance";
 
 export const apiManager = {
+
+  crearItemTrabajo: async (item) => {
+    try {
+      const response = await api.post("/itemtrabajo", item);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  crearOtFactura: async (data) => {
+    try {
+      const response = await api.post("/otfactura", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+
   // Método para iniciar sesión
   login: async ({ email, password }) => {
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import "../../styles/global.css";
 import styles from "./DashboardLayout.module.css";
@@ -18,6 +18,20 @@ function DashboardLayout() {
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 867) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div className={styles.dashboard}>
       <nav className={`${styles.sidebar} ${isMenuOpen ? styles.open : ""}`}>
@@ -30,7 +44,7 @@ function DashboardLayout() {
             <i className="fas fa-bars"></i>
           </div>
           <div className={styles.jbizsign_content}>
-            <span>CMOCS</span>
+            {/* <span>CMOCS</span> */}
           </div>
         </header>
         <div className={styles.main_content}>

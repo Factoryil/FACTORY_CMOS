@@ -1,11 +1,9 @@
 /* Estilos generales */
 .body {
-    font-family: 'Arial', sans-serif;
-    /* background: #f4f7f6; */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100dvh - 105px);
+    min-height: calc(100dvh);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -27,7 +25,8 @@
 .formContainer {
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    /* Sombra más suave */
     max-width: 400px;
     width: 90%;
     padding: 30px;
@@ -37,7 +36,8 @@
 
 .formContainer:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Sombra más suave al hacer hover */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    /* Sombra más suave al hacer hover */
 }
 
 /* Tarjeta interna del formulario */
@@ -116,7 +116,7 @@
 .inputWrapper {
     position: relative;
 }
-  
+
 .togglePassword {
     position: absolute;
     right: 10px;
@@ -125,6 +125,4 @@
     cursor: pointer;
     color: #6a11cb;
     font-size: 18px;
-  }
-  
-  
+}

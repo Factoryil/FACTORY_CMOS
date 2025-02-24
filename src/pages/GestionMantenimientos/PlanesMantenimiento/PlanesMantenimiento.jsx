@@ -55,12 +55,14 @@ function PlanesMantenimiento() {
 
   if (planes.length === 0) {
     return (
-      <div className={styles.etiquetas}>
+      <div className="contenedor1">
+        <div className="contenedor2">
         <h2 className={styles.titulo}>Lista de Planes de Mantenimiento</h2>
         <button onClick={() => setMostrarModal(true)} className={styles.addButton3}>
           Agregar Plan de Mantenimiento
         </button>
         {mostrarModal && <ModalAgregarPlanMantenimiento cerrarModal={handleModalClose} />}
+      </div>
       </div>
     );
   }
@@ -69,7 +71,8 @@ function PlanesMantenimiento() {
   const columnasVisibles = Object.values(mapeoColumnas);
 
   return (
-    <div className={styles.etiquetas}>
+    <div className="contenedor1">
+      <div className="contenedor2">
       <h2 className={styles.titulo}>Lista de Planes de Mantenimiento</h2>
       <Tabla
         datos={datosTransformados}
@@ -86,6 +89,7 @@ function PlanesMantenimiento() {
         </button>
       </Tabla>
       {mostrarModal && <ModalAgregarPlanMantenimiento cerrarModal={handleModalClose} />}
+    </div>
     </div>
   );
 }

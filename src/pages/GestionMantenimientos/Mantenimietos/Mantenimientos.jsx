@@ -72,7 +72,8 @@ function Mantenimientos() {
   const columnasVisibles = Object.values(mapeoColumnas);
 
   return (
-    <div className={styles.etiquetas}>
+    <div className="contenedor1">
+      <div className="contenedor2">
       <h2 className={styles.titulo}>Lista de Mantenimientos</h2>
       <Tabla
         datos={datosTransformados}
@@ -89,6 +90,7 @@ function Mantenimientos() {
         </button>
       </Tabla>
       {mostrarModal && <ModalAgregarMantenimiento cerrarModal={handleModalClose} />}
+    </div>
     </div>
   );
 }

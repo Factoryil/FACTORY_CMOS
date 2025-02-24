@@ -39,54 +39,46 @@ function ModalAgregarPermiso({ cerrarModal }) {
       <div className={styles.modal}>
         <h2>Agregar Nuevo Permiso</h2>
         <form onSubmit={manejarEnvio}>
-
-
-          <label htmlFor="tipo">Tipo</label>
-          <select
-            id="tipo"
-            name="TIPO"
-            value={nuevoPermiso.TIPO}
-            onChange={manejarCambio}
-            required
-          >
-            <option value="">Seleccionar tipo</option>
-            <option value="lectura">Lectura</option>
-            <option value="escritura">Escritura</option>
-            <option value="eliminación">Eliminación</option>
-            <option value="administración">Administración</option>
-          </select>
-
           <label htmlFor="modulo">Módulo</label>
-          <select
+          <input
+            type="text"
             id="modulo"
             name="MODULO"
             value={nuevoPermiso.MODULO}
             onChange={manejarCambio}
             required
-          >
-            <option value="">Seleccionar módulo</option>
-            <option value="usuarios">Usuarios</option>
-            <option value="reportes">Reportes</option>
-            <option value="configuración">Configuración</option>
-          </select>
+          />
+          
+          <label htmlFor="tipo">Tipo</label>
+          <input
+            type="text"
+            id="tipo"
+            name="TIPO"
+            value={nuevoPermiso.TIPO}
+            onChange={manejarCambio}
+            required
+          />
+
 
           <label htmlFor="descripcion">Descripción</label>
-          <textarea 
-            type="text"
+          <textarea
             id="descripcion"
             name="DESCRIPCION"
             value={nuevoPermiso.DESCRIPCION}
             onChange={manejarCambio}
             required
             className={styles.texarean1}
-            
           />
 
           <div className={styles.modalButtons}>
             <button type="submit" className={styles.saveButton}>
               Guardar
             </button>
-            <button type="button" className={styles.cancelButton} onClick={cerrarModal}>
+            <button
+              type="button"
+              className={styles.cancelButton}
+              onClick={cerrarModal}
+            >
               Cancelar
             </button>
           </div>

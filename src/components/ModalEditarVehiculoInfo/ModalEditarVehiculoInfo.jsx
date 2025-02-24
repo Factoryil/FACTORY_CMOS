@@ -57,7 +57,7 @@ function ModalEditarVehiculoInfo({ cerrarModal, vehiculoData, onUpdate = () => {
   const manejarCambio = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value.toUpperCase()
     });
   };
 

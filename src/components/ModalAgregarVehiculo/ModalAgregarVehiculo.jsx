@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
 import { apiManager } from "../../api/apiManager";
+import { useNavigate } from "react-router-dom";
 
 function ModalAgregarVehiculo({ cerrarModal }) {
+  const navigate = useNavigate();
+
   const [nuevaPlaca, setnuevaPlaca] = useState({
     placa: ""
   });
@@ -10,7 +13,7 @@ function ModalAgregarVehiculo({ cerrarModal }) {
   const manejarCambio = (e) => {
     setnuevaPlaca({
       ...nuevaPlaca,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.toUpperCase(),
     });
   };
 
@@ -18,9 +21,20 @@ function ModalAgregarVehiculo({ cerrarModal }) {
     e.preventDefault();
 
     try {
+      
       const response = await apiManager.addPlaca(nuevaPlaca);
-      console.log("Nueva placa agregada:", response);
       cerrarModal();
+      // Si la respuesta contiene error
+      if (response.error) {
+        console.error("Error al agregar el contacto:", response.error);
+        // Aquí puedes mostrar un mensaje de error o hacer otro manejo
+        return;
+      }
+      
+      // Si la creación fue exitosa, se espera que response contenga { mensaje, ID_CONTACTOS }
+      if (response.id) {
+        navigate(`/gestion/vehiculos/ver/${nuevaPlaca.placa}`);
+      }
     } catch (error) {
       console.error("Error al agregar placa:", error);
     }
