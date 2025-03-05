@@ -3,24 +3,22 @@ import styles from "./ModalEditarPropietarioInfo.module.css";
 import { apiManager } from "../../api/apiManager";
 
 const ModalEditarPropietarioInfo = ({ cerrarModal, propietarioData, onUpdate = () => {} }) => {
+  
   const [formData, setFormData] = useState({
-    ESTADO: propietarioData.ESTADO || "Actual",
-    FECHA_EMISION: propietarioData.FECHA_EMISION || "",
-    FECHA_VENCIMIENTO: propietarioData.FECHA_VENCIMIENTO || "",
-    PERIODO: propietarioData.PERIODO || "Año",
-    VALOR: propietarioData.VALOR || "",
-    // Para PDF, si no se carga uno nuevo se usará el existente (puedes manejarlo a tu gusto)
+    ESTADO: propietarioData.ESTADO || "Actual", // Usamos la propiedad 'Estado'
+    FECHA_EMISION: propietarioData["Fecha Emision"] || "", // Usamos la propiedad con espacio
+    FECHA_VENCIMIENTO: propietarioData["Fecha Vencimiento"] || "",
+    PERIODO: propietarioData.Periodo || "Año",
+    VALOR: propietarioData.Valor || "",
     URL_PDF: propietarioData.URL_PDF || ""
   });
+  
 
   const [nuevoPdf, setNuevoPdf] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
@@ -37,10 +35,8 @@ const ModalEditarPropietarioInfo = ({ cerrarModal, propietarioData, onUpdate = (
     dataToSend.append("FECHA_VENCIMIENTO", formData.FECHA_VENCIMIENTO);
     dataToSend.append("PERIODO", formData.PERIODO);
     dataToSend.append("VALOR", formData.VALOR);
-    // Si se sube un nuevo PDF, se envía; de lo contrario, el backend puede decidir mantener el existente
-    if (nuevoPdf) {
-      dataToSend.append("URL_PDF", nuevoPdf);
-    }
+    if (nuevoPdf) dataToSend.append("URL_PDF", nuevoPdf);
+    
     try {
       // Se asume que editPropietarioInfo recibe el ID del registro y el FormData
       await apiManager.editPropietarioInfo(propietarioData.ID_UNION_VEHICULO_Y_PROPIETARIO, dataToSend);

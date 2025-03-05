@@ -3,13 +3,15 @@ import styles from "./ModalEditarClienteVehiculo.module.css";
 import { apiManager } from "../../api/apiManager";
 
 const ModalEditarClienteVehiculo = ({ cerrarModal, clienteData, onUpdate = () => {} }) => {
+  console.log(clienteData);
+  
   const [formData, setFormData] = useState({
     ESTADO: clienteData.ESTADO || "Actual",
-    FECHA_EMISION: clienteData.FECHA_EMISION || "",
-    FECHA_VENCIMIENTO: clienteData.FECHA_VENCIMIENTO || "",
-    PERIODO: clienteData.PERIODO || "Año",
-    VALOR: clienteData.VALOR || "",
-    URL_PDF: clienteData.URL_PDF || ""
+    FECHA_EMISION: clienteData["Fecha Emision"] || "",
+    FECHA_VENCIMIENTO: clienteData["Fecha Vencimiento"] || "",
+    PERIODO: clienteData.Periodo || "Año",
+    VALOR: clienteData.Valor || "",
+    URL_PDF: ""
   });
 
   const [nuevoPdf, setNuevoPdf] = useState(null);
@@ -45,29 +47,57 @@ const ModalEditarClienteVehiculo = ({ cerrarModal, clienteData, onUpdate = () =>
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={(e) => { if (e.target === e.currentTarget) cerrarModal(); }}>
+    <div 
+      className={styles.modalOverlay} 
+      onClick={(e) => { if (e.target === e.currentTarget) cerrarModal(); }}
+    >
       <div className={styles.modalContainer}>
         <h2 className={styles.title}>Editar Información del Cliente</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
-          {/* Campos del formulario similares al modal de propietarios */}
           <div className={styles.inputGroup}>
             <label htmlFor="ESTADO">Estado</label>
-            <select name="ESTADO" id="ESTADO" value={formData.ESTADO} onChange={handleChange} required>
+            <select 
+              name="ESTADO" 
+              id="ESTADO" 
+              value={formData.ESTADO} 
+              onChange={handleChange} 
+              required
+            >
               <option value="Actual">Actual</option>
               <option value="Renovado">Renovado</option>
             </select>
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="FECHA_EMISION">Fecha de Emisión</label>
-            <input type="date" name="FECHA_EMISION" value={formData.FECHA_EMISION} onChange={handleChange} required />
+            <input 
+              type="date" 
+              id="FECHA_EMISION"
+              name="FECHA_EMISION" 
+              value={formData.FECHA_EMISION} 
+              onChange={handleChange} 
+              required 
+            />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="FECHA_VENCIMIENTO">Fecha de Vencimiento</label>
-            <input type="date" name="FECHA_VENCIMIENTO" value={formData.FECHA_VENCIMIENTO} onChange={handleChange} required />
+            <input 
+              type="date" 
+              id="FECHA_VENCIMIENTO"
+              name="FECHA_VENCIMIENTO" 
+              value={formData.FECHA_VENCIMIENTO} 
+              onChange={handleChange} 
+              required 
+            />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="PERIODO">Período</label>
-            <select name="PERIODO" value={formData.PERIODO} onChange={handleChange} required>
+            <select 
+              name="PERIODO" 
+              id="PERIODO"
+              value={formData.PERIODO} 
+              onChange={handleChange} 
+              required
+            >
               <option value="Día">Día</option>
               <option value="Mes">Mes</option>
               <option value="Año">Año</option>
@@ -75,11 +105,25 @@ const ModalEditarClienteVehiculo = ({ cerrarModal, clienteData, onUpdate = () =>
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="VALOR">Valor</label>
-            <input type="number" name="VALOR" value={formData.VALOR} onChange={handleChange} step="0.01" required />
+            <input 
+              type="number" 
+              id="VALOR"
+              name="VALOR" 
+              value={formData.VALOR} 
+              onChange={handleChange} 
+              step="0.01" 
+              required 
+            />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="URL_PDF">PDF (opcional)</label>
-            <input type="file" name="URL_PDF" accept="application/pdf" onChange={handleFileChange} />
+            <input 
+              type="file" 
+              id="URL_PDF"
+              name="URL_PDF" 
+              accept="application/pdf" 
+              onChange={handleFileChange} 
+            />
           </div>
           <div className={styles.buttonGroup}>
             <button type="submit" className={styles.saveButton}>Guardar</button>

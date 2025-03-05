@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../styles/ModalFormulario.module.css";
 import Tabla from "../../../components/Tabla/Tabla";
-import { transformarDatos } from "../../../utils/transformarDatos"; // Función para transformar datos
 import ModalAgregarContacto from "../../../components/ModalAgregarContacto/ModalAgregarContacto";
 import Loader from "../../../components/Loader/Loader";
 import { apiManager } from "../../../api/apiManager";
@@ -9,21 +8,14 @@ import { apiManager } from "../../../api/apiManager";
 // Mapeo de las claves originales a los nombres que queremos mostrar en la tabla
 const mapeoColumnas = {
   NOMBRE_COMPLETO: "Nombre Completo",
+  TIPO_IDENTIFICACION: "Tipo de ID",
+  NUMERO_IDENTIFICACION: "Número de Identificación",
   CORREO_ELECTRONICO: "Correo Electrónico",
   TELEFONO: "Teléfono",
-  TIPO_IDENTIFICACION: "Tipo de ID",
-  NUMERO_IDENTIFICACION: "Número de Identificación"
 };
 
 const botonesAcciones = [
-  { nombre: "Ver", link: "/gestion/contactos/ver/", icono: "fas fa-eye", color: "blue" },
-  {
-    nombre: 'Ver Detalle',
-    color: 'blue',
-    funcionAccion: (fila) => {
-      console.log('Datos de la fila:', fila);
-    },
-  },
+  { nombre: "Ver", link: "/gestion/contactos/ver/", icono: "fas fa-eye", color: "blue" }
 ];
 
 
@@ -68,11 +60,6 @@ function Contactos() {
     return <Loader />;
   }
 
-  // Transformamos los datos usando la función definida
-  const datosTransformados = transformarDatos(contactos, mapeoColumnas);
-
-  // Las columnas visibles son los valores mapeados
-  const columnasVisibles = Object.values(mapeoColumnas);
 
   if (contactos.length === 0) {
     return (
@@ -93,8 +80,9 @@ function Contactos() {
       <h2 className={styles.titulo}>Lista de Contactos</h2>
 
       <Tabla
-        datos={datosTransformados}
-        columnasVisibles={columnasVisibles}
+        datos={contactos}
+        mapeoColumnas={mapeoColumnas}
+        columnasVisibles={Object.values(mapeoColumnas)}
         mostrarAcciones={true}
         columnaAccion="ID_CONTACTOS"
         botonesAccion={botonesAcciones}

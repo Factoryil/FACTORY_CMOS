@@ -1,14 +1,20 @@
 export const menuItems = [
   {
+    label: "Login",
+    icon: "fas fa-sign-in-alt",
+    path: "/login",
+    public: true, // Se muestra solo cuando NO está autenticado
+  },
+  {
     label: "Inicio",
     icon: "fas fa-home",
     path: "/",
-    requiredPermission: "usuarios:lectura",
+    requiredPermission: "usuarios:lectura", // Solo se muestra si el usuario tiene este permiso
   },
   {
     label: "Gestión de Contactos",
     icon: "fas fa-address-book",
-    requiredPermission: "usuarios:lectura",
+    requiredPermission: "usuarios:lectura", // Solo se muestra si el usuario tiene este permiso
     submenu: [
       {
         label: "Contactos",
@@ -22,6 +28,30 @@ export const menuItems = [
         path: "/gestion/etiquetas",
         requiredPermission: "usuarios:lectura",
       },
+      // {
+      //   label: "Tipos de Identificación",
+      //   icon: "fas fa-id-card",
+      //   path: "/gestion/contactos/tipos-identificacion",
+      //   requiredPermission: "usuarios:lectura",
+      // },
+      // {
+      //   label: "Correos",
+      //   icon: "fas fa-envelope",
+      //   path: "/gestion/contactos/correos",
+      //   requiredPermission: "usuarios:lectura",
+      // },
+      // {
+      //   label: "Teléfonos",
+      //   icon: "fas fa-phone",
+      //   path: "/gestion/contactos/telefonos",
+      //   requiredPermission: "usuarios:lectura",
+      // },
+      // {
+      //   label: "Documentos",
+      //   icon: "fas fa-file-alt",
+      //   path: "/gestion/contactos/documentos",
+      //   requiredPermission: "usuarios:lectura",
+      // },
     ],
   },
   {
@@ -35,36 +65,59 @@ export const menuItems = [
         path: "/gestion/vehiculos",
         requiredPermission: "usuarios:lectura",
       },
+      // {
+      //   label: "Documentos",
+      //   icon: "fas fa-file-alt",
+      //   path: "/gestion/vehiculos/documentos",
+      //   requiredPermission: "usuarios:lectura",
+      // },
       {
         label: "Mediciones",
         icon: "fas fa-tachometer-alt",
         path: "/gestion/vehiculos/mediciones",
         requiredPermission: "usuarios:lectura",
       },
-    ],
-  },
-  {
-    label: "Gestión de Mantenimientos",
-    icon: "fas fa-cogs", // Cambiado para reflejar mantenimiento
-    requiredPermission: "usuarios:lectura",
-    submenu: [
       {
-        label: "Planes de Mantenimiento",
-        icon: "fas fa-calendar-alt",
-        path: "/gestion/mantenimientos/planes",
+        label: "Operatividad",
+        icon: "fas fa-cogs",
+        path: "/gestion/vehiculos/operatividad",
         requiredPermission: "usuarios:lectura",
       },
       {
-        label: "Trabajos de Mantenimiento",
-        icon: "fas fa-wrench",
-        path: "/gestion/mantenimientos/trabajos",
+        label: "Inspecciones",
+        icon: "fas fa-search",
+        path: "/gestion/vehiculos/inspecciones",
         requiredPermission: "usuarios:lectura",
       },
+      // {
+      //   label: "Afectación",
+      //   icon: "fas fa-bolt",
+      //   path: "/gestion/vehiculos/afectacion",
+      //   requiredPermission: "usuarios:lectura",
+      // },
+      // {
+      //   label: "Marca",
+      //   icon: "fas fa-industry",
+      //   path: "/gestion/vehiculos/marca",
+      //   requiredPermission: "usuarios:lectura",
+      // },
+      // {
+      //   label: "Línea",
+      //   icon: "fas fa-road",
+      //   path: "/gestion/vehiculos/linea",
+      //   requiredPermission: "usuarios:lectura",
+      // },
+      // {
+      //   label: "Tipo Vehículos",
+      //   icon: "fas fa-car-side",
+      //   path: "/gestion/vehiculos/tipo",
+      //   requiredPermission: "usuarios:lectura",
+      // },
     ],
   },
   {
     label: "Gestión de Trabajos",
-    icon: "fas fa-tasks", // Cambiado para reflejar gestión de tareas/trabajos
+    icon: "fas fa-tools",
     requiredPermission: "usuarios:lectura",
     submenu: [
       {
@@ -77,6 +130,77 @@ export const menuItems = [
         label: "Autorizaciones",
         icon: "fas fa-check-circle",
         path: "/gestion/trabajos/autorizaciones",
+        requiredPermission: "usuarios:lectura",
+      },
+    ],
+  },
+  // {
+  //   label: "Gestión de Conductores",
+  //   icon: "fas fa-id-badge",
+  //   requiredPermission: "usuarios:lectura",
+  //   submenu: [
+  //     {
+  //       label: "Conductores",
+  //       icon: "fas fa-user-check",
+  //       path: "/gestion/conductores",
+  //       requiredPermission: "usuarios:lectura",
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "Gestión de Propietarios",
+  //   icon: "fas fa-user-tie",
+  //   requiredPermission: "usuarios:lectura",
+  //   submenu: [
+  //     {
+  //       label: "Propietarios",
+  //       icon: "fas fa-address-book",
+  //       path: "/gestion/propietarios",
+  //       requiredPermission: "usuarios:lectura",
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "Gestión de Proveedores",
+  //   icon: "fas fa-handshake",
+  //   requiredPermission: "usuarios:lectura",
+  //   submenu: [
+  //     {
+  //       label: "Proveedores",
+  //       icon: "fas fa-truck-loading",
+  //       path: "/gestion/proveedores",
+  //       requiredPermission: "usuarios:lectura",
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "Gestión de Clientes",
+  //   icon: "fas fa-user-friends",
+  //   requiredPermission: "usuarios:lectura",
+  //   submenu: [
+  //     {
+  //       label: "Clientes",
+  //       icon: "fas fa-users",
+  //       path: "/gestion/clientes",
+  //       requiredPermission: "usuarios:lectura",
+  //     },
+  //   ],
+  // },
+  {
+    label: "Gestión de FUEC",
+    icon: "fas fa-file-signature",
+    requiredPermission: "usuarios:lectura",
+    submenu: [
+      {
+        label: "Crear",
+        icon: "fas fa-plus-circle",
+        path: "/gestion/fuec/crear",
+        requiredPermission: "usuarios:lectura",
+      },
+      {
+        label: "FUEC",
+        icon: "fas fa-file",
+        path: "/gestion/fuec",
         requiredPermission: "usuarios:lectura",
       },
     ],
@@ -94,7 +218,7 @@ export const menuItems = [
       },
       {
         label: "Roles",
-        icon: "fas fa-user-tag", // Alternativa para roles
+        icon: "fas fa-users",
         path: "/gestion/roles",
         requiredPermission: "usuarios:lectura",
       },
@@ -111,11 +235,5 @@ export const menuItems = [
     icon: "fas fa-sign-out-alt",
     path: "/logout",
     requiredPermission: "usuarios:lectura",
-  },
-  {
-    label: "Login",
-    icon: "fas fa-sign-in-alt",
-    path: "/login",
-    public: true,
   },
 ];

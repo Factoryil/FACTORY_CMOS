@@ -1,0 +1,289 @@
+.container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .container p {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .titulo {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+
+  .addButton2 {
+    padding: 10px 20px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 3px;
+    user-select: none;
+    font-size: medium;
+    text-transform: capitalize;
+    margin-left: 10px;
+  }
+
+  .addButton3 {
+    padding: 10px 20px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 3px;
+    user-select: none;
+    font-size: medium;
+    text-transform: capitalize;
+    margin-left: auto;
+  }
+  .botonAgregar {
+    padding: 10px 20px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 3px;
+    user-select: none;
+    font-size: medium;
+    text-transform: capitalize;
+    margin-left: 10px;
+    margin-left: auto;
+  }
+  
+  
+  /* Modal */
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  .modal2 {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+
+
+  
+  .modal h2 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .modal label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .modal input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .modal2 h2 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+  .prueba2 {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+
+  }
+  
+  .prueba {
+    width: 50%;
+  }
+  
+  .modal2 label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .modal2 input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .modalButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .saveButton {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .saveButton:hover {
+    background-color: #218838;
+  }
+  
+  .cancelButton {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .cancelButton:hover {
+    background-color: #c82333;
+  }
+  .modal select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+
+
+
+/* Estilos para los tabs */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background: #f5f5f5;
+  margin-right: 5px;
+  outline: none;
+  font-size: 16px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.activeTab {
+  background: #fff;
+  border: 2px solid #ccc;
+  border-bottom: none;
+  font-weight: bold;
+}
+
+
+.texarean1 {
+  resize: vertical;
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+  .tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tabla th,
+  .tabla td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .tabla th {
+    background-color: #f4f4f4;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .tabla tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .tabla td:nth-child(1) {
+    font-weight: bold; /* Estilo para la columna de numeración */
+  }
+  
+  .verBtn,
+  .eliminarBtn {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+  }
+  
+  .verBtn:hover,
+  .eliminarBtn:hover {
+    color: #0056b3;
+  }
+  
+  .eliminarBtn {
+    color: #e74c3c;
+  }
+  
+  .eliminarBtn:hover {
+    color: #c0392b;
+  }
+  
+
+  

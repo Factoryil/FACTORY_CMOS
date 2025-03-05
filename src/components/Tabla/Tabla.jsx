@@ -23,6 +23,7 @@ const Tabla = ({
   onCambiarPagina,
   incluirPaginacionEnURL = true,
 }) => {
+  
   const navigate = useNavigate();
   const location = useLocation();
 

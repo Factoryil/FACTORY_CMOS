@@ -1,140 +1,199 @@
-import React, { useState, useEffect } from 'react';
-import styles from './PropietarioVehiculos.module.css';
-import { apiManager } from '../../api/apiManager';
-import Loader from '../Loader/Loader';
-import ModalEditarPropietarioVehiculo from '../ModalEditarPropietarioVehiculo/ModalEditarPropietarioVehiculo';
-import ModalAgregarPropietario from '../ModalAgregarPropietario/ModalAgregarPropietario';
-import { url } from '../../data/url';
+import React, { useState, useEffect } from "react";
+import styles from "../../styles/ModalFormulario.module.css";
+import Loader from "../Loader/Loader";
+import ModalEditarPropietarioVehiculo from "../ModalEditarPropietarioVehiculo/ModalEditarPropietarioVehiculo";
+import ModalAgregarPropietario from "../ModalAgregarPropietario/ModalAgregarPropietario";
+import Tabla from "../Tabla/Tabla";
+import { apiManager } from "../../api/apiManager";
+import { url } from "../../data/url";
+
+// Mapeo de columnas para la tabla de propietarios
+const mapeoColumnas = {
+  placa: "Placa",
+  PERIODO: "Periodo",
+  VALOR: "Valor",
+  FECHA_EMISION: "Fecha Emision",
+  FECHA_VENCIMIENTO: "Fecha Vencimiento",
+  dias_faltantes: "Dias Faltantes",
+};
 
 const PropietarioVehiculos = ({ id }) => {
-  const [propietarios, setPropietarios] = useState([]); // Historial de propietarios
-  const [loading, setLoading] = useState(true);
+  // Estados para pestañas y paginación
+  const [activeTab, setActiveTab] = useState("actual");
+  const [paginaActualActual, setPaginaActualActual] = useState(1);
+  const [paginaHistorico, setPaginaHistorico] = useState(1);
+
+  // Estados para almacenar datos
+  const [propietariosActuales, setPropietariosActuales] = useState([]);
+  const [propietariosHistoricos, setPropietariosHistoricos] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Estados para modales
   const [mostrarModalEditarInfo, setMostrarModalEditarInfo] = useState(false);
   const [mostrarModalAgregar, setMostrarModalAgregar] = useState(false);
   const [propietarioSeleccionado, setPropietarioSeleccionado] = useState(null);
 
-  useEffect(() => {
-    const fetchPropietarios = async () => {
-      try {
-        setLoading(true);
-        const propietariosResponse = await apiManager.getPropietariosID(id);
-        console.log(id);
-        
-        console.log(propietariosResponse);
-        setPropietarios(propietariosResponse);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error al obtener propietarios:', error);
-        setLoading(false);
-      }
-    };
+  // Cambio de pestaña
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
 
-    fetchPropietarios();
+  // Obtener propietarios actuales
+  const obtenerPropietariosActuales = async () => {
+    try {
+      setLoading(true);
+      const response = await apiManager.getPropietariosActualesID(id);
+      setPropietariosActuales(Array.isArray(response) ? response : []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al obtener propietarios actuales:", error);
+      setLoading(false);
+    }
+  };
+
+  // Obtener propietarios históricos
+  const obtenerPropietariosHistoricos = async () => {
+    try {
+      setLoading(true);
+      const response = await apiManager.getPropietariosHistoricosID(id);
+      setPropietariosHistoricos(Array.isArray(response) ? response : []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al obtener propietarios históricos:", error);
+      setLoading(false);
+    }
+  };
+
+  // Cargar datos al montar o al cambiar el id del vehículo
+  useEffect(() => {
+    obtenerPropietariosActuales();
+    obtenerPropietariosHistoricos();
   }, [id]);
 
-  // Función para refrescar el listado después de editar o agregar
-  const handleUpdate = async () => {
-    try {
-      const propietariosResponse = await apiManager.getPropietariosID(id);
-      setPropietarios(propietariosResponse);
-    } catch (error) {
-      console.error("Error al actualizar la información de propietarios:", error);
-    }
+  // Función para refrescar ambas listas (por ejemplo, tras editar o agregar)
+  const handleUpdate = () => {
+    obtenerPropietariosActuales();
+    obtenerPropietariosHistoricos();
   };
 
-  // Abre PDF en una nueva pestaña (si existe)
-  const handleVerPdf = (propietario) => {
-    if (propietario.URL_PDF) {
-      window.open(url + "/" + propietario.URL_PDF, '_blank', 'noopener,noreferrer');
-    } else {
-      alert("No hay PDF disponible para este registro.");
-    }
-  };
-
-  // Abre la información del contacto en una nueva pestaña
-  const handleVerContacto = (propietario) => {
-    if (propietario.placa) {
-      window.open("/gestion/vehiculos/ver/" + propietario.placa, '_blank', 'noopener,noreferrer');
-    } else {
-      alert("No se encontró contacto.");
-    }
-  };
-
-  // Abre el modal para editar información del registro
+  // Funciones para las acciones en la tabla
   const handleEditarInfo = (propietario) => {
     setPropietarioSeleccionado(propietario);
     setMostrarModalEditarInfo(true);
   };
 
-  if (loading) {
-    return <Loader />;
-  }
+  const handleVerPdf = (propietario) => {
+    if (propietario.URL_PDF) {
+      window.open(url + "/" + propietario.URL_PDF, "_blank", "noopener,noreferrer");
+    } else {
+      alert("No hay PDF disponible para este registro.");
+    }
+  };
+
+  const handleVerVehiculo = (propietario) => {
+    if (propietario.placa) {
+      window.open("/gestion/vehiculos/ver/" + propietario.placa, "_blank", "noopener,noreferrer");
+    } else {
+      alert("No se encontró vehículo.");
+    }
+  };
+
+  const botonesAcciones = [
+    {
+      nombre: "Ver Vehículo",
+      icono: "fas fa-car",
+      color: "blue",
+      funcionAccion: (fila) => handleVerVehiculo(fila),
+    },
+    {
+      nombre: "Ver PDF",
+      icono: "fas fa-file-pdf",
+      color: "blue",
+      funcionAccion: (fila) => handleVerPdf(fila),
+    },
+    {
+      nombre: "Editar",
+      icono: "fas fa-edit",
+      color: "blue",
+      funcionAccion: (fila) => handleEditarInfo(fila),
+    },
+  ];
 
   return (
-    <div className={styles.propietariosContainer}>
-      <div className={styles.propietariosSection}>
-        <div className={styles.header}>
-          <h3>Historial de Propietarios</h3>
-          <button
-            className={styles.addPropietarioButton}
-            onClick={() => setMostrarModalAgregar(true)}
-          >
-            <i className="fas fa-plus"></i> Agregar Propietario
-          </button>
-        </div>
-        {propietarios.length === 0 ? (
-          <p>No se han asignado propietarios a este vehículo.</p>
-        ) : (
-          <div className={styles.tableWrapper}>
-            <table className={styles.propietariosTable}>
-              <thead>
-                <tr>
-                  <th>Placa</th>
-                  <th>Estado</th>
-                  <th>Fecha Emisión</th>
-                  <th>Fecha Vencimiento</th>
-                  <th>Período</th>
-                  <th>Valor</th>
-                  <th>Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                {propietarios.map((propietario) => (
-                  <tr key={propietario.ID_UNION_VEHICULO_Y_PROPIETARIO}>
-                    <td>{propietario.placa}</td>
-                    <td>{propietario.ESTADO}</td>
-                    <td>{propietario.FECHA_EMISION}</td>
-                    <td>{propietario.FECHA_VENCIMIENTO}</td>
-                    <td>{propietario.PERIODO}</td>
-                    <td>{propietario.VALOR}</td>
-                    <td className={styles.tbbotones}>
-                      <button
-                        className={styles.actionButton}
-                        onClick={() => handleVerContacto(propietario)}
-                        title="Ver Contacto"
-                      >
-                        <i className="fas fa-eye"></i>
-                      </button>
-                      <button
-                        className={styles.actionButton}
-                        onClick={() => handleVerPdf(propietario)}
-                        title="Ver PDF"
-                      >
-                        <i className="fas fa-eye"></i>
-                      </button>
-                      <button
-                        className={styles.actionButton}
-                        onClick={() => handleEditarInfo(propietario)}
-                        title="Editar Información"
-                      >
-                        <i className="fas fa-edit"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+    <div className={styles.contenedor2}>
+      <h3 className={styles.titulo}>Propietarios</h3>
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.tab} ${activeTab === "actual" ? styles.activeTab : ""}`}
+          onClick={() => handleTabClick("actual")}
+        >
+          Actual
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === "historico" ? styles.activeTab : ""}`}
+          onClick={() => handleTabClick("historico")}
+        >
+          Histórico
+        </button>
+      </div>
+      <div className={styles.content}>
+        {activeTab === "actual" && (
+          <>
+            {loading ? (
+              <Loader />
+            ) : propietariosActuales.length > 0 ? (
+              <Tabla
+                datos={propietariosActuales}
+                mapeoColumnas={mapeoColumnas}
+                columnasVisibles={Object.values(mapeoColumnas)}
+                habilitarExportacion={true}
+                nombreExcel={"Propietarios_Actuales"}
+                filasPorPagina={5}
+                incluirPaginacionEnURL={false}
+                paginaActualInicial={paginaActualActual}
+                onCambiarPagina={setPaginaActualActual}
+                mostrarAcciones={true}
+                botonesAccion={botonesAcciones}
+              >
+                <button className={styles.addButton2} onClick={() => setMostrarModalAgregar(true)}>
+                  Agregar Propietario
+                </button>
+              </Tabla>
+            ) : (
+              <div>
+                <p>No hay propietarios actuales.</p>
+                <button className={styles.addButton3} onClick={() => setMostrarModalAgregar(true)}>
+                  Agregar Propietario
+                </button>
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === "historico" && (
+          <>
+            {loading ? (
+              <Loader />
+            ) : propietariosHistoricos.length > 0 ? (
+              <Tabla
+                datos={propietariosHistoricos}
+                mapeoColumnas={mapeoColumnas}
+                columnasVisibles={Object.values(mapeoColumnas)}
+                habilitarExportacion={true}
+                nombreExcel={"Propietarios_Historicos"}
+                filasPorPagina={5}
+                incluirPaginacionEnURL={false}
+                paginaActualInicial={paginaHistorico}
+                onCambiarPagina={setPaginaHistorico}
+                mostrarAcciones={true}
+                botonesAccion={botonesAcciones}
+              />
+            ) : (
+              <div>
+                <p>No hay propietarios históricos.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -142,6 +201,7 @@ const PropietarioVehiculos = ({ id }) => {
         <ModalEditarPropietarioVehiculo
           cerrarModal={() => {
             setMostrarModalEditarInfo(false);
+            setPropietarioSeleccionado(null);
             handleUpdate();
           }}
           propietarioData={propietarioSeleccionado}

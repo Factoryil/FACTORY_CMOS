@@ -1,7 +1,201 @@
 import api from "./instance";
 
 export const apiManager = {
+  guardarOperatividad: async (datos) => {
+    try {
+      const response = await api.post('/vehiculo-operatividad', datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  crearMesOperativo: async (formData) => {
+    try {
+      const response = await api.post('/mes-operativo', formData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  obtenerMesOperativos: async () => {
+    try {
+      const response = await api.get('/mes-operativo');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  asignarVehiculoAMesOperativo: async (formData) => {
+    try {
+      const response = await api.post('/vehiculo-mes-operativo', formData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  obtenerVehiculosPorMesOperativo: async (idMes) => {
+    try {
+      const response = await api.get(`/vehiculo-mes-operativo/${idMes}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  obtenerOperatividadPorMes: async (idMesOperativo) => {
+    try {
+      const response = await api.get(`/vehiculo-operatividad/${idMesOperativo}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
+  // guardarOperatividad: async (datos) => {
+  //   try {
+  //     const response = await api.post('/vehiculo-operatividad', datos);
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+
+  // // Nuevo: Asignar Vehículo a Mes Operativo
+  // asignarVehiculoAMesOperativo: async (datos) => {
+  //   try {
+  //     const response = await api.post('/vehiculo-mes-operativo', datos);
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+
+  // // Nuevo: Obtener Vehículos asignados a un Mes Operativo
+  // obtenerVehiculosPorMesOperativo: async (id) => {
+  //   try {
+  //     const response = await api.get(`/vehiculo-mes-operativo/${id}`);
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+
+  // // Nuevo: Eliminar asignación de vehículo de un Mes Operativo
+  // eliminarVehiculoDeMesOperativo: async (id) => {
+  //   try {
+  //     const response = await api.delete(`/vehiculo-mes-operativo/${id}`);
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+  // crearMesOperativo: async (datos) => {
+  //   try {
+  //     const response = await api.post('/mes-operativo', datos);
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+
+  // obtenerMesOperativos: async () => {
+  //   try {
+  //     const response = await api.get('/mes-operativo');
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+
+
+  
+  getContratosActualesID: async (id) => {
+    try {
+      const response = await api.get(`/contractos-contacto/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getContratosHistoricosID: async (id) => {
+    try {
+      const response = await api.get(`/contractos-contacto-historico/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateContrato: async (id, datos) => {
+    try {
+      const response = await api.post(`/contractos-editar/${id}`, datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addContrato: async (datos) => {
+    try {
+      const response = await api.post("/contractos", datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  editarDocumentoContacto: async (datos) => {
+    try {
+      const response = await api.post("/contacto-documentos-editar", datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  realizarAccionCerrada: async (id) => {
+    try {
+      const response = await api.get(`/ordenes-trabajo-accion-cerrada/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addDocumentoContacto: async ($datos) => {
+    try {
+      const response = await api.post("/contacto-documentos", $datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  CrearFuec: async ($datos) => {
+    try {
+      const response = await api.post("/generar-fuec", $datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  obtenerResumenOrdenes: async () => {
+    try {
+      const response = await api.get("/ordenes-trabajo-resumen");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  obtenerResumenOrdenesAutorizar: async () => {
+    try {
+      const response = await api.get("/ordenes-trabajo-autorizar-resumen");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   crearFactura: async (item) => {
     try {
@@ -222,15 +416,44 @@ export const apiManager = {
     }
   },
 
-  // Ordenes de Trabajo
-  ordenesTrabajoActuales: async () => {
+
+  documentosContactoActuales: async (id) => {
     try {
-      const response = await api.get("/ordenes-trabajo");
+      const response = await api.get(`/contacto-documentos/contacto-activos/${id}`);
       return response.data;
     } catch (error) {
       throw error;
     }
   },
+
+  documentosContactoHistorico: async (id) => {
+    try {
+      const response = await api.get(`/contacto-documentos/contacto/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  ordenesTrabajoActuales: async () => {
+    try {
+      const response = await api.get("/ordenes-trabajo-actuales");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  ordenesTrabajoActualesAutorizar: async () => {
+    try {
+      const response = await api.get("/ordenes-trabajo-actuales-autorizar");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  
 
   ordenesTrabajoHistorico: async () => {
     try {
@@ -343,6 +566,7 @@ export const apiManager = {
     }
   },
 
+
   getClientesVehiculo: async (placa) => {
     try {
       const response = await api.get(`/union-vehiculo-cliente/vehiculo/${placa}`);
@@ -355,6 +579,50 @@ export const apiManager = {
   getPropietariosID: async (id) => {
     try {
       const response = await api.get(`/union-vehiculo-propietario/propietario/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getPropietariosActualesID: async (id) => {
+    try {
+      const response = await api.get(`/union-vehiculo-propietario/propietario-actual/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPropietariosHistoricosID: async (id) => {
+    try {
+      const response = await api.get(`/union-vehiculo-propietario/propietario-historico/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getClientesID: async (id) => {
+    try {
+      const response = await api.get(`/union-vehiculo-cliente/cliente/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getClientesActualesID: async (id) => {
+    try {
+      const response = await api.get(`/union-vehiculo-cliente/cliente-actual/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getClientesHistoricosID: async (id) => {
+    try {
+      const response = await api.get(`/union-vehiculo-cliente/cliente-historico/${id}`);
       return response.data;
     } catch (error) {
       throw error;

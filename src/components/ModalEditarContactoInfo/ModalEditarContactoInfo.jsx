@@ -3,6 +3,24 @@ import styles from "../../styles/ModalFormulario.module.css";
 import { apiManager } from "../../api/apiManager";
 
 function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {} }) {
+  console.log(contactData);
+  
+  const [clicFuera, setClicFuera] = useState(false);
+
+  const manejarMouseDown = (e) => {
+    if (e.target.classList.contains(styles.modalOverlay)) {
+      setClicFuera(true);
+    } else {
+      setClicFuera(false);
+    }
+  };
+
+  const manejarMouseUp = (e) => {
+    if (e.target.classList.contains(styles.modalOverlay) && clicFuera) {
+      cerrarModal();
+    }
+  };
+
   const tiposIdentificacion = [
     { value: "CC", label: "Cédula" },
     { value: "NIT", label: "Número de Identificación Tributaria" },
@@ -14,7 +32,9 @@ function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {}
     CORREO_ELECTRONICO: contactData?.CORREO_ELECTRONICO || "",
     TELEFONO: contactData?.TELEFONO || "",
     TIPO_IDENTIFICACION: contactData?.TIPO_IDENTIFICACION || "",
-    NUMERO_IDENTIFICACION: contactData?.NUMERO_IDENTIFICACION || ""
+    NUMERO_IDENTIFICACION: contactData?.NUMERO_IDENTIFICACION || "",
+    DIRECCION: contactData?.DIRECCION || "",
+    UBICACION: contactData?.UBICACION || "",
   });
 
   const manejarCambio = (e) => {
@@ -27,21 +47,23 @@ function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {}
   const manejarEnvio = async (e) => {
     e.preventDefault();
 
-    // Enviar los datos como un objeto JSON en lugar de FormData
+    // Enviar los datos como un objeto JSON
     const dataToUpdate = {
       NOMBRE_COMPLETO: formData.NOMBRE_COMPLETO,
       CORREO_ELECTRONICO: formData.CORREO_ELECTRONICO,
       TELEFONO: formData.TELEFONO,
       TIPO_IDENTIFICACION: formData.TIPO_IDENTIFICACION,
       NUMERO_IDENTIFICACION: formData.NUMERO_IDENTIFICACION,
+      direccion: formData.DIRECCION,
+      ubicacion: formData.UBICACION,
     };
 
     try {
       // Se asume que el ID del contacto se encuentra en contactData.ID_CONTACTOS
       const response = await apiManager.editContactosInfo(contactData.ID_CONTACTOS, dataToUpdate);
-      console.log(response); // Verifica los datos en la consola
+      console.log(response);
 
-      // Si la actualización es exitosa, se refresca la información en el componente padre
+      // Actualizamos la información en el componente padre y cerramos el modal
       onUpdate();
       cerrarModal();
     } catch (error) {
@@ -58,7 +80,11 @@ function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {}
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={manejarCerrarModal}>
+    <div
+      className={styles.modalOverlay}
+      onMouseDown={manejarMouseDown}
+      onMouseUp={manejarMouseUp}
+    >
       <div className={styles.modal}>
         <h2>Editar Contacto</h2>
         <form onSubmit={manejarEnvio}>
@@ -110,6 +136,24 @@ function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {}
             id="NUMERO_IDENTIFICACION"
             name="NUMERO_IDENTIFICACION"
             value={formData.NUMERO_IDENTIFICACION}
+            onChange={manejarCambio}
+            required
+          />
+          <label htmlFor="DIRECCION">Dirección</label>
+          <input
+            type="text"
+            id="DIRECCION"
+            name="DIRECCION"
+            value={formData.DIRECCION}
+            onChange={manejarCambio}
+            required
+          />
+          <label htmlFor="UBICACION">Ubicación</label>
+          <input
+            type="text"
+            id="UBICACION"
+            name="UBICACION"
+            value={formData.UBICACION}
             onChange={manejarCambio}
             required
           />

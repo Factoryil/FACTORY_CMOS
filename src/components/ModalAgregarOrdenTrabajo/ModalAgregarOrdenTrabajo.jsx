@@ -1,11 +1,98 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
 import { apiManager } from "../../api/apiManager";
 import { useNavigate } from "react-router-dom";
 
+// Componente de select personalizado con búsqueda interna
+function CustomSelect({ options, value, onChange, placeholder = "Seleccione un vehículo..." }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleOptionClick = (option) => {
+    onChange(option);
+    setIsOpen(false);
+    setSearch("");
+  };
+
+  const selectedOption = options.find((option) => option.value === value);
+
+  return (
+    <div ref={containerRef} style={{ position: "relative" }}>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          cursor: "pointer",
+          padding: "8px",
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+          background: "#fff",
+        }}
+      >
+        {selectedOption ? selectedOption.label : placeholder}
+      </div>
+      {isOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 2px)",
+            left: 0,
+            right: 0,
+            background: "#fff",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            zIndex: 1000,
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "8px",
+              boxSizing: "border-box",
+              borderBottom: "1px solid #ccc",
+            }}
+          />
+          <div style={{ maxHeight: "150px", overflowY: "auto" }}>
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <div
+                  key={option.value}
+                  onClick={() => handleOptionClick(option)}
+                  style={{ padding: "8px", cursor: "pointer" }}
+                >
+                  {option.label}
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: "8px" }}>No se encontraron opciones</div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Función para obtener la fecha y hora actual en hora colombiana (America/Bogota)
 function obtenerFechaColombiana() {
-  
   const now = new Date();
   const formatter = new Intl.DateTimeFormat("en-GB", {
     timeZone: "America/Bogota",
@@ -44,7 +131,6 @@ function obtenerFechaColombiana() {
 
 function ModalAgregarOrdenTrabajo({ cerrarModal }) {
   const navigate = useNavigate();
-
   const defaultDateTime = obtenerFechaColombiana();
 
   // Estado para almacenar los datos del nuevo registro de orden de trabajo.
@@ -55,7 +141,7 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
     observacion: "",
     lectura: "",
     estado_vehiculo: "Operativo", // Valor por defecto "Operativo"
-    fecha_creacion: defaultDateTime, // Valor por defecto: fecha y hora en Colombia
+    fecha_creacion: defaultDateTime, // Fecha y hora en Colombia
   });
 
   // Estado para almacenar la lista de vehículos consultados desde la API
@@ -66,7 +152,6 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
     const obtenerVehiculos = async () => {
       try {
         const response = await apiManager.vehiculos();
-        console.log(response);
         setVehiculos(response);
       } catch (error) {
         console.error("Error al obtener vehículos:", error);
@@ -76,32 +161,25 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
     obtenerVehiculos();
   }, []);
 
-  // Manejo de cambios en los inputs
+  // Crear las opciones para el select personalizado
+  const optionsVehiculos = vehiculos.map((vehiculo) => ({
+    value: vehiculo.id_vehiculo,
+    label: vehiculo.placa,
+  }));
+
+  // Manejo de cambios en los inputs tradicionales
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    // Si el campo es id_vehiculo, buscamos la placa correspondiente
-    if (name === "id_vehiculo") {
-      const vehiculoSeleccionado = vehiculos.find(
-        (vehiculo) => vehiculo.id_vehiculo.toString() === value
-      );
-      setNuevoOrdenTrabajo((prevState) => ({
-        ...prevState,
-        id_vehiculo: value,
-        placa: vehiculoSeleccionado ? vehiculoSeleccionado.placa : "",
-      }));
-    } else {
-      setNuevoOrdenTrabajo((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+    setNuevoOrdenTrabajo((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   // Manejo del envío del formulario.
   const manejarEnvio = async (e) => {
     e.preventDefault();
 
-    // Validar campos requeridos.
     if (
       !nuevoOrdenTrabajo.observacion ||
       !nuevoOrdenTrabajo.id_vehiculo ||
@@ -114,7 +192,6 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
       return;
     }
 
-    // Utilizamos FormData para enviar los datos
     const formData = new FormData();
     formData.append("id_vehiculo", nuevoOrdenTrabajo.id_vehiculo);
     formData.append("placa", nuevoOrdenTrabajo.placa);
@@ -128,14 +205,13 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
       const response = await apiManager.addOrdenTrabajo(formData);
 
       if (response.error) {
-        console.error("Error al agregar el ot:", response.error);
+        console.error("Error al agregar la orden de trabajo:", response.error);
         return;
       }
 
       if (response.id) {
         navigate(`/gestion/trabajos/ordenes-trabajo/ver/${response.id}`);
       }
-      
 
       cerrarModal();
     } catch (error) {
@@ -143,7 +219,7 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
     }
   };
 
-  // Permite cerrar el modal si se hace clic fuera de la caja del modal.
+  // Cerrar el modal al hacer clic fuera de él
   const manejarCerrarModal = (e) => {
     if (e.target === e.currentTarget) {
       cerrarModal();
@@ -156,20 +232,18 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
         <h2>Agregar Orden de Trabajo</h2>
         <form onSubmit={manejarEnvio}>
           <label htmlFor="id_vehiculo">Vehículo</label>
-          <select
-            id="id_vehiculo"
-            name="id_vehiculo"
+          <CustomSelect
+            options={optionsVehiculos}
             value={nuevoOrdenTrabajo.id_vehiculo}
-            onChange={manejarCambio}
-            required
-          >
-            <option value="">Seleccione un vehículo</option>
-            {vehiculos.map((vehiculo) => (
-              <option key={vehiculo.id_vehiculo} value={vehiculo.id_vehiculo}>
-                {vehiculo.placa}
-              </option>
-            ))}
-          </select>
+            onChange={(option) =>
+              setNuevoOrdenTrabajo((prevState) => ({
+                ...prevState,
+                id_vehiculo: option.value,
+                placa: option.label,
+              }))
+            }
+            placeholder="Seleccione un vehículo..."
+          />
 
           <label htmlFor="prioridad">Prioridad</label>
           <select
@@ -194,7 +268,7 @@ function ModalAgregarOrdenTrabajo({ cerrarModal }) {
             required
           />
 
-          <label htmlFor="lectura">Lectura</label>
+          <label htmlFor="lectura">Odometro</label>
           <input
             type="number"
             id="lectura"

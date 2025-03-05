@@ -3,10 +3,9 @@ import styles from "./Trabajos.module.css";
 import { apiManager } from "../../api/apiManager"; // Asegúrate de que la ruta sea correcta
 
 const Trabajos = ({ ot, placa }) => {
-  // Estado para el número de OT (Orden de Trabajo)
   const [otNumber, setOtNumber] = useState(ot);
   const [items, setItems] = useState([]);
-  const [editMode, setEditMode] = useState(true); // Modo edición activado
+  const [editMode, setEditMode] = useState(true);
 
   // Estados para el modal de mantenimientos y búsqueda
   const [maintenanceModalOpen, setMaintenanceModalOpen] = useState(false);
@@ -19,8 +18,26 @@ const Trabajos = ({ ot, placa }) => {
   const [descuento, setDescuento] = useState("");
   const [discountType, setDiscountType] = useState("percentage");
   const [facturaGuardada, setFacturaGuardada] = useState(false);
-  // Estado para almacenar el ID de la factura (si existe)
   const [facturaId, setFacturaId] = useState(null);
+
+  // Helper para formatear valores como moneda
+  const formatCurrency = (value) =>
+    "$" +
+    Number(value)
+      .toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+  // Helper para formatear porcentajes
+  const formatPercentage = (value) => {
+    if (value === null || value === undefined || value === "") return "0.00%";
+    const num = Number(value);
+    return num.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + "%";
+  };
 
   // Función para obtener los ítems asociados a la OT
   const fetchItems = async () => {
@@ -28,7 +45,6 @@ const Trabajos = ({ ot, placa }) => {
       const response = await apiManager.obtenerItemTrabajoPorOT(otNumber);
       const transformedItems = response.map((item) => ({
         id: item.ID_ITEM,
-        // Se utiliza tempId en caso de que id sea nulo
         tempId: `temp-${Date.now()}-${Math.random()}`,
         tipo: item.TIPO,
         nombre: item.NOMBRE,
@@ -53,7 +69,15 @@ const Trabajos = ({ ot, placa }) => {
     const fetchMaintenanceOptions = async () => {
       try {
         const response = await apiManager.ejecucionesMantenimiento(placa);
-        const options = response.map((item) => item.trabajo);
+        // Mapeamos la respuesta para obtener todos los detalles necesarios
+        const options = response.map((item) => ({
+          trabajo: item.trabajo,
+          tipo_mantenimiento: item.tipo_mantenimiento,
+          fecha_probable_vencimiento: item.fecha_probable_vencimiento,
+          periodicidad_km: item.periodicidad_km,
+          odometro_ultima: item.odometro_ultima,
+          odometro_actual: item.odometro_actual,
+        }));
         setMaintenanceOptions(options);
       } catch (error) {
         console.error("Error al obtener mantenimientos:", error);
@@ -75,14 +99,12 @@ const Trabajos = ({ ot, placa }) => {
       const response = await apiManager.obtenerFacturaPorOT(otNumber);
       if (response && response.ID_FACTURA) {
         setFacturaId(response.ID_FACTURA);
-        // Cargar descuento y total de la factura existente (opcional)
         setDescuento(response.DESCUENTO);
         setDiscountType(
           response.DESCUENTO_TIPO === "Porcentaje" ? "percentage" : "fixed"
         );
         setFacturaGuardada(true);
         setEditMode(false);
-        // Cargar observaciones si están disponibles
         if (response.observacion) {
           setNotes(response.observacion);
         }
@@ -99,7 +121,7 @@ const Trabajos = ({ ot, placa }) => {
   // Función para agregar un nuevo ítem
   const agregarItem = () => {
     const nuevoItem = {
-      id: null, // Ítem nuevo aún no tiene ID asignado
+      id: null,
       tempId: `temp-${Date.now()}-${Math.random()}`,
       tipo: "producto",
       nombre: "",
@@ -119,7 +141,6 @@ const Trabajos = ({ ot, placa }) => {
     if (name === "tipo") {
       const oldType = newItems[index].tipo;
       newItems[index][name] = value;
-      // Si se cambia entre mantenimiento y otro tipo, se limpia el nombre
       if (
         (oldType === "mantenimientos" &&
           (value === "producto" || value === "servicio")) ||
@@ -169,7 +190,7 @@ const Trabajos = ({ ot, placa }) => {
   // Seleccionar un mantenimiento desde el modal
   const handleSelectMaintenance = (option) => {
     const newItems = [...items];
-    newItems[activeMaintenanceIndex].nombre = option;
+    newItems[activeMaintenanceIndex].nombre = option.trabajo;
     setItems(newItems);
     setMaintenanceModalOpen(false);
     setActiveMaintenanceIndex(null);
@@ -188,7 +209,6 @@ const Trabajos = ({ ot, placa }) => {
 
   // Función para guardar (o editar) la factura y los ítems asociados
   const handleGuardarFactura = async () => {
-    // Armar payload de la factura
     const formDataFactura = new FormData();
     formDataFactura.append(
       "DESCUENTO_TIPO",
@@ -211,7 +231,6 @@ const Trabajos = ({ ot, placa }) => {
         }
       }
 
-      // Guardar o actualizar cada ítem
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         const formDataItem = new FormData();
@@ -238,7 +257,7 @@ const Trabajos = ({ ot, placa }) => {
     }
   };
 
-  // Función para cancelar la actualización (descartar cambios)
+  // Función para cancelar la actualización
   const cancelarActualizacion = async () => {
     try {
       if (otNumber) {
@@ -372,15 +391,21 @@ const Trabajos = ({ ot, placa }) => {
                 disabled={!editMode}
               />
 
-              <input
-                className={styles.input}
-                type="text"
-                name="precio"
-                value={item.precio}
-                placeholder="Precio"
-                onChange={(e) => handleInputChange(e, index)}
-                disabled={!editMode}
-              />
+              {editMode ? (
+                <input
+                  className={styles.input}
+                  type="text"
+                  name="precio"
+                  value={item.precio}
+                  placeholder="Precio"
+                  onChange={(e) => handleInputChange(e, index)}
+                  disabled={!editMode}
+                />
+              ) : (
+                <div className={styles.columna}>
+                  {formatCurrency(item.precio)}
+                </div>
+              )}
 
               {editMode ? (
                 <input
@@ -393,13 +418,17 @@ const Trabajos = ({ ot, placa }) => {
                   disabled={!editMode}
                 />
               ) : (
-                <div className={styles.nombreText}>
-                  {item.impuesto ? item.impuesto : "0.00%"}
+                <div className={styles.columna}>
+                  {item.impuesto
+                    ? formatPercentage(item.impuesto)
+                    : "0.00%"}
                 </div>
               )}
 
               <div className={styles.totalItem}>
-                {item.total ? item.total.toFixed(2) : "0.00"}
+                {editMode
+                  ? item.total.toFixed(2)
+                  : formatCurrency(item.total ? item.total : 0)}
               </div>
 
               {editMode && (
@@ -440,7 +469,7 @@ const Trabajos = ({ ot, placa }) => {
             id="descuento"
             name="descuento"
             value={descuento}
-            onChange={handleDescuentoChange}
+            onChange={(e) => handleDescuentoChange(e)}
             className={styles.input}
             placeholder={discountType === "percentage" ? "ej: 10" : "ej: 2000"}
             disabled={!editMode}
@@ -452,27 +481,27 @@ const Trabajos = ({ ot, placa }) => {
       <div className={styles.resumenFactura}>
         <div className={styles.resumenItem}>
           <span>Subtotal:</span>
-          <span>{subtotal.toFixed(2)}</span>
+          <span>{formatCurrency(subtotal)}</span>
         </div>
         <div className={styles.resumenItem}>
           <span>Impuestos:</span>
-          <span>{totalTax.toFixed(2)}</span>
+          <span>{formatCurrency(totalTax)}</span>
         </div>
         <div className={styles.resumenItem}>
           <span>Total antes de descuento:</span>
-          <span>{totalAntesDescuento.toFixed(2)}</span>
+          <span>{formatCurrency(totalAntesDescuento)}</span>
         </div>
         <div className={styles.resumenItem}>
           <span>
             {discountType === "percentage"
-              ? `Descuento (${descuento}%)`
+              ? `Descuento (${formatPercentage(descuento)})`
               : `Descuento (Valor Fijo)`}:
           </span>
-          <span>-{discountAmount.toFixed(2)}</span>
+          <span>-{formatCurrency(discountAmount)}</span>
         </div>
         <div className={styles.resumenItemTotal}>
           <span>Total:</span>
-          <span>{totalFactura.toFixed(2)}</span>
+          <span>{formatCurrency(totalFactura)}</span>
         </div>
       </div>
 
@@ -521,19 +550,40 @@ const Trabajos = ({ ot, placa }) => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.modalSearchInput}
             />
-            {maintenanceOptions
-              .filter((option) =>
-                option.toLowerCase().includes(searchQuery.toLowerCase())
-              )
-              .map((option, idx) => (
-                <div
-                  key={idx}
-                  className={styles.modalOption}
-                  onClick={() => handleSelectMaintenance(option)}
-                >
-                  {option}
-                </div>
-              ))}
+            <div className={styles.modalTableContainer}>
+              <table className={styles.modalTable}>
+                <thead>
+                  <tr>
+                    <th>Trabajo</th>
+                    <th>Tipo</th>
+                    <th>Periód.</th>
+                    <th>Ultimo Trabajo</th>
+                    <th>Odómetro Actual</th>
+                    <th>Fecha Venc.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {maintenanceOptions
+                    .filter((option) =>
+                      option.trabajo.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .map((option, idx) => (
+                      <tr
+                        key={idx}
+                        className={styles.modalTableRow}
+                        onClick={() => handleSelectMaintenance(option)}
+                      >
+                        <td>{option.trabajo}</td>
+                        <td>{option.tipo_mantenimiento}</td>
+                        <td>{option.periodicidad_km}</td>
+                        <td>{option.odometro_ultima}</td>
+                        <td>{option.odometro_actual}</td>
+                        <td>{option.fecha_probable_vencimiento}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
             <button
               className={styles.modalCloseBtn}
               onClick={() => {

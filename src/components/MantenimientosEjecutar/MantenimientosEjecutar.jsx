@@ -8,13 +8,12 @@ import ModalAgregarMantenimientoEjecutar from "../ModalAgregarMantenimientoEjecu
 
 // Mapeo de claves para mostrar en la tabla
 const mapeoColumnas = {
-  fecha_probable_vencimiento: "Fecha probable vencimiento", //
   trabajo: "Trabajo",
-  tipo_mantenimiento: "Tipo mantenimiento",
-  // mantenimiento_id: "Mantenimiento",
-  // vehiculo_id: "Vehículo",
+  tipo_mantenimiento: "Tipo",
   periodicidad_km: "Periodicidad (km)",
-  odometro_ultima: "Odómetro Último"
+  odometro_ultima: "Último Trabajo ",
+  odometro_actual: "Odometro actual",
+  fecha_probable_vencimiento: "Fecha probable vencimiento", 
 };
 
 function MantenimientosEjecutar({ placa }) {
@@ -66,8 +65,10 @@ function MantenimientosEjecutar({ placa }) {
         </div>
       ) : (
         <Tabla
-          datos={datosTransformados}
-          columnasVisibles={columnasVisibles}
+          datos={ejecuciones}
+          mapeoColumnas={mapeoColumnas}
+          columnasVisibles={Object.values(mapeoColumnas)}
+
           habilitarExportacion={true}
           nombreExcel={"Ejecucion_Mantenimiento"}
           habilitarPaginacion={false}

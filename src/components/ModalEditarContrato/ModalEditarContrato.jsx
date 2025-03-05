@@ -1,56 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
 import { apiManager } from "../../api/apiManager";
 
-function ModalEditarContrato({ cerrarModal, contactData, onUpdate = () => {} }) {
-  const tiposIdentificacion = [
-    { value: "CC", label: "Cédula" },
-    { value: "NIT", label: "Número de Identificación Tributaria" },
+function ModalEditarContrato({ cerrarModal, contratoData, handleUpdate }) {
+  
+  console.log("Datos recibidos:", contratoData);
+
+  // Opciones de estado según el ENUM de la tabla (Activo, Inactivo)
+  const estadosDisponibles = [
+    { value: "Activo", label: "Activo" },
+    { value: "Inactivo", label: "Inactivo" },
   ];
 
-  // Inicializamos el estado con la información actual del contacto
-  const [formData, setFormData] = useState({
-    NOMBRE_COMPLETO: contactData?.NOMBRE_COMPLETO || "",
-    CORREO_ELECTRONICO: contactData?.CORREO_ELECTRONICO || "",
-    TELEFONO: contactData?.TELEFONO || "",
-    TIPO_IDENTIFICACION: contactData?.TIPO_IDENTIFICACION || "",
-    NUMERO_IDENTIFICACION: contactData?.NUMERO_IDENTIFICACION || ""
+  // Estado local con los datos iniciales del contrato
+  const [contrato, setContrato] = useState({
+    NUMERO_CONTRATO: "",
+    OBSERVACION: "",
+    FECHA_EMISION: "",
+    FECHA_VENCIMIENTO: "",
+    ESTADO: "Activo",
+    SUBDIVICION: "",
   });
+  const [contratoFile, setContratoFile] = useState(null);
 
+  // Cargar datos del contrato al montar el componente
+  useEffect(() => {
+    if (contratoData) {
+      setContrato({
+        // Asumiendo que en contratoData la clave para número de contrato es "Contrato"
+        NUMERO_CONTRATO: contratoData["Contrato"] || "",
+        OBSERVACION: contratoData["Obervacion"] || "",
+        FECHA_EMISION: contratoData["Fecha de Inicio"]
+          ? contratoData["Fecha de Inicio"].slice(0, 10)
+          : "",
+        FECHA_VENCIMIENTO: contratoData["Fecha de Finalización"]
+          ? contratoData["Fecha de Finalización"].slice(0, 10)
+          : "",
+        ESTADO: contratoData["ESTADO"] || "Activo",
+        // Se asume que el backend devuelve la subdivisión en la clave "SUBDIVICION"
+        SUBDIVICION: contratoData["Subdivision"] || "",
+      });
+    }
+  }, [contratoData]);
+
+  // Maneja los cambios en los inputs
   const manejarCambio = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setContrato((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  const manejarEnvio = async (e) => {
-    e.preventDefault();
-
-    // Enviar los datos como un objeto JSON en lugar de FormData
-    const dataToUpdate = {
-      NOMBRE_COMPLETO: formData.NOMBRE_COMPLETO,
-      CORREO_ELECTRONICO: formData.CORREO_ELECTRONICO,
-      TELEFONO: formData.TELEFONO,
-      TIPO_IDENTIFICACION: formData.TIPO_IDENTIFICACION,
-      NUMERO_IDENTIFICACION: formData.NUMERO_IDENTIFICACION,
-    };
-
-    try {
-      // Se asume que el ID del contacto se encuentra en contactData.ID_CONTACTOS
-      const response = await apiManager.editContactosInfo(contactData.ID_CONTACTOS, dataToUpdate);
-      console.log(response); // Verifica los datos en la consola
-
-      // Si la actualización es exitosa, se refresca la información en el componente padre
-      onUpdate();
-      cerrarModal();
-    } catch (error) {
-      console.error("Error al actualizar el contacto:", error);
-      // Aquí se podría mostrar un mensaje de error si se desea
+  // Maneja la selección del nuevo archivo PDF para actualizar
+  const manejarCambioArchivo = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setContratoFile(e.target.files[0]);
     }
   };
 
-  // Cierra el modal si se hace clic en el overlay
+  // Envía el formulario utilizando FormData para actualizar el contrato
+  const manejarEnvio = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("NUMERO_CONTRATO", contrato.NUMERO_CONTRATO);
+    formData.append("OBSERVACION", contrato.OBSERVACION);
+    formData.append("FECHA_EMISION", contrato.FECHA_EMISION);
+    formData.append("FECHA_VENCIMIENTO", contrato.FECHA_VENCIMIENTO);
+    formData.append("ESTADO", contrato.ESTADO);
+    formData.append("SUBDIVICION", contrato.SUBDIVICION);
+    if (contratoFile) {
+      formData.append("URL_CONTRATO", contratoFile);
+    }
+
+    try {
+      // Se asume que el método updateContrato de apiManager envía el FormData al endpoint correspondiente
+      const response = await apiManager.updateContrato(
+        contratoData.ID_CONTRATO,
+        formData
+      );
+      console.log("Contrato actualizado:", response);
+      // Actualiza la lista de contratos en el componente padre
+      handleUpdate();
+      cerrarModal();
+    } catch (error) {
+      console.error("Error al actualizar contrato:", error);
+    }
+  };
+
+  // Cierra el modal cuando se hace clic fuera del contenido
   const manejarCerrarModal = (e) => {
     if (e.target === e.currentTarget) {
       cerrarModal();
@@ -60,59 +99,81 @@ function ModalEditarContrato({ cerrarModal, contactData, onUpdate = () => {} }) 
   return (
     <div className={styles.modalOverlay} onClick={manejarCerrarModal}>
       <div className={styles.modal}>
-        <h2>Editar Contacto</h2>
+        <h2>Editar Contrato</h2>
         <form onSubmit={manejarEnvio}>
-          <label htmlFor="NOMBRE_COMPLETO">Nombre Completo</label>
+          <label htmlFor="NUMERO_CONTRATO">Número de Contrato</label>
           <input
-            type="text"
-            id="NOMBRE_COMPLETO"
-            name="NOMBRE_COMPLETO"
-            value={formData.NOMBRE_COMPLETO}
+            type="number"
+            id="NUMERO_CONTRATO"
+            name="NUMERO_CONTRATO"
+            value={contrato.NUMERO_CONTRATO}
             onChange={manejarCambio}
             required
           />
-          <label htmlFor="CORREO_ELECTRONICO">Correo Electrónico</label>
-          <input
-            type="email"
-            id="CORREO_ELECTRONICO"
-            name="CORREO_ELECTRONICO"
-            value={formData.CORREO_ELECTRONICO}
+
+          <label htmlFor="OBSERVACION">Observación</label>
+          <textarea
+            id="OBSERVACION"
+            name="OBSERVACION"
+            value={contrato.OBSERVACION}
             onChange={manejarCambio}
-            required
+            className={styles.texarean1}
           />
-          <label htmlFor="TELEFONO">Teléfono</label>
+
+          <label htmlFor="FECHA_EMISION">Fecha de Emisión</label>
           <input
-            type="text"
-            id="TELEFONO"
-            name="TELEFONO"
-            value={formData.TELEFONO}
+            type="date"
+            id="FECHA_EMISION"
+            name="FECHA_EMISION"
+            value={contrato.FECHA_EMISION}
             onChange={manejarCambio}
-            required
           />
-          <label htmlFor="TIPO_IDENTIFICACION">Tipo de Identificación</label>
+
+          <label htmlFor="FECHA_VENCIMIENTO">Fecha de Vencimiento</label>
+          <input
+            type="date"
+            id="FECHA_VENCIMIENTO"
+            name="FECHA_VENCIMIENTO"
+            value={contrato.FECHA_VENCIMIENTO}
+            onChange={manejarCambio}
+          />
+
+          <label htmlFor="ESTADO">Estado</label>
           <select
-            id="TIPO_IDENTIFICACION"
-            name="TIPO_IDENTIFICACION"
-            value={formData.TIPO_IDENTIFICACION}
+            id="ESTADO"
+            name="ESTADO"
+            value={contrato.ESTADO}
             onChange={manejarCambio}
             required
           >
-            <option value="">Seleccione un tipo</option>
-            {tiposIdentificacion.map((tipo) => (
-              <option key={tipo.value} value={tipo.value}>
-                {tipo.label}
+            {estadosDisponibles.map((estado) => (
+              <option key={estado.value} value={estado.value}>
+                {estado.label}
               </option>
             ))}
           </select>
-          <label htmlFor="NUMERO_IDENTIFICACION">Número de Identificación</label>
+
+          <label htmlFor="SUBDIVICION">SUBDIVICION</label>
           <input
             type="text"
-            id="NUMERO_IDENTIFICACION"
-            name="NUMERO_IDENTIFICACION"
-            value={formData.NUMERO_IDENTIFICACION}
+            id="SUBDIVICION"
+            name="SUBDIVICION"
+            value={contrato.SUBDIVICION}
             onChange={manejarCambio}
-            required
+            placeholder="Opcional"
           />
+
+          <label htmlFor="URL_CONTRATO">
+            Actualizar Archivo del Contrato (PDF, opcional)
+          </label>
+          <input
+            type="file"
+            id="URL_CONTRATO"
+            name="URL_CONTRATO"
+            accept="application/pdf"
+            onChange={manejarCambioArchivo}
+          />
+
           <div className={styles.modalButtons}>
             <button type="submit" className={styles.saveButton}>
               Guardar

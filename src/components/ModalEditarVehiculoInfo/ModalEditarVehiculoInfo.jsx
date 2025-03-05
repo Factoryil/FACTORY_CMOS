@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./ModalFormulario.module.css";
+import styles from "../../styles/ModalFormulario2.module.css";
 import { apiManager } from "../../api/apiManager";
 
 function ModalEditarVehiculoInfo({ cerrarModal, vehiculoData, onUpdate = () => {} }) {

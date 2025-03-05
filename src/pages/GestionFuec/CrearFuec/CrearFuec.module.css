@@ -1,0 +1,191 @@
+/* Contenedor raíz */
+.container-root {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+
+/* Título del formulario */
+.form-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Formulario */
+.fuec-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.form-fieldset {
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.form-legend {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0 5px;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.input-field {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+/* Botones */
+.add-button,
+.remove-button,
+.print-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
+
+.remove-button {
+  background-color: #dc3545;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.remove-button:hover {
+  background-color: #c82333;
+}
+
+.print-button {
+  background-color: #007bff;
+  color: #fff;
+  align-self: center;
+  margin-top: 10px;
+}
+
+.print-button:hover {
+  background-color: #0056b3;
+}
+
+/* Conductores */
+.conductor-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Contenido a imprimir: se oculta de la vista sin impedir el renderizado */
+.print-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Se oculta moviéndolo fuera del viewport */
+  transform: translateX(-10000px);
+}
+
+/* Estilos para el contenido del PDF */
+.titulo-cabezera {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.imagen1,
+.imagen2,
+.imagen3 {
+  width: 100%;
+  max-width: 300px;
+  object-fit: contain;
+}
+
+.contenedor-titulo-fuec {
+  text-align: center;
+}
+
+.titulo-fuec1,
+.titulo-fuec2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 5px 0;
+}
+
+.datos-contrato-info {
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 10px;
+}
+
+.tabla-vigencia-contrato {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.tabla-th {
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: center;
+  background-color: #f0f0f0;
+}
+
+.tabla-td {
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: center;
+}
+
+.imagen5 {
+  width: 100%;
+  max-width: 150px;
+  object-fit: contain;
+}
+
+.imagen4 {
+  width: 100%;
+  max-width: 150px;
+  object-fit: contain;
+}

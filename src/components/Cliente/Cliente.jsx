@@ -19,7 +19,6 @@ const Cliente = ({ id }) => {
       try {
         setLoading(true);
         const clientesResponse = await apiManager.getClientesVehiculo(id);
-        console.log(id);
         
         setClientes(clientesResponse);
         setLoading(false);

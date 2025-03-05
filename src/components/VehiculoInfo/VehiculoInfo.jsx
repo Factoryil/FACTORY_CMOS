@@ -1,24 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styles from './VehiculoInfo.module.css';
 import imagen from '../../assets/img/imagen.jpg';
-// import ModalEditarContactoInfo from '../ModalEditarContactoInfo/ModalEditarContactoInfo';
-// import ModalEditarContactoImagen from '../ModalEditarContactoImagen/ModalEditarContactoImagen';
 import { url } from '../../data/url'; // Asegúrate de que la ruta sea la correcta
 import { apiManager } from '../../api/apiManager';
 import ModalEditarVehiculoImagen from '../ModalEditarVehiculoImagen/ModalEditarVehiculoImagen';
 
 const VehiculoInfo = ({ id }) => {
-  // data["PLACA"] = "TLL961"
-  // data["MARCA"] = "[Marca del vehículo]"
-  // data["MODELO"] = "[Modelo del vehículo]"
-  // data["SERVICIO"] = "[Servicio del vehículo]"
-  // data["IMAGEN"] = "[URL de imagen del vehículo]"
-  // data["ULTIMO_PROPIETARIO"] = "[Nombre del último propietario]"
-  // data["VENCIMIENTO_PROPIETARIO"] = "[Fecha de vencimiento propietario]"
-  // data["ESTADO_PROPIETARIO"] = "[Estado del propietario]"
-  // data["ULTIMO_CLIENTE"] = "[Nombre del último cliente]"
-  // data["VENCIMIENTO_CLIENTE"] = "[Fecha de vencimiento cliente]"
-  // data["ESTADO_CLIENTE"] = "[Estado del cliente]"
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);

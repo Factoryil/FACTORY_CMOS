@@ -1,0 +1,128 @@
+.contenedor {
+  padding: 20px;
+}
+
+.container {
+    /* width: 95%; */
+    /* margin: 2rem auto; */
+    padding: 2rem;
+    background-color: #ffffff;
+    /* border: 1px solid #ddd; */
+    border-radius: 8px;
+    /* box-shadow: 0 4px 12px rgba(0,0,0,0.1); */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .companyInfo {
+    text-align: left;
+  }
+  
+  .companyInfo h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #2c3e50;
+  }
+  
+  .companyInfo p {
+    margin: 0.3rem 0 0;
+    font-size: 0.95rem;
+  }
+  
+  .conciliacionInfo {
+    text-align: right;
+  }
+  
+  .conciliacionInfo h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #3498db;
+  }
+  
+  .conciliacionInfo h3 {
+    margin: 0.3rem 0 0;
+    font-size: 1.2rem;
+    color: #e74c3c;
+  }
+  
+  .infoSection {
+    margin-bottom: 2rem;
+  }
+  
+  .infoSection h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    text-decoration: underline;
+  }
+  
+  .infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .infoGrid div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .infoGrid strong {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    color: #555;
+  }
+  
+  .tableSection {
+    margin-bottom: 2rem;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 0.6rem;
+  }
+  
+  .table th {
+    background-color: #3498db;
+    color: #fff;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .totalRow td {
+    border-top: 2px solid #3498db;
+  }
+  
+  .totalLabel {
+    text-align: right;
+    font-weight: bold;
+  }
+  
+  .totalValue {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  

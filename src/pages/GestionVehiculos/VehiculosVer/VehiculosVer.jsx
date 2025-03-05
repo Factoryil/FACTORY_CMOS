@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import styles from "./VehiculosVer.module.css";
+import styles from "../../../styles/tabs.module.css";
 import VehiculoInfo from "../../../components/VehiculoInfo/VehiculoInfo";
 import FichaTecnica from "../../../components/FichaTecnica/FichaTecnica";
 import Propietario from "../../../components/Propietario/Propietario";

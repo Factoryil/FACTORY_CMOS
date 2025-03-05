@@ -21,11 +21,11 @@
   width: 100%;
   margin: 0 auto;
   background-color: #fff;
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
-
 
 /* Encabezado de la factura (datos de taller y responsable) */
 .encabezadoFactura {
@@ -113,6 +113,11 @@
 }
 
 /* Encabezado e ítems de la lista */
+.encabezado{
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
 .encabezado,
 .itemFactura {
   display: grid;
@@ -330,8 +335,9 @@
   background: #fff;
   padding: 20px;
   border-radius: 5px;
-  max-width: 400px;
+  max-width: 900px;
   width: 90%;
+
 }
 
 .modalSearchInput {
@@ -343,18 +349,45 @@
   font-size: 14px;
 }
 
-.modalOption {
-  padding: 10px;
-  border: 1px solid #ddd;
+/* Contenedor de la tabla en el modal con scroll vertical */
+.modalTableContainer {
+  max-height: 300px;
+  overflow-y: auto;
   margin-bottom: 10px;
-  border-radius: 5px;
-  cursor: pointer;
+
 }
 
-.modalOption:hover {
+.modalTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modalTable th,
+.modalTable td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.modalTable th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.modalTableRow {
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.modalTableRow:hover {
   background: #f0f0f0;
 }
 
+/* Botón de cierre del modal */
 .modalCloseBtn {
   background: #f44336;
   color: #fff;
@@ -378,7 +411,7 @@
 }
 
 .actualizarItemBtn {
-  background-color: #3498db; /* Color azul */
+  background-color: #3498db;
   color: #fff;
   border: none;
   padding: 4px 7px;
@@ -387,11 +420,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-right: 5px;
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
 }
-
 .actualizarItemBtn:hover {
   background-color: #2980b9;
 }

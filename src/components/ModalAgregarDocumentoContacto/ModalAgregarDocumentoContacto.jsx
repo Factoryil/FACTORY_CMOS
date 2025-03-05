@@ -1,132 +1,117 @@
 import React, { useState } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
+import { apiManager } from "../../api/apiManager";
 
-function ModalAgregarDocumentoContacto({ cerrarModal }) {
-
-  const tiposIdentificacion = [
-    { value: "cedula", label: "Cédula" },
-    { value: "pasaporte", label: "Pasaporte" },
-    { value: "ruc", label: "RUC" },
-    { value: "otro", label: "Otro" },
-  ];
-  
-    // Función que se pasará al modal para agregar un nuevo contacto
-    const agregarContacto = (data) => {
-      const nuevoContacto = {
-        ID_CONTACTO: contactos.length + 1, // ID simulado
-        ...data,
-      };
-      setContactos([...contactos, nuevoContacto]);
-      // Redirigimos al detalle del contacto recién creado (si se desea)
-      navigate(`/gestion/contactos/ver/${nuevoContacto.ID_CONTACTO}`);
-    };
-
-  const [nuevoContacto, setNuevoContacto] = useState({
-    NOMBRE_COMPLETO: "",
-    CORREO_ELECTRONICO: "",
-    TELEFONO: "",
-    TIPO_IDENTIFICACION: "",
-    NUMERO_IDENTIFICACION: "",
-    URL_IMAGEN: ""
+function ModalAgregarDocumentoContacto({ cerrarModal, contactoID }) {
+  const [nuevoDocumento, setNuevoDocumento] = useState({
+    TIPO_DOCUMENTO: "",
+    FECHA_EMISION: "",
+    FECHA_VENCIMIENTO: "",
+    OBSERVACION: "",
+    ESTADO: "activo", 
   });
-  const [imagen, setImagen] = useState(null);
+  const [soporte, setSoporte] = useState(null);
 
-  const manejarCambio = (e) => {
-    setNuevoContacto({
-      ...nuevoContacto,
+  const handleChange = (e) => {
+    setNuevoDocumento({
+      ...nuevoDocumento,
       [e.target.name]: e.target.value,
     });
   };
 
-  const manejarCambioImagen = (e) => {
-    setImagen(e.target.files[0]);
+  const handleFileChange = (e) => {
+    setSoporte(e.target.files[0]);
   };
 
-  const manejarEnvio = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Creamos el objeto que representa el nuevo contacto. Si hay imagen, la procesamos.
+
     const data = {
-      ...nuevoContacto,
-      URL_IMAGEN: imagen ? URL.createObjectURL(imagen) : null,
+      TIPO_DOCUMENTO: nuevoDocumento.TIPO_DOCUMENTO,
+      FECHA_EMISION: nuevoDocumento.FECHA_EMISION || null,
+      FECHA_VENCIMIENTO: nuevoDocumento.FECHA_VENCIMIENTO || null,
+      OBSERVACION: nuevoDocumento.OBSERVACION,
+      ESTADO: nuevoDocumento.ESTADO,
     };
 
-    // Llamamos a la función que se pasó como prop para agregar el contacto.
-    agregarContacto(data);
+    // Construimos el FormData con los campos necesarios
+    const formData = new FormData();
+    formData.append("ID_CONTACTOS", contactoID);
+    formData.append("TIPO_DOCUMENTO", data.TIPO_DOCUMENTO);
+    formData.append("FECHA_EMISION", data.FECHA_EMISION);
+    formData.append("FECHA_VENCIMIENTO", data.FECHA_VENCIMIENTO);
+    formData.append("OBSERVACION", data.OBSERVACION);
+    formData.append("ESTADO", data.ESTADO);
+    if (soporte) {
+      formData.append("URL_SOPORTE", soporte);
+    }
 
-    // Cerramos el modal.
+    // Enviamos los datos a través del API
+    await apiManager.addDocumentoContacto(formData);
     cerrarModal();
   };
 
-  // Cerrar el modal al hacer clic en el overlay (si se clickea fuera del modal)
-  const manejarCerrarModal = (e) => {
+  const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       cerrarModal();
     }
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={manejarCerrarModal}>
+    <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modal}>
-        <h2>Agregar Nuevo Contacto</h2>
-        <form onSubmit={manejarEnvio}>
-          <label htmlFor="NOMBRE_COMPLETO">Nombre Completo</label>
+        <h2>Agregar Nuevo Documento</h2>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="TIPO_DOCUMENTO">Tipo de Documento</label>
           <input
             type="text"
-            id="NOMBRE_COMPLETO"
-            name="NOMBRE_COMPLETO"
-            value={nuevoContacto.NOMBRE_COMPLETO}
-            onChange={manejarCambio}
+            id="TIPO_DOCUMENTO"
+            name="TIPO_DOCUMENTO"
+            value={nuevoDocumento.TIPO_DOCUMENTO}
+            onChange={handleChange}
             required
           />
-          <label htmlFor="CORREO_ELECTRONICO">Correo Electrónico</label>
+          <label htmlFor="FECHA_EMISION">Fecha de Emisión</label>
           <input
-            type="email"
-            id="CORREO_ELECTRONICO"
-            name="CORREO_ELECTRONICO"
-            value={nuevoContacto.CORREO_ELECTRONICO}
-            onChange={manejarCambio}
-            required
+            type="date"
+            id="FECHA_EMISION"
+            name="FECHA_EMISION"
+            value={nuevoDocumento.FECHA_EMISION}
+            onChange={handleChange}
           />
-          <label htmlFor="TELEFONO">Teléfono</label>
+          <label htmlFor="FECHA_VENCIMIENTO">Fecha de Vencimiento</label>
           <input
-            type="text"
-            id="TELEFONO"
-            name="TELEFONO"
-            value={nuevoContacto.TELEFONO}
-            onChange={manejarCambio}
-            required
+            type="date"
+            id="FECHA_VENCIMIENTO"
+            name="FECHA_VENCIMIENTO"
+            value={nuevoDocumento.FECHA_VENCIMIENTO}
+            onChange={handleChange}
           />
-          <label htmlFor="TIPO_IDENTIFICACION">Tipo de Identificación</label>
+          <label htmlFor="ESTADO">Estado</label>
           <select
-            id="TIPO_IDENTIFICACION"
-            name="TIPO_IDENTIFICACION"
-            value={nuevoContacto.TIPO_IDENTIFICACION}
-            onChange={manejarCambio}
+            id="ESTADO"
+            name="ESTADO"
+            value={nuevoDocumento.ESTADO}
+            onChange={handleChange}
             required
           >
-            <option value="">Seleccione un tipo</option>
-            {tiposIdentificacion.map((tipo) => (
-              <option key={tipo.value} value={tipo.value}>
-                {tipo.label}
-              </option>
-            ))}
+            <option value="activo">Activo</option>
+            <option value="renovado">Renovado</option>
           </select>
-          <label htmlFor="NUMERO_IDENTIFICACION">Número de Identificación</label>
-          <input
-            type="text"
-            id="NUMERO_IDENTIFICACION"
-            name="NUMERO_IDENTIFICACION"
-            value={nuevoContacto.NUMERO_IDENTIFICACION}
-            onChange={manejarCambio}
-            required
-          />
-          <label htmlFor="URL_IMAGEN">Imagen (opcional)</label>
+          <label htmlFor="URL_SOPORTE">Documento (opcional)</label>
           <input
             type="file"
-            id="URL_IMAGEN"
-            name="URL_IMAGEN"
-            onChange={manejarCambioImagen}
+            id="URL_SOPORTE"
+            name="URL_SOPORTE"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="OBSERVACION">Observación</label>
+          <textarea
+            id="OBSERVACION"
+            name="OBSERVACION"
+            value={nuevoDocumento.OBSERVACION}
+            onChange={handleChange}
+            className={styles.texarean1}
           />
           <div className={styles.modalButtons}>
             <button type="submit" className={styles.saveButton}>

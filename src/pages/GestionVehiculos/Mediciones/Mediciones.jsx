@@ -11,7 +11,7 @@ import { apiManager } from "../../../api/apiManager";
 const mapeoColumnas = {
   placa: "Placa",
   LECTURA: "Lectura",
-  url_imagen: "Imagen",
+  // url_imagen: "Imagen",
   FECHA_REGISTRO: "Fecha de Registro",
   km_promedio: "km diario promedio"
 };

@@ -1,0 +1,424 @@
+/* Evitar autofill */
+.itemFactura input:-webkit-autofill,
+.itemFactura input:-webkit-autofill:hover,
+.itemFactura input:-webkit-autofill:focus,
+.itemFactura input:-webkit-autofill:active,
+.itemFactura textarea:-webkit-autofill,
+.itemFactura textarea:-webkit-autofill:hover,
+.itemFactura textarea:-webkit-autofill:focus,
+.itemFactura textarea:-webkit-autofill:active,
+.itemFactura select:-webkit-autofill,
+.itemFactura select:-webkit-autofill:hover,
+.itemFactura select:-webkit-autofill:focus,
+.itemFactura select:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Contenedor principal de la "factura" */
+.facturaContainer {
+  width: 100%;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 0px 20px 20px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+/* Encabezado de la factura (datos de taller y responsable) */
+.encabezadoFactura {
+  width: 100%;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.datosContainer {
+  width: 100%;
+}
+
+.datosContainer h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.selectContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.selectContainer label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.selectContainer select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.datosDetalles {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.datosDetalles p {
+  margin: 5px 0;
+}
+
+/* Botón para agregar ítems y guardar/editar */
+.agregarItemBtn {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+  transition: background-color 0.3s;
+}
+
+.agregarItemBtn:hover {
+  background-color: #45a049;
+}
+
+/* Contenedor con scroll horizontal para la lista de ítems */
+.listaItemsContainer {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Lista de ítems */
+.listaItems {
+  margin-top: 30px;
+  font-family: Arial, sans-serif;
+  min-width: 800px; /* Asegura que quepan todas las columnas */
+}
+.encabezado{
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+/* Encabezado e ítems de la lista */
+.encabezado,
+.itemFactura {
+  display: grid;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Grid con botón de acción (8 columnas: N°, Tipo, Nombre, Cantidad, Precio, Impuesto, Total, Acción) */
+.gridWithAction {
+  grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+/* Grid sin botón de acción (7 columnas: N°, Tipo, Nombre, Cantidad, Precio, Impuesto, Total) */
+.gridWithoutAction {
+  grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr 1fr;
+}
+
+.columna {
+  text-align: center;
+  padding: 5px;
+}
+
+/* Estilos para inputs, textareas y selects dentro de la lista */
+.itemFactura input,
+.itemFactura select,
+.itemFactura textarea {
+  min-height: 26px;
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 5px 0;
+  box-sizing: border-box;
+}
+
+.itemFactura input:disabled,
+.itemFactura select:disabled,
+.itemFactura textarea:disabled {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+  color: inherit;
+}
+
+.itemFactura input:focus,
+.itemFactura select:focus,
+.itemFactura textarea:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.totalItem {
+  text-align: right;
+  padding-right: 10px;
+}
+
+/* Botón para eliminar un ítem */
+.eliminarItemBtn {
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  max-width: min-content;
+  margin: 0 auto;
+}
+
+.eliminarItemBtn:hover {
+  background-color: #e53935;
+}
+
+/* Botón para seleccionar mantenimiento */
+.maintenanceSelectBtn {
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 5px 0;
+  background-color: #fff;
+  cursor: pointer;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.maintenanceSelectBtn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Modo visualización de "nombre" */
+.nombreText {
+  padding: 5px;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Estilo para el textarea de "nombre" en edición */
+.inputNombre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.2;
+  overflow: hidden;
+  resize: none;
+  padding: 0;
+}
+
+/* Contenedor para la sección de descuento global */
+.descuentoContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.descuentoContainer label {
+  font-size: 16px;
+  color: #333;
+}
+
+.descuentoContainer select,
+.descuentoContainer input {
+  width: 150px;
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Resumen de la factura */
+.resumenFactura {
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
+
+.resumenItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 16px;
+}
+
+.resumenItemTotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border-top: 1px solid #ddd;
+  margin-top: 10px;
+}
+
+/* Área de observaciones */
+.notesContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.notesContainer label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.notesText {
+  white-space: pre-wrap;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Contenedor para botones de guardar/editar */
+.buttonsContainer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modalContent {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 900px;
+  width: 90%;
+
+}
+
+.modalSearchInput {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Contenedor de la tabla en el modal con scroll vertical */
+.modalTableContainer {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+
+}
+
+.modalTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modalTable th,
+.modalTable td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.modalTable th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.modalTableRow {
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.modalTableRow:hover {
+  background: #f0f0f0;
+}
+
+/* Botón de cierre del modal */
+.modalCloseBtn {
+  background: #f44336;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Responsive: ajustes en pantallas pequeñas */
+@media (max-width: 768px) {
+  .facturaContainer {
+    width: 95%;
+  }
+  .encabezado,
+  .itemFactura {
+    font-size: 12px;
+  }
+  /* Se mantiene el ancho mínimo para permitir scroll horizontal */
+}
+
+.actualizarItemBtn {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 4px 7px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 5px;
+}
+.actualizarItemBtn:hover {
+  background-color: #2980b9;
+}

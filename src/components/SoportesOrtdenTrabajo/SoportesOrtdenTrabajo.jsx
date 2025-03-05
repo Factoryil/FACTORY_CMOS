@@ -1,4 +1,3 @@
-// GaleriaImagenes.jsx
 import React, { useState, useEffect } from "react";
 import styles from "./SoportesOrtdenTrabajo.module.css";
 import { apiManager } from "../../api/apiManager"; // Asegúrate de tener definidas las funciones getSoportes, uploadSoporte y deleteSoporte
@@ -67,7 +66,6 @@ const GaleriaImagenes = ({ OT }) => {
   const eliminarImagen = async (id) => {
     try {
       console.log(id);
-      
       await apiManager.deleteSoporte(id);
       setSoportes(soportes.filter((img) => img.ID_SOPORTE !== id));
       if (
@@ -97,6 +95,27 @@ const GaleriaImagenes = ({ OT }) => {
     const soporte = soportes[nuevoIndex];
     setEsVideo(!!soporte.fullURL.match(/\.(mp4|mov|avi)$/i));
   };
+
+  // Efecto para manejar la navegación con el teclado cuando el visor está abierto
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (imagenSeleccionada !== null) {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          cambiarImagen(-1);
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          cambiarImagen(1);
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          setImagenSeleccionada(null);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [imagenSeleccionada, soportes]);
 
   return (
     <div className={styles.container}>

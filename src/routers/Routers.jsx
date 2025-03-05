@@ -28,6 +28,11 @@ import Mantenimientos from "../pages/GestionMantenimientos/Mantenimietos/Manteni
 import PlanesMantenimiento from "../pages/GestionMantenimientos/PlanesMantenimiento/PlanesMantenimiento";
 import PlanMantenimientoVer from "../pages/GestionMantenimientos/PlanMantenimientoVer/PlanMantenimientoVer";
 import VerOrdenTrabajo from "../pages/GestionTrabajos/VerOrdenTrabajo/VerOrdenTrabajo";
+import CrearFuec from "../pages/GestionFuec/CrearFuec/CrearFuec";
+import Operatividad from "../pages/GestionVehiculos/Operatividad/Operatividad";
+import Conciliaciones from "../pages/GestionVehiculos/Conciliaciones/Conciliaciones";
+import Inspecciones from "../pages/GestionVehiculos/Inspecciones/Inspecciones";
+import VerAutorizaciones from "../pages/GestionTrabajos/VerAutorizaciones/VerAutorizaciones";
 
 
 // Componente de carga mientras se cargan los componentes diferidos
@@ -52,16 +57,22 @@ function Routers() {
             <Route path="/gestion/roles" element={<Roles />} />
             <Route path="/gestion/permisos" element={<Permisos />} />
             <Route path="/gestion/vehiculos" element={<Vehiculo />} />
+            <Route path="/gestion/vehiculos/operatividad" element={<Operatividad />} />
+            <Route path="/gestion/vehiculos/conciliaciones" element={<Conciliaciones />} />
+            <Route path="/gestion/vehiculos/inspecciones" element={<Inspecciones />} />
             <Route path="/gestion/vehiculos/ver/:id" element={<VehiculosVer />} />
             <Route path="/gestion/vehiculos/mediciones" element={<Mediciones />} />
             <Route path="/gestion/trabajos/ordenes-trabajo" element={<OrdenesTrabajos />} />
             <Route path="/gestion/trabajos/ordenes-trabajo/ver/:OT" element={<VerOrdenTrabajo />} />
             <Route path="/gestion/trabajos/autorizaciones" element={<Autorizaciones />} />
+            <Route path="/gestion/trabajos/autorizaciones/ver/:OT" element={<VerAutorizaciones />} />
 
 
             <Route path="/gestion/mantenimientos/trabajos" element={<Mantenimientos />} />
             <Route path="/gestion/mantenimientos/planes" element={<PlanesMantenimiento />} />
             <Route path="/gestion/plan-mantenimiento/ver/:planId" element={<PlanMantenimientoVer />} />
+            <Route path="/gestion/fuec/crear" element={<CrearFuec />} />
+            
             
             
             {/* <Route path="/gestion/contactos/documentos" element={<DocumentosLista />} />
@@ -76,10 +87,9 @@ function Routers() {
         
           </Route>
         </Route>
-
+        <Route path="/login" element={<Login />} />
 
         <Route path="/logout" element={<Logout />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={ <Unauthorized />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

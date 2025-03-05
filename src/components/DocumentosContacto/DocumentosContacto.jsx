@@ -1,117 +1,197 @@
-import React, { useState } from "react";
-import styles from "./DocumentosContacto.module.css";
-import Tabla from "../Tabla/Tabla";
-import { transformarDatos } from "../../utils/transformarDatos";
-
-const datos = [
-  { id: 1, tipo_documento: "RUT", numero_documento: "213242342", fecha_emision: "2024-01-10", fecha_vencimiento: "", estado: "Vigente" },
-  { id: 2, tipo_documento: "CERTIFICADO BANCARIO", numero_documento: "1231233321", fecha_emision: "2024-01-10", fecha_vencimiento: "", estado: "Vigente" },
-];
-
-const datos2 = [
-  { id: 1, tipo_documento: "RUT", numero_documento: "213242342", fecha_emision: "2024-01-10", fecha_vencimiento: "", estado: "Vigente" },
-];
+import React, { useState, useEffect } from "react";
+import styles from "../../styles/ModalFormulario.module.css";
+import Loader from "../Loader/Loader";
+import { apiManager } from "../../api/apiManager.js";
+import ModalAgregarDocumentoContacto from "../ModalAgregarDocumentoContacto/ModalAgregarDocumentoContacto.jsx";
+import ModalEditarDocumentoContacto from "../ModalEditarDocumentoContacto/ModalEditarDocumentoContacto.jsx";
+import Tabla from "../Tabla/Tabla.jsx";
+import { url } from '../../data/url.js';
 
 const mapeoColumnas = {
-  tipo_documento: "tipo documento",
-  numero_documento: "numero documento",
-  fecha_emision: "fecha emision",
-  fecha_vencimiento: "fecha vencimiento",
+  TIPO_DOCUMENTO: "Tipo Documento",
+  FECHA_EMISION: "Fecha Emision",
+  FECHA_VENCIMIENTO: "Fecha Vencimiento",
+  OBSERVACION: "Observacion",
+  dias_faltantes: "Dias Faltantes",
 };
 
-function DocumentosContacto() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("vigentes");
+function DocumentosContacto({ contactoID }) {
+  const [paginaActualActual, setPaginaActualActual] = useState(1);
+  const [paginaHistorico, setPaginaHistorico] = useState(1);
+  const [activeTab, setActiveTab] = useState("actual");
+  const [documentosActuales, setDocumentosActuales] = useState([]);
+  const [documentosHistoricos, setDocumentosHistoricos] = useState([]);
+  const [cargando, setCargando] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModalEditar, setMostrarModalEditar] = useState(false);
+  const [documentoEditar, setDocumentoEditar] = useState(null);
 
-  const datosTransformados = transformarDatos(datos, mapeoColumnas);
-  const datosTransformados2 = transformarDatos(datos2, mapeoColumnas);
-  const columnasVisibles = Object.values(mapeoColumnas);
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+
+  const obtenerdocumentosActuales = async () => {
+    try {
+      setCargando(true);
+      const response = await apiManager.documentosContactoActuales(contactoID);
+      console.log(response);
+      
+      setDocumentosActuales(Array.isArray(response) ? response : []);
+      setCargando(false);
+    } catch (error) {
+      console.error("Error al obtener documentos actuales:", error);
+      setCargando(false);
+    }
+  };
+
+  const obtenerdocumentosHistorico = async () => {
+    try {
+      setCargando(true);
+      const response = await apiManager.documentosContactoHistorico(contactoID);
+      setDocumentosHistoricos(Array.isArray(response) ? response : []);
+      setCargando(false);
+    } catch (error) {
+      console.error("Error al obtener documentos históricos:", error);
+      setCargando(false);
+    }
+  };
+
+  // Cargar los datos una única vez al montar el componente o al cambiar el contacto
+  useEffect(() => {
+    obtenerdocumentosActuales();
+    obtenerdocumentosHistorico();
+  }, [contactoID]);
+
+  // Al cerrar el modal de agregar, se refrescan ambas listas de documentos
+  const handleModalClose = () => {
+    setMostrarModal(false);
+    obtenerdocumentosActuales();
+    obtenerdocumentosHistorico();
+  };
+
+  // Abre el modal para editar información del registro
+  const handleEditarInfo = (documento) => {
+    setDocumentoEditar(documento);
+    setMostrarModalEditar(true);
+  };
+
+  // Abre PDF en una nueva pestaña (si existe)
+  const handleVerPdf = (documento) => {
+    if (documento.URL_SOPORTE) {
+      window.open(url + "/" + documento.URL_SOPORTE, '_blank', 'noopener,noreferrer');
+    } else {
+      alert("No hay PDF disponible para este registro.");
+    }
+  };
 
   const botonesAcciones = [
-    { nombre: "Ver", link: "/gestion/documentos/ver/", icono: "fas fa-eye", color: "blue" }
+    {
+      nombre: "Ver PDF",
+      icono: "fas fa-file-pdf",
+      color: "blue",
+      funcionAccion: (fila) => handleVerPdf(fila),
+    },
+    {
+      nombre: "Editar",
+      icono: "fas fa-edit",
+      color: "blue",
+      funcionAccion: (fila) => handleEditarInfo(fila),
+    },
   ];
 
   return (
-    <div className={styles.container}>
-      <h3 className={styles.title}>Documentos del Contacto</h3>
-      <div className={styles.tabsContainer}>
-        <button className={`${styles.tab} ${activeTab === "vigentes" ? styles.activeTab : ""}`} onClick={() => setActiveTab("vigentes")}>
-          Vigentes
+    <div className="contenedor2">
+      <h3 className={styles.titulo}>Lista de Documentos</h3>
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.tab} ${activeTab === "actual" ? styles.activeTab : ""}`}
+          onClick={() => handleTabClick("actual")}
+        >
+          Actual
         </button>
-        <button className={`${styles.tab} ${activeTab === "vencidos" ? styles.activeTab : ""}`} onClick={() => setActiveTab("vencidos")}>
-          Vencidos
+        <button
+          className={`${styles.tab} ${activeTab === "historico" ? styles.activeTab : ""}`}
+          onClick={() => handleTabClick("historico")}
+        >
+          Histórico
         </button>
       </div>
-
-      <div className={styles.tabContent}>
-        {activeTab === "vigentes" && (
-          <Tabla
-            datos={datosTransformados}
-            columnasOmitidas={["id"]}
-            columnasVisibles={columnasVisibles}
-            mostrarAcciones={true}
-            columnaAccion="id"
-            botonesAccion={botonesAcciones}
-            filasPorPagina={3}
-            habilitarPaginacion={true}
-            habilitarBusqueda={true}
-            habilitarOrdenamiento={true}
-            habilitarExportacion={true}
-            nombreExcel={"datos_tabla"}
-            habilitarTotalRegistros={true}
-          >
-            <button className={styles.addButton2} onClick={() => setIsModalOpen(true)}>
-              Añadir Documento
-            </button>
-          </Tabla>
+      <div className={styles.content}>
+        {activeTab === "actual" && (
+          <>
+            {cargando ? (
+              <Loader />
+            ) : documentosActuales && documentosActuales.length > 0 ? (
+              <Tabla
+                datos={documentosActuales}
+                mapeoColumnas={mapeoColumnas}
+                columnasVisibles={Object.values(mapeoColumnas)}
+                habilitarExportacion={true}
+                nombreExcel={"Lista_documentos_actuales"}
+                filasPorPagina={5}
+                incluirPaginacionEnURL={false}
+                paginaActualInicial={paginaActualActual}
+                onCambiarPagina={setPaginaActualActual}
+                mostrarAcciones={true}
+                botonesAccion={botonesAcciones}
+              >
+                <button onClick={() => setMostrarModal(true)} className={styles.addButton2}>
+                  Agregar Documento
+                </button>
+              </Tabla>
+            ) : (
+              <div>
+                <p>No hay documentos actuales.</p>
+                <button onClick={() => setMostrarModal(true)} className={styles.addButton3}>
+                  Agregar Documento
+                </button>
+              </div>
+            )}
+          </>
         )}
-        
-        {activeTab === "vencidos" && (
-          <Tabla
-            datos={datosTransformados2} // Aquí deberías filtrar los vencidos
-            columnasOmitidas={["id"]}
-            columnasVisibles={columnasVisibles}
-            mostrarAcciones={true}
-            columnaAccion="id"
-            botonesAccion={botonesAcciones}
-            filasPorPagina={3}
-            habilitarPaginacion={true}
-            habilitarBusqueda={true}
-            habilitarOrdenamiento={true}
-            habilitarExportacion={true}
-            nombreExcel={"datos_tabla"}
-            habilitarTotalRegistros={true}
-          >
-            <button className={styles.addButton2} onClick={() => setIsModalOpen(true)}>
-              Añadir Documento
-            </button>
-          </Tabla>
+
+        {activeTab === "historico" && (
+          <>
+            {cargando ? (
+              <Loader />
+            ) : documentosHistoricos && documentosHistoricos.length > 0 ? (
+              <Tabla
+                datos={documentosHistoricos}
+                mapeoColumnas={mapeoColumnas}
+                columnasVisibles={Object.values(mapeoColumnas)}
+                habilitarExportacion={true}
+                nombreExcel={"Lista_documentos_historicos"}
+                filasPorPagina={5}
+                incluirPaginacionEnURL={false}
+                paginaActualInicial={paginaHistorico}
+                onCambiarPagina={setPaginaHistorico}
+                mostrarAcciones={true}
+                botonesAccion={botonesAcciones}
+              />
+            ) : (
+              <div>
+                <p>No hay documentos históricos.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <h2>Añadir Documento</h2>
-            <form>
-              <div className={styles.divselector}>
-                <label>Tipo de Documento:</label>
-                <select className={styles.input} required>
-                  <option value="">Seleccione</option>
-                  <option value="DNI">DNI</option>
-                  <option value="Contrato">Contrato</option>
-                  <option value="Otros">Otros</option>
-                </select>
-              </div>
-              <label>Anexar Documento:</label>
-              <input type="file" className={styles.input} required />
-              <div className={styles.modalButtons}>
-                <button type="submit" className={styles.saveButton}>Guardar</button>
-                <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {mostrarModal && activeTab === "actual" && (
+        <ModalAgregarDocumentoContacto contactoID={contactoID} cerrarModal={handleModalClose} />
+      )}
+
+      {mostrarModalEditar && (
+        <ModalEditarDocumentoContacto
+          documento={documentoEditar}
+          cerrarModal={() => {
+            setMostrarModalEditar(false);
+            setDocumentoEditar(null);
+            // Refrescar listas tras editar
+            obtenerdocumentosActuales();
+            obtenerdocumentosHistorico();
+          }}
+        />
       )}
     </div>
   );

@@ -5,8 +5,10 @@ import ModalEditarContactoInfo from '../ModalEditarContactoInfo/ModalEditarConta
 import ModalEditarContactoImagen from '../ModalEditarContactoImagen/ModalEditarContactoImagen';
 import { url } from '../../data/url'; // Asegúrate de que la ruta sea la correcta
 import { apiManager } from '../../api/apiManager';
+import { useNavigate } from "react-router-dom";
 
 const ContactosInfo = ({ id }) => {
+  const navigate = useNavigate();
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -29,7 +31,7 @@ const ContactosInfo = ({ id }) => {
     fetchContact();
   }, [id]);
   
-  // Asegúrate de que handleUpdate está correctamente definido y se pasa al ModalEditarContactoImagen
+  // Función para actualizar la información del contacto después de editar
   const handleUpdate = async () => {
     try {
       const response = await apiManager.contactosID(id);
@@ -45,7 +47,8 @@ const ContactosInfo = ({ id }) => {
   }
 
   if (!data) {
-    return <div>No se encontró información para este contacto.</div>;
+    navigate(`/NotFound`);
+    return null;
   }
 
   const imageUrl = data["URL_IMAGEN"] ? `${url}/${data["URL_IMAGEN"]}` : imagen;
@@ -60,8 +63,6 @@ const ContactosInfo = ({ id }) => {
         >
           <i className="fas fa-edit"></i> Cambiar Imagen
         </button>
-
-
       </div>
       <div className={styles['contenedor-info-contenido']}>
         <div className={styles['contenedor-info-contenido-titulo']}>
@@ -70,7 +71,7 @@ const ContactosInfo = ({ id }) => {
             className={styles['boton-editar']}
             onClick={() => setMostrarModal(true)}
           >
-            <i className="fas fa-edit"></i> Editar
+            <i className="fas fa-edit"></i> Editar Info
           </button>
         </div>
         <div className={styles['contenedor-info-contenido-detalles']}>
@@ -91,6 +92,14 @@ const ContactosInfo = ({ id }) => {
           <div className={styles['contenedor-info-contenido-detalles-item']}>
             <span>Teléfono</span>
             <span>{data["TELEFONO"]}</span>
+          </div>
+          <div className={styles['contenedor-info-contenido-detalles-item']}>
+            <span>Ubicación</span>
+            <span>{data["UBICACION"]}</span>
+          </div>
+          <div className={styles['contenedor-info-contenido-detalles-item']}>
+            <span>Dirección</span>
+            <span>{data["DIRECCION"]}</span>
           </div>
         </div>
       </div>
