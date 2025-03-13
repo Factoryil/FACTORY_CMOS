@@ -156,6 +156,15 @@ function ModalAgregarContacto({ cerrarModal }) {
             onChange={manejarCambio}
             required
           />
+           <label htmlFor="UBICACION">Ubicación</label>
+          <input
+            type="text"
+            id="UBICACION"
+            name="UBICACION"
+            value={nuevoContacto.UBICACION}
+            onChange={manejarCambio}
+            required
+          />
           <label htmlFor="DIRECCION">Dirección</label>
           <input
             type="text"
@@ -165,15 +174,7 @@ function ModalAgregarContacto({ cerrarModal }) {
             onChange={manejarCambio}
             required
           />
-          <label htmlFor="UBICACION">Ubicación</label>
-          <input
-            type="text"
-            id="UBICACION"
-            name="UBICACION"
-            value={nuevoContacto.UBICACION}
-            onChange={manejarCambio}
-            required
-          />
+         
           <label htmlFor="URL_IMAGEN">Imagen (opcional)</label>
           <input
             type="file"

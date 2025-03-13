@@ -50,61 +50,20 @@ export const apiManager = {
     }
   },
 
-  // guardarOperatividad: async (datos) => {
-  //   try {
-  //     const response = await api.post('/vehiculo-operatividad', datos);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
 
-  // // Nuevo: Asignar Vehículo a Mes Operativo
-  // asignarVehiculoAMesOperativo: async (datos) => {
-  //   try {
-  //     const response = await api.post('/vehiculo-mes-operativo', datos);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
 
-  // // Nuevo: Obtener Vehículos asignados a un Mes Operativo
-  // obtenerVehiculosPorMesOperativo: async (id) => {
-  //   try {
-  //     const response = await api.get(`/vehiculo-mes-operativo/${id}`);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
 
-  // // Nuevo: Eliminar asignación de vehículo de un Mes Operativo
-  // eliminarVehiculoDeMesOperativo: async (id) => {
-  //   try {
-  //     const response = await api.delete(`/vehiculo-mes-operativo/${id}`);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
-  // crearMesOperativo: async (datos) => {
-  //   try {
-  //     const response = await api.post('/mes-operativo', datos);
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
+  // Nuevo: Eliminar asignación de vehículo de un Mes Operativo
+  eliminarVehiculoDeMesOperativo: async (id) => {
+    try {
+      const response = await api.post(`/vehiculo-mes-operativo-eliminar/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-  // obtenerMesOperativos: async () => {
-  //   try {
-  //     const response = await api.get('/mes-operativo');
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
+
 
 
   
@@ -401,6 +360,15 @@ export const apiManager = {
   vehiculos: async () => {
     try {
       const response = await api.get("/vehiculos");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  vehiculosContratosActivos: async () => {
+    try {
+      const response = await api.get("/union-vehiculo-cliente-activos");
       return response.data;
     } catch (error) {
       throw error;

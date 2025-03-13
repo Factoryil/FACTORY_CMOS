@@ -94,7 +94,7 @@ function ModalEditarDocumentoContacto({ cerrarModal, documento }) {
             required
           >
             <option value="activo">Activo</option>
-            <option value="renovado">Renovado</option>
+            <option value="renovado">Inactivo</option>
           </select>
           <label htmlFor="URL_SOPORTE">Documento (opcional)</label>
           <input

@@ -1,44 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import styles from './Cliente.module.css';
+import styles from '../../styles/ModalFormulario.module.css';
 import { apiManager } from '../../api/apiManager';
 import Loader from '../Loader/Loader';
 import ModalEditarClienteVehiculo from '../ModalEditarClienteVehiculo/ModalEditarClienteVehiculo';
-import ModalAgregarCliente from '../ModalAgregarCliente/ModalAgregarCliente';
+import ModalAgregarClienteEnVehiculo from '../ModalAgregarClienteEnVehiculo/ModalAgregarClienteEnVehiculo';
 import { url } from '../../data/url';
+import Tabla from '../Tabla/Tabla';
+
+const mapeoColumnas = {
+  NOMBRE_COMPLETO: "Nombre Completo",
+  ESTADO: "Estado",
+  FECHA_EMISION: "Fecha Emision",
+  FECHA_VENCIMIENTO: "Fecha Vencimiento",
+  PERIODO: "Período",
+  VALOR: "Valor"
+};
 
 const Cliente = ({ id }) => {
-  
-  const [clientes, setClientes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("actual");
+  const [clientesActuales, setClientesActuales] = useState([]);
+  const [clientesHistoricos, setClientesHistoricos] = useState([]);
+  const [paginaActualActual, setPaginaActualActual] = useState(1);
+  const [paginaHistorico, setPaginaHistorico] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [mostrarModalEditarInfo, setMostrarModalEditarInfo] = useState(false);
   const [mostrarModalAgregar, setMostrarModalAgregar] = useState(false);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
 
-  useEffect(() => {
-    const fetchClientes = async () => {
-      try {
-        setLoading(true);
-        const clientesResponse = await apiManager.getClientesVehiculo(id);
-        
-        setClientes(clientesResponse);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error al obtener clientes:', error);
-        setLoading(false);
-      }
-    };
+  const handleTabClick = (tab) => setActiveTab(tab);
 
-    fetchClientes();
+  const obtenerClientesActuales = async () => {
+    try {
+      setLoading(true);
+      const response = await apiManager.getClientesVehiculo(id);
+      // Si fuese necesario filtrar clientes actuales:
+      // const actuales = response.filter(cliente => cliente.tipo === 'actual');
+      setClientesActuales(Array.isArray(response) ? response : []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al obtener clientes actuales:", error);
+      setLoading(false);
+    }
+  };
+
+  const obtenerClientesHistoricos = async () => {
+    try {
+      setLoading(true);
+      const response = await apiManager.getClientesVehiculo(id);
+      // Si hubiese que filtrar históricos, se podría hacer aquí:
+      setClientesHistoricos(Array.isArray(response) ? response : []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al obtener clientes históricos:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    obtenerClientesActuales();
+    obtenerClientesHistoricos();
   }, [id]);
 
-  const handleUpdate = async () => {
-    try {
-      const clientesResponse = await apiManager.getClientesVehiculo(id);
-      
-      setClientes(clientesResponse);
-    } catch (error) {
-      console.error("Error al actualizar la información de clientes:", error);
-    }
+  const handleUpdate = () => {
+    obtenerClientesActuales();
+    obtenerClientesHistoricos();
   };
 
   const handleVerPdf = (cliente) => {
@@ -62,63 +87,103 @@ const Cliente = ({ id }) => {
     setMostrarModalEditarInfo(true);
   };
 
-  if (loading) return <Loader />;
+  const botonesAcciones = [
+    {
+      nombre: "Ver Contacto",
+      icono: "fas fa-eye",
+      color: "blue",
+      funcionAccion: (fila) => handleVerContacto(fila),
+    },
+    {
+      nombre: "Ver PDF",
+      icono: "fas fa-eye",
+      color: "blue",
+      funcionAccion: (fila) => handleVerPdf(fila),
+    },
+    {
+      nombre: "Editar",
+      icono: "fas fa-edit",
+      color: "blue",
+      funcionAccion: (fila) => handleEditarInfo(fila),
+    },
+  ];
 
   return (
-    <div className={styles.clientesContainer}>
-      <div className={styles.clientesSection}>
-        <div className={styles.header}>
-          <h3>Historial de Clientes</h3>
-          <button
-            className={styles.addClienteButton}
-            onClick={() => setMostrarModalAgregar(true)}
-          >
-            <i className="fas fa-plus"></i> Agregar Cliente
-          </button>
-        </div>
-        {clientes.length === 0 ? (
-          <p>No se han asignado clientes a este vehículo.</p>
+    <div className={styles.propietariosContainer}>
+      <h3 className={styles.titulo}>Clientes</h3>
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.tab} ${activeTab === "actual" ? styles.activeTab : ""}`}
+          onClick={() => handleTabClick("actual")}
+        >
+          Actuales
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === "historico" ? styles.activeTab : ""}`}
+          onClick={() => handleTabClick("historico")}
+        >
+          Históricos
+        </button>
+      </div>
+      <div className={styles.content}>
+        {activeTab === "actual" ? (
+          <>
+            {loading ? (
+              <Loader />
+            ) : clientesActuales.length > 0 ? (
+              <Tabla
+                datos={clientesActuales}
+                mapeoColumnas={mapeoColumnas}
+                columnasVisibles={Object.values(mapeoColumnas)}
+                habilitarExportacion={true}
+                nombreExcel={"Clientes_Actuales"}
+                filasPorPagina={5}
+                incluirPaginacionEnURL={false}
+                paginaActualInicial={paginaActualActual}
+                onCambiarPagina={setPaginaActualActual}
+                mostrarAcciones={true}
+                botonesAccion={botonesAcciones}
+              >
+                <button className={styles.addButton2} onClick={() => setMostrarModalAgregar(true)}>
+                  Agregar Cliente
+                </button>
+              </Tabla>
+            ) : (
+              <div>
+                <p>No hay clientes actuales.</p>
+                <button className={styles.addButton3} onClick={() => setMostrarModalAgregar(true)}>
+                  Agregar Cliente
+                </button>
+              </div>
+            )}
+          </>
         ) : (
-          <div className={styles.tableWrapper}>
-            <table className={styles.clientesTable}>
-              <thead>
-                <tr>
-                  <th>Nombre Completo</th>
-                  <th>Estado</th>
-                  <th>Fecha Emisión</th>
-                  <th>Fecha Vencimiento</th>
-                  <th>Período</th>
-                  <th>Valor</th>
-                  <th>Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clientes.map((cliente) => (
-                  <tr key={cliente.ID_UNION_VEHICULO_Y_CLIENTE}>
-                    <td>{cliente.NOMBRE_COMPLETO}</td>
-                    <td>{cliente.ESTADO}</td>
-                    <td>{cliente.FECHA_EMISION}</td>
-                    <td>{cliente.FECHA_VENCIMIENTO}</td>
-                    <td>{cliente.PERIODO}</td>
-                    <td>{cliente.VALOR}</td>
-                    <td className={styles.tbbotones}>
-                      <button className={styles.actionButton} onClick={() => handleVerContacto(cliente)} title="Ver Contacto">
-                        <i className="fas fa-eye"></i>
-                      </button>
-                      <button className={styles.actionButton} onClick={() => handleVerPdf(cliente)} title="Ver PDF">
-                        <i className="fas fa-eye"></i>
-                      </button>
-                      <button className={styles.actionButton} onClick={() => handleEditarInfo(cliente)} title="Editar Información">
-                        <i className="fas fa-edit"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <>
+            {loading ? (
+              <Loader />
+            ) : clientesHistoricos.length > 0 ? (
+              <Tabla
+                datos={clientesHistoricos}
+                mapeoColumnas={mapeoColumnas}
+                columnasVisibles={Object.values(mapeoColumnas)}
+                habilitarExportacion={true}
+                nombreExcel={"Clientes_Historicos"}
+                filasPorPagina={5}
+                incluirPaginacionEnURL={false}
+                paginaActualInicial={paginaHistorico}
+                onCambiarPagina={setPaginaHistorico}
+                mostrarAcciones={true}
+                botonesAccion={botonesAcciones}
+              />
+            ) : (
+              <div>
+                <p>No hay clientes históricos.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
+
       {mostrarModalEditarInfo && clienteSeleccionado && (
         <ModalEditarClienteVehiculo
           cerrarModal={() => {
@@ -128,8 +193,9 @@ const Cliente = ({ id }) => {
           clienteData={clienteSeleccionado}
         />
       )}
+
       {mostrarModalAgregar && (
-        <ModalAgregarCliente
+        <ModalAgregarClienteEnVehiculo
           cerrarModal={() => {
             setMostrarModalAgregar(false);
             handleUpdate();

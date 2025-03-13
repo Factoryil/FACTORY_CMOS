@@ -139,21 +139,22 @@ function ModalEditarContactoInfo({ cerrarModal, contactData, onUpdate = () => {}
             onChange={manejarCambio}
             required
           />
-          <label htmlFor="DIRECCION">Dirección</label>
-          <input
-            type="text"
-            id="DIRECCION"
-            name="DIRECCION"
-            value={formData.DIRECCION}
-            onChange={manejarCambio}
-            required
-          />
+          
           <label htmlFor="UBICACION">Ubicación</label>
           <input
             type="text"
             id="UBICACION"
             name="UBICACION"
             value={formData.UBICACION}
+            onChange={manejarCambio}
+            required
+          />
+          <label htmlFor="DIRECCION">Dirección</label>
+          <input
+            type="text"
+            id="DIRECCION"
+            name="DIRECCION"
+            value={formData.DIRECCION}
             onChange={manejarCambio}
             required
           />

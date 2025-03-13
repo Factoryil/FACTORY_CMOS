@@ -1,89 +1,96 @@
-/* Contenedor principal */
+/* Contenedor general mejorado y responsivo */
 .container {
-  padding: 10px;
-  background-color: #f2f5fa;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #444;
-}
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
 
-/* Título */
-.title {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 1.7rem;
-  color: #2c3e50;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
 }
 
 /* Secciones generales */
-.section {
-  margin-bottom: 1rem;
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+.headerSection,
+.selectSection,
+.contentSection {
+  margin-bottom: 20px;
 }
 
-/* Fila de acciones */
-.actionRow {
+/* Títulos y subtítulos */
+.title {
+  font-size: 28px;
+  margin-bottom: 10px;
   text-align: center;
-  margin-bottom: 1rem;
 }
 
-/* Inputs y selects */
+.subtitle {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+/* Filas de acciones y botones */
+.actionRow,
+.vehicleActionRow {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.button,
+.actionButton {
+  padding: 10px 15px;
+  margin: 5px;
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.buttonSecondary {
+  padding: 10px 15px;
+  margin: 5px;
+  background-color: #6c757d;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Formulario en modal */
+.formRow {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
 .input,
 .select,
 .searchInput {
-  padding: 0.6rem 0.8rem;
-  margin-right: 0.5rem;
+  padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #fff;
-  font-size: 1rem;
-  outline: none;
-  transition: border 0.3s ease;
+  border-radius: 4px;
 }
 
-.input:focus,
-.select:focus,
-.searchInput:focus {
-  border-color: #3498db;
+/* Opciones de select */
+.option {
+  padding: 5px;
 }
 
-/* Botones primarios */
-.button {
-  padding: 0.6rem 1.2rem;
-  background-color: #3498db;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
+/* Listado de opciones (para búsqueda de vehículos) */
+.optionsList {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.optionItem {
+  padding: 8px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+  border-bottom: 1px solid #eee;
 }
 
-.button:hover {
-  background-color: #2874a6;
-}
-
-/* Botones secundarios */
-.buttonSecondary {
-  padding: 0.6rem 1.2rem;
-  background-color: #ecf0f1;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.3s ease;
-}
-
-.buttonSecondary:hover {
-  background-color: #d0dce3;
-}
-
-/* Select custom */
-.select {
-  appearance: none;
-  cursor: pointer;
+.optionItem:hover {
+  background-color: #f0f0f0;
 }
 
 /* Modal */
@@ -93,7 +100,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,235 +109,155 @@
 
 .modal {
   background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  max-width: 400px;
+  padding: 20px;
   width: 90%;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  max-width: 500px;
+  border-radius: 5px;
 }
 
-.formRow {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
+.modalTitle {
+  font-size: 22px;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
 .modalActions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
+  justify-content: center;
+  margin-top: 15px;
 }
 
-.modalActions button {
-  flex: 1;
-  margin: 0 0.3rem;
+/* Selección de Mes Operativo */
+.selectContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Lista de opciones en modal */
-.optionsList {
-  list-style: none;
-  padding: 0;
-  margin: 0.5rem 0;
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+/* Nota y toolbar */
+.note {
+  text-align: center;
+  font-size: 14px;
+  margin: 10px 0;
 }
 
-.optionItem {
-  padding: 0.6rem;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.optionItem:last-child {
-  border-bottom: none;
-}
-
-.optionItem:hover {
-  background-color: #f9f9f9;
-}
-
-/* Toolbar para asignación de estados */
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .toolbarButton {
-  background-color: #ecf0f1;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
   cursor: pointer;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
+  border-radius: 4px;
   position: relative;
-  transition: background-color 0.3s ease;
 }
 
 .toolbarButton:hover {
-  background-color: #d0dce3;
+  background-color: #e9ecef;
 }
 
 .active {
-  background-color: #3498db;
+  background-color: #007bff;
   color: #fff;
 }
 
-/* Tooltip para toolbar */
+/* Tooltip en la toolbar */
 .tooltip {
   visibility: hidden;
   background-color: #333;
   color: #fff;
-  text-align: center;
-  border-radius: 4px;
-  padding: 0.3rem;
+  font-size: 12px;
+  border-radius: 3px;
+  padding: 3px 5px;
   position: absolute;
-  z-index: 1;
-  bottom: -1.5rem;
+  top: -30px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
 }
 
 .toolbarButton:hover .tooltip {
   visibility: visible;
 }
 
-/* Acciones */
-.actions {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.actionButton {
-  background-color: #ecf0f1;
-  border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.3s ease;
-}
-
-.actionButton:hover {
-  background-color: #d0dce3;
-}
-
-/* Tabla y grilla */
+/* Tabla */
 .tableContainer {
-  overflow-x: auto;
-  margin-bottom: 1.5rem;
+  overflow: auto;
+  margin-bottom: 20px;
 }
 
 .table {
   width: 100%;
-  min-width: 800px;
   border-collapse: collapse;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.table thead th:first-child {
-  position: sticky;
-  left: 0;
-  z-index: 3; /* Mayor que el z-index de las celdas para que se solape */
-  background-color: #3498db; /* O el color que desees para el header */
+.tableHead {
+  background-color: #fff;
+  color: black;
 }
 
-.tableHeader {
-  background-color: #3498db;
-  color: #fff;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
+.tableBody tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
-.tableRow:nth-child(even) {
-  background-color: #f8f8f8;
-}
-
-.vehicleCell {
-  font-weight: bold;
-  background-color: #7f8c8d;
-  color: #fff;
-  text-align: center;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  position: sticky;
-  left: 0;
-  z-index: 2; 
-}
-
+.tableHeader,
+.vehicleCell,
 .cell {
-  text-align: center;
-  padding: 0.75rem;
+  padding: 8px;
   border: 1px solid #ddd;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border 0.3s ease;
+  text-align: center;
+  /* white-space: nowrap; */
+}
+
+/* Columnas fijas (sticky) */
+.stickyFirst {
+  position: sticky;
+  left: 0;
+  background-color: #fff;
+  color: black;
+  z-index: 2;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+.stickySecond {
+  position: sticky;
+  left: 80px; /* Ajusta este valor según el ancho de la primera columna */
+  background-color: #fff;
+  z-index: 2;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+  color: black;
+}
+
+/* Celdas seleccionadas en la grilla */
+.selected {
+  outline: 1px solid #000;
   user-select: none;
 }
 
-.cell:hover {
-  background-color: #d0e6f7;
-}
-
-.selected {
-  border: 2px solid #2980b9;
-}
-
-/* Gráfica de Reporte */
+/* Contenedor del gráfico responsivo */
 .chartContainer {
+  width: 100%;
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  margin: 30px auto;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-/* Nota final */
-.note {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #7f8c8d;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-.contenedorBtnes {
-  display: flex;
-  flex-direction: column;
-}
-
-.contenerselectmeses {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.contenedorBtnVehiculo {
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.contenedorBtnVehiculo button{
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5px;
-}
-
-.h3asignacionestado {
-  text-align: center;
-  margin: 15px 0px;
-}
-
-.contenedorBtnes h3 {
-  margin-bottom: 15px;
+/* Media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .chartContainer {
+    padding: 5px;
+    margin-top: 20px;
+  }
 }

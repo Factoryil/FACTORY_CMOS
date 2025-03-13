@@ -116,6 +116,25 @@ export const menuItems = [
     ],
   },
   {
+    label: "Gestión de Mantenimientos",
+    icon: "fas fa-cogs", // Cambiado para reflejar mantenimiento
+    requiredPermission: "usuarios:lectura",
+    submenu: [
+      {
+        label: "Planes de Mantenimiento",
+        icon: "fas fa-calendar-alt",
+        path: "/gestion/mantenimientos/planes",
+        requiredPermission: "usuarios:lectura",
+      },
+      {
+        label: "Trabajos de Mantenimiento",
+        icon: "fas fa-wrench",
+        path: "/gestion/mantenimientos/trabajos",
+        requiredPermission: "usuarios:lectura",
+      },
+    ],
+  },
+  {
     label: "Gestión de Trabajos",
     icon: "fas fa-tools",
     requiredPermission: "usuarios:lectura",

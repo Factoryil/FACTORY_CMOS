@@ -3,7 +3,6 @@ import styles from "./ModalEditarClienteVehiculo.module.css";
 import { apiManager } from "../../api/apiManager";
 
 const ModalEditarClienteVehiculo = ({ cerrarModal, clienteData, onUpdate = () => {} }) => {
-  console.log(clienteData);
   
   const [formData, setFormData] = useState({
     ESTADO: clienteData.ESTADO || "Actual",

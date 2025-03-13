@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "../../styles/ModalFormulario.module.css";
 import Loader from "../Loader/Loader";
 import ModalEditarPropietarioVehiculo from "../ModalEditarPropietarioVehiculo/ModalEditarPropietarioVehiculo";
-import ModalAgregarPropietario from "../ModalAgregarPropietario/ModalAgregarPropietario";
+import ModalAgregarPropietarioContacto from "../ModalAgregarPropietarioContacto/ModalAgregarPropietarioContacto";
 import Tabla from "../Tabla/Tabla";
 import { apiManager } from "../../api/apiManager";
 import { url } from "../../data/url";
@@ -209,12 +209,13 @@ const PropietarioVehiculos = ({ id }) => {
       )}
 
       {mostrarModalAgregar && (
-        <ModalAgregarPropietario
+        <ModalAgregarPropietarioContacto
           cerrarModal={() => {
             setMostrarModalAgregar(false);
             handleUpdate();
           }}
           vehiculoId={id}
+          ContactoID={id}
         />
       )}
     </div>

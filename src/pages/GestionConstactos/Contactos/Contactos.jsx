@@ -12,6 +12,9 @@ const mapeoColumnas = {
   NUMERO_IDENTIFICACION: "Número de Identificación",
   CORREO_ELECTRONICO: "Correo Electrónico",
   TELEFONO: "Teléfono",
+  ubicacion: "Ubicacion",
+  direccion: "Direccion",
+
 };
 
 const botonesAcciones = [
@@ -30,7 +33,6 @@ function Contactos() {
     try {
       setCargando(true);
       const response = await apiManager.contactos();
-      
       if (response.error) {
         console.error(response.error);   
       }else {

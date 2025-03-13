@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import styles from './Conciliacion.module.css';
 import { apiManager } from '../../../api/apiManager';
 
+// Número de días en el mes (para futuros usos)
 const daysInMonth = 31;
 
+// Definición de monthNames para mostrar el nombre de los meses
 const monthNames = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
+// Datos estáticos para la conciliación (por ahora)
 const staticConciliacionData = {
   company: {
     name: "FACTORY INTEGRATE SAS",
@@ -45,11 +48,13 @@ const staticConciliacionData = {
 };
 
 const Conciliacion = () => {
+  // Data de conciliación (estática por ahora)
   const [conciliacionData, setConciliacionData] = useState(staticConciliacionData);
 
   // Estados para Mes Operativo
+  // Ahora se guarda el objeto completo del mes operativo
   const [mesOperativoList, setMesOperativoList] = useState([]);
-  const [selectedMesOperativo, setSelectedMesOperativo] = useState("");
+  const [selectedMesOperativo, setSelectedMesOperativo] = useState(null);
   const [searchMes, setSearchMes] = useState('');
   const [filteredMeses, setFilteredMeses] = useState([]);
 
@@ -58,27 +63,21 @@ const Conciliacion = () => {
   const [searchContact, setSearchContact] = useState('');
   const [filteredContacts, setFilteredContacts] = useState([]);
 
-  // Estado para almacenar la operatividad para el mes seleccionado
-  const [operativeData, setOperativeData] = useState([]);
-
-  // Estados para Vehículos Disponibles y Seleccionados
+  // Estados para Vehículos asignados (lista local)
+  const [vehicles, setVehicles] = useState([]);
+  // Lista completa de vehículos disponibles (según API) para asignar
   const [allVehicles, setAllVehicles] = useState([]);
-  const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [searchVehicle, setSearchVehicle] = useState('');
-  const [selectedVehicles, setSelectedVehicles] = useState([]);
+  const [filteredVehicles, setFilteredVehicles] = useState([]);
 
-  // Estados para los modales
+  // Estados para los modales (trabajando de forma independiente)
   const [isMesModalOpen, setIsMesModalOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isVehiculoModalOpen, setIsVehiculoModalOpen] = useState(false);
 
-  // Si el vehículo no tiene operatividad válida, se inicializa un array de 31 elementos vacíos
-  const getVehicleOperatividad = (vehicle) => {
-    if (vehicle.operatividad && vehicle.operatividad.length === daysInMonth) {
-      return vehicle.operatividad;
-    }
-    return Array(daysInMonth).fill('');
-  };
+  // Función de ayuda para inicializar la propiedad "operatividad" de un vehículo
+  const getVehicleOperatividad = (vehicle) =>
+    vehicle.operatividad ? vehicle.operatividad : Array(daysInMonth).fill('');
 
   // --- Mes Operativo ---
   const obtenerMesOperativos = async () => {
@@ -104,41 +103,16 @@ const Conciliacion = () => {
     );
   }, [searchMes, mesOperativoList]);
 
-  // Al seleccionar un mes, se actualiza el estado y se carga la operatividad de ese mes
-  const selectMesOperativo = async (mes) => {
-    setSelectedMesOperativo(mes.id);
+  const selectMesOperativo = (mes) => {
+    setSelectedMesOperativo(mes);
+    console.log("Mes Operativo seleccionado:", mes);
     setConciliacionData(prev => ({
       ...prev,
       conciliacion: { ...prev.conciliacion, id_mes_operativo: mes.id }
     }));
     setIsMesModalOpen(false);
-    try {
-      const data = await apiManager.obtenerOperatividadPorMes(mes.id);
-      setOperativeData(data);
-    } catch (error) {
-      console.error("Error al obtener operatividad:", error);
-    }
+    // Aquí podrías cargar los vehículos asignados si lo requieres
   };
-
-  // Efecto para actualizar la información de vehículos seleccionados cuando cambia el mes operativo
-  useEffect(() => {
-    if (selectedMesOperativo && operativeData.length > 0) {
-      const mesSeleccionado = mesOperativoList.find(m => m.id === selectedMesOperativo);
-      const updatedVehicles = selectedVehicles.map(vehicle => {
-        let updatedOperatividad = getVehicleOperatividad(vehicle);
-        operativeData.forEach(change => {
-          if (change.id_vehiculo === vehicle.id_vehiculo) {
-            if (change.dia - 1 >= 0 && change.dia - 1 < daysInMonth) {
-              updatedOperatividad[change.dia - 1] = change.estado;
-            }
-          }
-        });
-        const operativeDays = updatedOperatividad.filter(day => day === 'O').length;
-        return { ...vehicle, operatividad: updatedOperatividad, operativeDays, selectedMonth: mesSeleccionado };
-      });
-      setSelectedVehicles(updatedVehicles);
-    }
-  }, [selectedMesOperativo, operativeData]); // Se actualiza cada vez que cambia el mes u operatividad
 
   // --- Contactos ---
   const fetchContacts = async () => {
@@ -171,30 +145,33 @@ const Conciliacion = () => {
     );
   }, [searchContact, allContacts]);
 
-  // --- Vehículos Disponibles y Seleccionados ---
-  // Al abrir el modal, se cargan los vehículos disponibles
+  // --- Vehículos ---
+  // En este flujo, para el modal de "Agregar Vehículo" obtenemos los vehículos vinculados al mes operativo
   const openVehiculoModal = async () => {
     if (!selectedMesOperativo) {
       alert("Seleccione un mes operativo primero.");
       return;
     }
     try {
-      const response = await apiManager.vehiculos();
-      const vehiclesArray = response.data ? response.data : response;
-      // Filtramos: se descarta solo si el vehículo ya fue seleccionado para el mismo mes operativo
-      const disponibles = vehiclesArray.filter(v => {
-        const yaSeleccionadoEnMesActual = selectedVehicles.some(
-          sv => sv.id_vehiculo === v.id_vehiculo && sv.selectedMonth?.id === selectedMesOperativo
-        );
-        return !yaSeleccionadoEnMesActual;
-      });
-      setAllVehicles(disponibles);
-      setFilteredVehicles(disponibles);
-      setSearchVehicle('');
+      const data = await apiManager.obtenerVehiculosPorMesOperativo(selectedMesOperativo.id);
+      setAllVehicles(data);
+      setFilteredVehicles(data);
       setIsVehiculoModalOpen(true);
     } catch (error) {
-      console.error("Error al obtener vehículos:", error);
+      console.error("Error al obtener vehículos relacionados al mes:", error);
     }
+  };
+
+  // Al seleccionar un vehículo en el modal, se agrega a la lista local (sin asignación en backend)
+  const assignVehicle = (idVehiculo) => {
+    const vehicle = allVehicles.find(v => v.id_vehiculo === idVehiculo);
+    if (vehicle && !vehicles.some(v => v.id_vehiculo === vehicle.id_vehiculo)) {
+      // Inicializamos la propiedad operatividad si no existe
+      vehicle.operatividad = getVehicleOperatividad(vehicle);
+      setVehicles([...vehicles, vehicle]);
+    }
+    console.log("Vehículo agregado a la tabla:", vehicle);
+    setIsVehiculoModalOpen(false);
   };
 
   useEffect(() => {
@@ -205,47 +182,18 @@ const Conciliacion = () => {
     );
   }, [searchVehicle, allVehicles]);
 
-  // Función para agregar un vehículo seleccionado, congelando la información del mes y la operatividad
-  const seleccionarVehiculo = (vehiculo) => {
-    let updatedOperatividad = getVehicleOperatividad(vehiculo);
-    if (operativeData && operativeData.length > 0) {
-      operativeData.forEach(change => {
-        if (change.id_vehiculo === vehiculo.id_vehiculo) {
-          if (change.dia - 1 >= 0 && change.dia - 1 < daysInMonth) {
-            updatedOperatividad[change.dia - 1] = change.estado;
-          }
-        }
-      });
-    }
-    const operativeDays = updatedOperatividad.filter(day => day === 'O').length;
-    const mesSeleccionado = mesOperativoList.find(m => m.id === selectedMesOperativo);
-    const vehicleSelected = {
-      ...vehiculo,
-      operatividad: updatedOperatividad,
-      operativeDays,
-      selectedMonth: mesSeleccionado
-    };
-    setSelectedVehicles(prev => [...prev, vehicleSelected]);
-    setFilteredVehicles(prev => prev.filter(v => v.id_vehiculo !== vehiculo.id_vehiculo));
-  };
+  // Función para contar los días operativos ("O") de un vehículo
+  const countOperativeDays = (operatividad) =>
+    operatividad.filter(day => day === 'O').length;
 
-  const eliminarVehiculo = (idVehiculo) => {
-    setSelectedVehicles(prev => prev.filter(v => v.id_vehiculo !== idVehiculo));
+  // Función para eliminar un vehículo de la tabla
+  const removeVehicle = (idVehiculo) => {
+    setVehicles(vehicles.filter(vehicle => vehicle.id_vehiculo !== idVehiculo));
   };
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.companyInfo}>
-          <h1>{conciliacionData.company.name}</h1>
-          <p>NIT: {conciliacionData.company.nit}</p>
-        </div>
-        <div className={styles.conciliacionInfo}>
-          <h2>Conciliación #{conciliacionData.conciliacion.conciliacionNumber}</h2>
-          <p>Factura #{conciliacionData.conciliacion.facturaNumber}</p>
-        </div>
-      </header>
-
+      {/* Contenedor superior exclusivo para los botones */}
       <div className={styles.topButtons}>
         <button className={styles.button} onClick={openMesModal}>
           Seleccionar Mes
@@ -257,6 +205,18 @@ const Conciliacion = () => {
           Agregar Vehículo
         </button>
       </div>
+
+      {/* Cabecera con información de la compañía */}
+      <header className={styles.header}>
+        <div className={styles.companyInfo}>
+          <h1>{conciliacionData.company.name}</h1>
+          <p>NIT: {conciliacionData.company.nit}</p>
+        </div>
+        <div className={styles.conciliacionInfo}>
+          <h2>Conciliación #{conciliacionData.conciliacion.conciliacionNumber}</h2>
+          <p>Factura #{conciliacionData.conciliacion.facturaNumber}</p>
+        </div>
+      </header>
 
       {/* Modal para Seleccionar Mes Operativo */}
       {isMesModalOpen && (
@@ -322,7 +282,7 @@ const Conciliacion = () => {
         </div>
       )}
 
-      {/* Modal para Agregar Vehículo (vehículos disponibles) */}
+      {/* Modal para Agregar Vehículo */}
       {isVehiculoModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
@@ -335,22 +295,15 @@ const Conciliacion = () => {
               className={styles.searchInput}
             />
             <ul className={styles.optionsList}>
-              {filteredVehicles.length === 0 ? (
-                <p>No hay vehículos disponibles</p>
-              ) : (
-                filteredVehicles.map(vehicle => (
-                  <li key={vehicle.id_vehiculo} className={styles.optionItem}>
-                    {vehicle.placa}
-                    <button
-                      className={styles.buttonSecondary}
-                      onClick={() => seleccionarVehiculo(vehicle)}
-                      style={{ marginLeft: '10px' }}
-                    >
-                      Seleccionar
-                    </button>
-                  </li>
-                ))
-              )}
+              {filteredVehicles.map(vehicle => (
+                <li
+                  key={vehicle.id_vehiculo}
+                  className={styles.optionItem}
+                  onClick={() => assignVehicle(vehicle.id_vehiculo)}
+                >
+                  {vehicle.placa}
+                </li>
+              ))}
             </ul>
             <button onClick={() => setIsVehiculoModalOpen(false)} className={styles.buttonSecondary}>
               Cerrar
@@ -359,43 +312,38 @@ const Conciliacion = () => {
         </div>
       )}
 
-      {/* Tabla de Vehículos Seleccionados */}
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>N°</th>
-              <th>Placa</th>
-              <th>Mes y Año</th>
-              <th>Día</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selectedVehicles.map((vehicle, index) => {
-              const mesObj = vehicle.selectedMonth;
-              const mesAño = mesObj
-                ? `${mesObj.anio} - ${monthNames[mesObj.mes - 1]}`
-                : '-';
-              return (
+      {/* Tabla de Vehículos asignados con sus días operativos y mes operativo */}
+      {selectedMesOperativo && vehicles.length > 0 && (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Vehículo</th>
+                <th>Días</th>
+                <th>Mes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vehicles.map(vehicle => (
                 <tr key={vehicle.id_vehiculo} className={styles.vehicleRow}>
-                  <td style={{ position: 'relative' }}>
-                    {index + 1}
-                    <button
-                      className={styles.deleteButton}
-                      onClick={() => eliminarVehiculo(vehicle.id_vehiculo)}
+                  <td className={styles.vehicleCell}>
+                    <span>{vehicle.placa}</span>
+                    {/* Botón de eliminar, el estilo puede hacerlo visible solo al hacer hover */}
+                    <button 
+                      className={styles.deleteButton} 
+                      onClick={() => removeVehicle(vehicle.id_vehiculo)}
                     >
                       Eliminar
                     </button>
                   </td>
-                  <td className={styles.vehicleCell}>{vehicle.placa}</td>
-                  <td>{mesAño}</td>
-                  <td>{vehicle.operativeDays}</td>
+                  <td>{countOperativeDays(vehicle.operatividad)}</td>
+                  <td>{`${selectedMesOperativo.anio} - ${monthNames[selectedMesOperativo.mes - 1]}`}</td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

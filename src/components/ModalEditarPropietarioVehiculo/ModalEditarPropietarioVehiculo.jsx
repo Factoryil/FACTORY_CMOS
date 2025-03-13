@@ -4,6 +4,7 @@ import { apiManager } from "../../api/apiManager";
 
 const ModalEditarPropietarioInfo = ({ cerrarModal, propietarioData, onUpdate = () => {} }) => {
   
+  
   const [formData, setFormData] = useState({
     ESTADO: propietarioData.ESTADO || "Actual", // Usamos la propiedad 'Estado'
     FECHA_EMISION: propietarioData["Fecha Emision"] || "", // Usamos la propiedad con espacio

@@ -128,6 +128,7 @@ function DocumentosContacto({ contactoID }) {
                 columnasVisibles={Object.values(mapeoColumnas)}
                 habilitarExportacion={true}
                 nombreExcel={"Lista_documentos_actuales"}
+                columnasOmitidas={["ID_CONTACTO_DOCUMENTO", "ID_CONTACTOS", "URL_SOPORTE", "FECHA_ASIGNACION", "ESTADO"]}
                 filasPorPagina={5}
                 incluirPaginacionEnURL={false}
                 paginaActualInicial={paginaActualActual}
