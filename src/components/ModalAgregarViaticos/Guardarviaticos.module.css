@@ -1,0 +1,305 @@
+/* Guardarviaticos.module.css */
+
+/* --- Global Body Styles (Applied with :global) --- */
+/* These are typically in a root-level CSS file, but included here for completeness */
+:global body {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif; /* Modern font stack */
+  background-color: #f0f2f5; /* Light subtle grey background */
+  color: #344767; /* Darker, more professional text color */
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Modal Overlay --- */
+.overlay {
+  position: fixed; /* Stays in place even when scrolling */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 1000; /* Ensures modal is on top of other content */
+  backdrop-filter: blur(5px); /* Adds a subtle blur to content behind the modal */
+  animation: fadeIn 0.3s ease-out; /* Smooth fade-in animation */
+}
+
+/* --- Modal Content Box --- */
+.modal {
+  background: #ffffff;
+  padding: 35px 45px; /* Generous padding */
+  border-radius: 12px; /* Smoother rounded corners */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); /* Stronger, more prominent shadow */
+  max-height: 90vh; /* Limits modal height to 90% of viewport height */
+  overflow-y: auto; /* Adds scrollbar if content overflows vertically */
+  width: 95%; /* Takes most of the width on smaller screens */
+  max-width: 650px; /* Maximum width for the modal */
+  position: relative; /* Needed for positioning the close button */
+  animation: slideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth slide-in animation */
+  display: flex;
+  flex-direction: column; /* Organize content vertically */
+}
+
+/* --- Close Button for Modal --- */
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  background: none; /* No background */
+  border: none; /* No border */
+  font-size: 28px; /* Larger 'X' */
+  cursor: pointer;
+  color: #888; /* Muted color */
+  transition: color 0.2s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.closeButton:hover {
+  color: #dc3545; /* Red on hover */
+  transform: rotate(90deg); /* Spins on hover */
+}
+
+/* --- Modal Title --- */
+.modal h2 {
+  text-align: center;
+  color: #007bff; /* Primary blue */
+  margin-bottom: 30px;
+  font-size: 2.2em;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* --- Form within the Modal --- */
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label Styling */
+.modal label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600; /* Semi-bold */
+  color: #495057; /* Darker grey */
+  font-size: 1.05em;
+  margin-top: 20px; /* Space above each form group */
+}
+
+/* Input and Select Field Common Styles */
+.modal input[type="text"],
+.modal input[type="number"],
+.modal input[type="date"],
+.modal select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px; /* Space below each input */
+  border: 1px solid #dee2e6; /* Light grey border */
+  border-radius: 8px; /* Consistent rounded corners */
+  box-sizing: border-box;
+  font-size: 1em;
+  color: #495057;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  -webkit-appearance: none; /* Remove default browser styling */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.modal input[type="text"]:focus,
+.modal input[type="number"]:focus,
+.modal input[type="date"]:focus,
+.modal select:focus {
+  border-color: #007bff; /* Blue border on focus */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Individual Gasto Item Container */
+.gastoItem {
+  border: 1px solid #e9ecef; /* Light border around each expense block */
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px; /* Space between each expense item */
+  background-color: #fcfdfe; /* Very light background for distinction */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* Subtle shadow */
+}
+
+.gastoItem label { /* Adjust label inside gasto item */
+  margin-top: 0; /* Remove top margin if already inside a section */
+}
+
+.gastoItem hr {
+  border: none;
+  border-top: 1px dashed #e9ecef;
+  margin: 25px 0 0; /* More space above the HR within a gasto item */
+}
+
+/* Specific File Input Styling */
+.modal input[type="file"] {
+  padding: 10px 0;
+  margin-bottom: 10px; /* If file name paragraph follows */
+  border: none;
+}
+
+/* Style for the paragraph showing file name */
+/* Note: Your component uses a direct <p> and then <i className="fas fa-paperclip icono"></i>
+   I recommend adding a specific class like .fileName for this paragraph.
+   For now, I'll assume `styles.fileName` is used. */
+.fileName {
+  font-size: 0.9em;
+  color: #6c757d;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Style for the icon within the file name paragraph */
+/* If you keep the `icono` global class, this targets it. */
+.fileName :global .icono {
+  font-size: 1em; /* Smaller icon for inline text */
+  color: #28a745; /* Green for attachment */
+}
+
+/* Button to add another expense */
+.modal button[type="button"] { /* Target the "Agregar otro gasto" button specifically */
+  background-color: #6c757d; /* Muted grey for a secondary action */
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.05em;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex; /* Use flex to align icon and text */
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto 0; /* Center button and add top margin */
+  width: fit-content; /* Size to content */
+}
+
+.modal button[type="button"]:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal button[type="button"]:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Submit Button */
+.saveButton { /* This class is already used in your component */
+  background-color: #007bff; /* Primary blue */
+  color: white;
+  padding: 16px 35px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.15em;
+  font-weight: 700;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 30px auto 0; /* Center button and add more top margin */
+  width: fit-content; /* Size to content */
+}
+
+.saveButton:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.saveButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+
+/* --- Keyframe Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .modal {
+    padding: 25px 30px;
+    max-width: 90%;
+  }
+  .modal h2 {
+    font-size: 1.8em;
+    margin-bottom: 25px;
+  }
+  .closeButton {
+    font-size: 24px;
+    top: 10px;
+    right: 12px;
+  }
+  .modal input[type="text"],
+  .modal input[type="number"],
+  .modal input[type="date"],
+  .modal select {
+    padding: 10px 12px;
+    font-size: 0.95em;
+  }
+  .gastoItem {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  .modal button[type="button"], .saveButton {
+    padding: 12px 20px;
+    font-size: 1em;
+    width: 100%; /* Full width buttons on smaller screens */
+    margin-top: 15px;
+  }
+  .modal button[type="button"] { /* Specific override for add button if needed */
+    margin: 15px 0 0; /* Remove auto margins to allow full width */
+  }
+  .saveButton {
+    margin: 25px 0 0; /* Remove auto margins to allow full width */
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .modal h2 {
+    font-size: 1.6em;
+    margin-bottom: 20px;
+  }
+  .closeButton {
+    font-size: 22px;
+    top: 8px;
+    right: 10px;
+  }
+  .modal label {
+    font-size: 1em;
+    margin-top: 15px;
+  }
+  .gastoItem {
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  .fileName {
+    font-size: 0.85em;
+  }
+}

@@ -224,6 +224,23 @@ export const menuItems = [
       },
     ],
   },
+  {label:"Registro de viaticos",
+   icon:"fas fa-money-bill-wave",
+   submenu: [
+      {
+        label: "personas",
+        icon: "fa-solid fa-person",
+        path: "/viaticos/personas",
+        requiredPermission: "usuarios:lectura",
+      },
+      {
+        label: "vehicular",
+        icon: "fa-solid fa-car",
+        path: "/viaticos/vehiculos",
+        requiredPermission: "usuarios:lectura",
+      }
+    ],
+  },
   {
     label: "Gestión de Usuarios",
     icon: "fas fa-user-cog",

@@ -1,1 +1,1 @@
-export const url = "http://localhost/codevendix";
+export const url = "http://localhost/api_cmos";

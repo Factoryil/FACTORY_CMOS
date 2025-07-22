@@ -64,7 +64,7 @@ function ContactoEtiquetas({ contactoID, onEtiquetasUpdate }) {
   return (
     <div className={styles.container}>
       <br />
-      <h3 className={styles.title}>Gestión de Etiquetas</h3>
+      <h3 className={styles.title}>FUNCION</h3>
       <br />
       <ul className={styles.lista}>
         {etiquetas.map((etiqueta) => {

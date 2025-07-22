@@ -20,7 +20,7 @@ const SoportesOrtdenTrabajoSinEdicion = ({ OT }) => {
       const response = await apiManager.getSoportes(OT);
       const supportsWithPrefix = response.map((support) => ({
         ...support,
-        fullURL: `http://localhost/codevendix/${support.URL_ARCHIVO}`,
+        fullURL: `http://localhost/api_cmos/${support.URL_ARCHIVO}`,
       }));
       setSoportes(supportsWithPrefix);
     } catch (error) {

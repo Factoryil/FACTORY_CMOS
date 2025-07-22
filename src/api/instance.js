@@ -2,7 +2,7 @@ import axios from "axios";
 import { obtenerToken } from "../utils/authUtils";
 
 const instance = axios.create({
-  baseURL: "http://localhost/codevendix",
+  baseURL: "http://localhost/api_cmos",
 });
 
 // Interceptor para agregar el token si está disponible

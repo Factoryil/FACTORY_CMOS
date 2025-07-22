@@ -35,6 +35,12 @@ function ModalEditarVehiculoInfo({ cerrarModal, vehiculoData, onUpdate = () => {
     "Cédula de Extranjería",
     "Pasaporte"
   ];
+  // Opciones para el campo tipo_identificacion
+  const servicioOptions = [
+    "PUBLICA",
+    "PARTICULAR",
+  ];
+
 
   // Definimos los pasos y los campos que se mostrarán en cada uno
   const steps = [
@@ -126,6 +132,26 @@ function ModalEditarVehiculoInfo({ cerrarModal, vehiculoData, onUpdate = () => {
         </select>
       );
     }
+    // Para servicio (público o particular)
+  if (key === "servicio") {
+    return (
+      <select
+        id={key}
+        name={key}
+        value={formData[key]}
+        onChange={manejarCambio}
+        className={styles.input}
+      >
+        <option value="">Seleccione...</option>
+        {servicioOptions.map((opcion, index) => (
+          <option key={index} value={opcion}>
+            {opcion}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
     // Para el resto de los campos se usa input type "text"
     return (
       <input

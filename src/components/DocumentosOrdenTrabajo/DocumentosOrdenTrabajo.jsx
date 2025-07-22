@@ -84,7 +84,7 @@ function DocumentosOrdenTrabajo({ otId }) {
   };
 
   const verDocumento = (urlArchivo) => {
-    window.open("http://localhost/codevendix/" + urlArchivo, "_blank");
+    window.open("http://localhost/api_cmos/" + urlArchivo, "_blank");
   };
 
   return (

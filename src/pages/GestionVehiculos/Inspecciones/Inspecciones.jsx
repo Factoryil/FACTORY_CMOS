@@ -1,15 +1,59 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import styles from "./InspeccionCompletaVehiculos.module.css";
 
+// Simulated data - in a real app, this would come from an API
+const vehiclesData = [
+  {
+    placa: "ABC-123",
+    modelo: "Civic",
+    marca: "Honda",
+    anio: "2020",
+    cliente: {
+      nombre: "Juan Perez",
+      cedula: "123456789",
+      telefono: "3001112233",
+      direccion: "Calle 10 # 5-15",
+    },
+  },
+  {
+    placa: "XYZ-789",
+    modelo: "Corolla",
+    marca: "Toyota",
+    anio: "2022",
+    cliente: {
+      nombre: "Maria Garcia",
+      cedula: "987654321",
+      telefono: "3104445566",
+      direccion: "Carrera 20 # 8-20",
+    },
+  },
+  {
+    placa: "DEF-456",
+    modelo: "Mustang",
+    marca: "Ford",
+    anio: "1969",
+    cliente: {
+      nombre: "Pedro Rodriguez",
+      cedula: "112233445",
+      telefono: "3207778899",
+      direccion: "Avenida 30 # 12-30",
+    },
+  },
+];
+
 const InspeccionCompletaVehiculos = () => {
-  // Estado para el formulario
   const [formData, setFormData] = useState({
     // Datos del vehículo
     placa: "",
     modelo: "",
     marca: "",
     anio: "",
+    // Datos del cliente
+    nombreCliente: "",
+    cedulaCliente: "",
+    telefonoCliente: "",
+    direccionCliente: "",
     // Datos de inspección
     fechaInspeccion: "",
     inspector: "",
@@ -43,20 +87,55 @@ const InspeccionCompletaVehiculos = () => {
 
   const contentRef = useRef();
 
-  // Función para actualizar un campo
+  // Function to update a specific field in formData
   const updateField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Función para generar el PDF
+  // Handle vehicle selection
+  const handleVehicleSelect = (e) => {
+    const selectedPlaca = e.target.value;
+    const selectedVehicle = vehiclesData.find(
+      (vehicle) => vehicle.placa === selectedPlaca
+    );
+
+    if (selectedVehicle) {
+      setFormData((prev) => ({
+        ...prev,
+        placa: selectedVehicle.placa,
+        modelo: selectedVehicle.modelo,
+        marca: selectedVehicle.marca,
+        anio: selectedVehicle.anio,
+        nombreCliente: selectedVehicle.cliente.nombre,
+        cedulaCliente: selectedVehicle.cliente.cedula,
+        telefonoCliente: selectedVehicle.cliente.telefono,
+        direccionCliente: selectedVehicle.cliente.direccion,
+      }));
+    } else {
+      // Clear vehicle and client data if no vehicle is selected (e.g., "Seleccione un vehículo")
+      setFormData((prev) => ({
+        ...prev,
+        placa: "",
+        modelo: "",
+        marca: "",
+        anio: "",
+        nombreCliente: "",
+        cedulaCliente: "",
+        telefonoCliente: "",
+        direccionCliente: "",
+      }));
+    }
+  };
+
+  // Function to generate the PDF
   const handlePrint = async () => {
     const content = contentRef.current;
     const originalTransform = content.style.transform;
-    // Hacemos visible el contenido (quitamos el transform)
+    // Make content visible (remove transform)
     content.style.transform = "none";
     const opt = {
       margin: 0.2,
-      filename: "inspeccion_completa_vehiculo.pdf",
+      filename: `inspeccion_vehiculo_${formData.placa}.pdf`, // Dynamic filename
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -69,6 +148,28 @@ const InspeccionCompletaVehiculos = () => {
     <div className={styles["container-root"]}>
       <h1 className={styles["form-title"]}>Inspección Completa de Vehículo</h1>
       <form className={styles["inspeccion-form"]}>
+        {/* Selector de Vehículo */}
+        <fieldset className={styles["form-fieldset"]}>
+          <legend className={styles["form-legend"]}>Selección de Vehículo</legend>
+          <div className={styles["form-group"]}>
+            <label className={styles["form-label"]}>
+              Seleccionar Placa:
+              <select
+                className={styles["input-field"]}
+                value={formData.placa}
+                onChange={handleVehicleSelect}
+              >
+                <option value="">-- Seleccione un vehículo --</option>
+                {vehiclesData.map((vehicle) => (
+                  <option key={vehicle.placa} value={vehicle.placa}>
+                    {vehicle.placa}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
         {/* Datos del vehículo */}
         <fieldset className={styles["form-fieldset"]}>
           <legend className={styles["form-legend"]}>Datos del Vehículo</legend>
@@ -79,7 +180,7 @@ const InspeccionCompletaVehiculos = () => {
                 type="text"
                 className={styles["input-field"]}
                 value={formData.placa}
-                onChange={(e) => updateField("placa", e.target.value)}
+                readOnly // Make it read-only as it's selected
               />
             </label>
             <label className={styles["form-label"]}>
@@ -88,7 +189,7 @@ const InspeccionCompletaVehiculos = () => {
                 type="text"
                 className={styles["input-field"]}
                 value={formData.modelo}
-                onChange={(e) => updateField("modelo", e.target.value)}
+                readOnly // Make it read-only
               />
             </label>
             <label className={styles["form-label"]}>
@@ -97,16 +198,59 @@ const InspeccionCompletaVehiculos = () => {
                 type="text"
                 className={styles["input-field"]}
                 value={formData.marca}
-                onChange={(e) => updateField("marca", e.target.value)}
+                readOnly // Make it read-only
               />
             </label>
             <label className={styles["form-label"]}>
               Año:
               <input
-                type="number"
+                type="text"
                 className={styles["input-field"]}
                 value={formData.anio}
-                onChange={(e) => updateField("anio", e.target.value)}
+                readOnly // Make it read-only
+              />
+            </label>
+          </div>
+        </fieldset>
+
+        {/* Datos del Cliente */}
+        <fieldset className={styles["form-fieldset"]}>
+          <legend className={styles["form-legend"]}>Datos del Cliente</legend>
+          <div className={styles["form-group"]}>
+            <label className={styles["form-label"]}>
+              Nombre:
+              <input
+                type="text"
+                className={styles["input-field"]}
+                value={formData.nombreCliente}
+                readOnly
+              />
+            </label>
+            <label className={styles["form-label"]}>
+              Cédula:
+              <input
+                type="text"
+                className={styles["input-field"]}
+                value={formData.cedulaCliente}
+                readOnly
+              />
+            </label>
+            <label className={styles["form-label"]}>
+              Teléfono:
+              <input
+                type="text"
+                className={styles["input-field"]}
+                value={formData.telefonoCliente}
+                readOnly
+              />
+            </label>
+            <label className={styles["form-label"]}>
+              Dirección:
+              <input
+                type="text"
+                className={styles["input-field"]}
+                value={formData.direccionCliente}
+                readOnly
               />
             </label>
           </div>
@@ -601,30 +745,36 @@ const InspeccionCompletaVehiculos = () => {
                 <label>
                   <input
                     type="radio"
-                    name="instrumentos"
+                    name="panelInstrumentos"
                     value="Bien"
-                    checked={formData.instrumentos === "Bien"}
-                    onChange={(e) => updateField("instrumentos", e.target.value)}
+                    checked={formData.panelInstrumentos === "Bien"}
+                    onChange={(e) =>
+                      updateField("panelInstrumentos", e.target.value)
+                    }
                   />
                   Bien
                 </label>
                 <label>
                   <input
                     type="radio"
-                    name="instrumentos"
+                    name="panelInstrumentos"
                     value="Regular"
-                    checked={formData.instrumentos === "Regular"}
-                    onChange={(e) => updateField("instrumentos", e.target.value)}
+                    checked={formData.panelInstrumentos === "Regular"}
+                    onChange={(e) =>
+                      updateField("panelInstrumentos", e.target.value)
+                    }
                   />
                   Regular
                 </label>
                 <label>
                   <input
                     type="radio"
-                    name="instrumentos"
+                    name="panelInstrumentos"
                     value="Mal"
-                    checked={formData.instrumentos === "Mal"}
-                    onChange={(e) => updateField("instrumentos", e.target.value)}
+                    checked={formData.panelInstrumentos === "Mal"}
+                    onChange={(e) =>
+                      updateField("panelInstrumentos", e.target.value)
+                    }
                   />
                   Mal
                 </label>
@@ -665,12 +815,161 @@ const InspeccionCompletaVehiculos = () => {
                 </label>
               </div>
             </label>
+            <label className={styles["form-label"]}>
+              Sistema de Sonido:
+              <div className={styles["radio-group"]}>
+                <label>
+                  <input
+                    type="radio"
+                    name="sistemaSonido"
+                    value="Bien"
+                    checked={formData.sistemaSonido === "Bien"}
+                    onChange={(e) => updateField("sistemaSonido", e.target.value)}
+                  />
+                  Bien
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="sistemaSonido"
+                    value="Regular"
+                    checked={formData.sistemaSonido === "Regular"}
+                    onChange={(e) => updateField("sistemaSonido", e.target.value)}
+                  />
+                  Regular
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="sistemaSonido"
+                    value="Mal"
+                    checked={formData.sistemaSonido === "Mal"}
+                    onChange={(e) => updateField("sistemaSonido", e.target.value)}
+                  />
+                  Mal
+                </label>
+              </div>
+            </label>
+          </div>
+        </fieldset>
+
+        {/* Sección Seguridad */}
+        <fieldset className={styles["form-fieldset"]}>
+          <legend className={styles["form-legend"]}>Inspección de Seguridad</legend>
+          <div className={styles["form-group"]}>
+            <label className={styles["form-label"]}>
+              Cinturones de Seguridad:
+              <div className={styles["radio-group"]}>
+                <label>
+                  <input
+                    type="radio"
+                    name="cinturones"
+                    value="Bien"
+                    checked={formData.cinturones === "Bien"}
+                    onChange={(e) => updateField("cinturones", e.target.value)}
+                  />
+                  Bien
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="cinturones"
+                    value="Regular"
+                    checked={formData.cinturones === "Regular"}
+                    onChange={(e) => updateField("cinturones", e.target.value)}
+                  />
+                  Regular
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="cinturones"
+                    value="Mal"
+                    checked={formData.cinturones === "Mal"}
+                    onChange={(e) => updateField("cinturones", e.target.value)}
+                  />
+                  Mal
+                </label>
+              </div>
+            </label>
+            <label className={styles["form-label"]}>
+              Airbags:
+              <div className={styles["radio-group"]}>
+                <label>
+                  <input
+                    type="radio"
+                    name="airbags"
+                    value="Bien"
+                    checked={formData.airbags === "Bien"}
+                    onChange={(e) => updateField("airbags", e.target.value)}
+                  />
+                  Bien
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="airbags"
+                    value="Regular"
+                    checked={formData.airbags === "Regular"}
+                    onChange={(e) => updateField("airbags", e.target.value)}
+                  />
+                  Regular
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="airbags"
+                    value="Mal"
+                    checked={formData.airbags === "Mal"}
+                    onChange={(e) => updateField("airbags", e.target.value)}
+                  />
+                  Mal
+                </label>
+              </div>
+            </label>
+            <label className={styles["form-label"]}>
+              Alarmas:
+              <div className={styles["radio-group"]}>
+                <label>
+                  <input
+                    type="radio"
+                    name="alarmas"
+                    value="Bien"
+                    checked={formData.alarmas === "Bien"}
+                    onChange={(e) => updateField("alarmas", e.target.value)}
+                  />
+                  Bien
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="alarmas"
+                    value="Regular"
+                    checked={formData.alarmas === "Regular"}
+                    onChange={(e) => updateField("alarmas", e.target.value)}
+                  />
+                  Regular
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="alarmas"
+                    value="Mal"
+                    checked={formData.alarmas === "Mal"}
+                    onChange={(e) => updateField("alarmas", e.target.value)}
+                  />
+                  Mal
+                </label>
+              </div>
+            </label>
           </div>
         </fieldset>
 
         {/* Evidencias y Observaciones */}
         <fieldset className={styles["form-fieldset"]}>
-          <legend className={styles["form-legend"]}>Evidencias y Observaciones</legend>
+          <legend className={styles["form-legend"]}>
+            Evidencias y Observaciones
+          </legend>
           <div className={styles["form-group"]}>
             <label className={styles["form-label"]}>
               Evidencias (URL o descripción de fotos):
@@ -706,7 +1005,9 @@ const InspeccionCompletaVehiculos = () => {
       {/* Contenido a imprimir, oculto de la vista moviéndolo fuera del viewport */}
       <div ref={contentRef} className={styles["print-container"]}>
         <h2 className={styles["titulo-cabezera"]}>Informe de Inspección de Vehículo</h2>
+        {/* Vehicle Data in PDF */}
         <section className={styles["datos-vehiculo"]}>
+          <h3>Datos del Vehículo</h3>
           <p>
             <strong>Placa:</strong> {formData.placa}
           </p>
@@ -720,7 +1021,27 @@ const InspeccionCompletaVehiculos = () => {
             <strong>Año:</strong> {formData.anio}
           </p>
         </section>
+
+        {/* Client Data in PDF */}
+        <section className={styles["datos-cliente"]}>
+          <h3>Datos del Cliente</h3>
+          <p>
+            <strong>Nombre:</strong> {formData.nombreCliente}
+          </p>
+          <p>
+            <strong>Cédula:</strong> {formData.cedulaCliente}
+          </p>
+          <p>
+            <strong>Teléfono:</strong> {formData.telefonoCliente}
+          </p>
+          <p>
+            <strong>Dirección:</strong> {formData.direccionCliente}
+          </p>
+        </section>
+
+        {/* Inspection Data in PDF */}
         <section className={styles["datos-inspeccion"]}>
+          <h3>Datos de Inspección</h3>
           <p>
             <strong>Fecha de Inspección:</strong> {formData.fechaInspeccion}
           </p>
@@ -728,6 +1049,8 @@ const InspeccionCompletaVehiculos = () => {
             <strong>Inspector:</strong> {formData.inspector}
           </p>
         </section>
+
+        {/* Mechanical Inspection in PDF */}
         <section className={styles["checklist-section"]}>
           <h3>Inspección Mecánica</h3>
           <p>
@@ -743,9 +1066,12 @@ const InspeccionCompletaVehiculos = () => {
             <strong>Sistema de Escape:</strong> {formData.sistemaEscape}
           </p>
           <p>
-            <strong>Sistema de Transmisión:</strong> {formData.sistemaTransmision}
+            <strong>Sistema de Transmisión:</strong>{" "}
+            {formData.sistemaTransmision}
           </p>
         </section>
+
+        {/* Exterior Inspection in PDF */}
         <section className={styles["checklist-section"]}>
           <h3>Inspección Exterior</h3>
           <p>
@@ -764,6 +1090,8 @@ const InspeccionCompletaVehiculos = () => {
             <strong>Pintura:</strong> {formData.pintura}
           </p>
         </section>
+
+        {/* Interior Inspection in PDF */}
         <section className={styles["checklist-section"]}>
           <h3>Inspección Interior</h3>
           <p>
@@ -773,12 +1101,31 @@ const InspeccionCompletaVehiculos = () => {
             <strong>Tapicería:</strong> {formData.tapiceria}
           </p>
           <p>
-            <strong>Panel de Instrumentos:</strong> {formData.instrumentos}
+            <strong>Panel de Instrumentos:</strong> {formData.panelInstrumentos}
           </p>
           <p>
             <strong>Aire Acondicionado:</strong> {formData.aireAcondicionado}
           </p>
+          <p>
+            <strong>Sistema de Sonido:</strong> {formData.sistemaSonido}
+          </p>
         </section>
+
+        {/* Security Inspection in PDF */}
+        <section className={styles["checklist-section"]}>
+          <h3>Inspección de Seguridad</h3>
+          <p>
+            <strong>Cinturones de Seguridad:</strong> {formData.cinturones}
+          </p>
+          <p>
+            <strong>Airbags:</strong> {formData.airbags}
+          </p>
+          <p>
+            <strong>Alarmas:</strong> {formData.alarmas}
+          </p>
+        </section>
+
+        {/* Evidences and Observations in PDF */}
         <section className={styles["checklist-section"]}>
           <h3>Evidencias</h3>
           <p>{formData.evidencias}</p>

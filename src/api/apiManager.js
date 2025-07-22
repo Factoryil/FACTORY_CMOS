@@ -49,8 +49,14 @@ export const apiManager = {
       throw error;
     }
   },
-
-
+   viaticosListar: async () => {
+     try {
+      const response = await api.get(`/viaticos/personas`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+   },
 
 
   // Nuevo: Eliminar asignación de vehículo de un Mes Operativo
@@ -83,15 +89,7 @@ export const apiManager = {
       throw error;
     }
   },
-
-  updateContrato: async (id, datos) => {
-    try {
-      const response = await api.post(`/contractos-editar/${id}`, datos);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
+ 
 
   addContrato: async (datos) => {
     try {
@@ -776,6 +774,14 @@ export const apiManager = {
   // MÉTODOS POST (AGREGAR / EDITAR)
   // =====================================================
 
+    viaticosAgregar :async(datos)=>{
+     try {
+      const response = await api.post("/viaticos/personas", datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   activarEtiquetaContacto: async (datos) => {
     try {
       const response = await api.post("/union-etiquetas", datos);
@@ -875,5 +881,6 @@ export const apiManager = {
     } catch (error) {
       throw error;
     }
-  }
+  },
+
 };

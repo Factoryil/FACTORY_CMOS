@@ -33,6 +33,8 @@ import Operatividad from "../pages/GestionVehiculos/Operatividad/Operatividad";
 import Conciliaciones from "../pages/GestionVehiculos/Conciliaciones/Conciliaciones";
 import Inspecciones from "../pages/GestionVehiculos/Inspecciones/Inspecciones";
 import VerAutorizaciones from "../pages/GestionTrabajos/VerAutorizaciones/VerAutorizaciones";
+import Viaticospersonas from "../pages/Viaticos/viaticospersonas";
+import Viaticosvehiculos from "../pages/Viaticos/viaticosvehiculos";
 
 
 // Componente de carga mientras se cargan los componentes diferidos
@@ -72,6 +74,8 @@ function Routers() {
             <Route path="/gestion/mantenimientos/planes" element={<PlanesMantenimiento />} />
             <Route path="/gestion/plan-mantenimiento/ver/:planId" element={<PlanMantenimientoVer />} />
             <Route path="/gestion/fuec/crear" element={<CrearFuec />} />
+            <Route path="/viaticos/personas" element={<Viaticospersonas/>} />
+            <Route path="/viaticos/vehiculos" element={<Viaticosvehiculos />} />
             
             
             
