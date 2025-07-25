@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import styles from './Guardarviaticos.module.css';
 import { apiManager } from "../../api/apiManager";
 
@@ -78,6 +78,8 @@ const Guardarviaticos = ({ onClose }) => {
                 <option value="combustible">Combustible</option>
                 <option value="hospedaje">Hospedaje</option>
                 <option value="alimentacion">Alimentación</option>
+                <option value="Transporte">Transporte</option>
+
               </select>
 
               <input

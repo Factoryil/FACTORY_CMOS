@@ -1,11 +1,10 @@
-/* Guardarviaticos.module.css */
+/* Guardarviaticos.module.css - Versión Mejorada */
 
-/* --- Global Body Styles (Applied with :global) --- */
-/* These are typically in a root-level CSS file, but included here for completeness */
+/* --- Global Body Styles --- */
 :global body {
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif; /* Modern font stack */
-  background-color: #f0f2f5; /* Light subtle grey background */
-  color: #344767; /* Darker, more professional text color */
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #344767;
   margin: 0;
   padding: 0;
   line-height: 1.6;
@@ -15,78 +14,84 @@
 
 /* --- Modal Overlay --- */
 .overlay {
-  position: fixed; /* Stays in place even when scrolling */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+  background: rgba(10, 22, 41, 0.6); /* Fondo más oscuro */
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  z-index: 1000; /* Ensures modal is on top of other content */
-  backdrop-filter: blur(5px); /* Adds a subtle blur to content behind the modal */
-  animation: fadeIn 0.3s ease-out; /* Smooth fade-in animation */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px); /* Blur más pronunciado */
+  animation: fadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* --- Modal Content Box --- */
 .modal {
   background: #ffffff;
-  padding: 35px 45px; /* Generous padding */
-  border-radius: 12px; /* Smoother rounded corners */
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); /* Stronger, more prominent shadow */
-  max-height: 90vh; /* Limits modal height to 90% of viewport height */
-  overflow-y: auto; /* Adds scrollbar if content overflows vertically */
-  width: 95%; /* Takes most of the width on smaller screens */
-  max-width: 650px; /* Maximum width for the modal */
-  position: relative; /* Needed for positioning the close button */
-  animation: slideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth slide-in animation */
+  padding: 40px 50px; /* Espaciado más generoso */
+  border-radius: 16px; /* Bordes más redondeados */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.15); /* Sombra de dos capas */
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 95%;
+  max-width: 700px; /* Un poco más ancho para formularios complejos */
+  position: relative;
+  animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   display: flex;
-  flex-direction: column; /* Organize content vertically */
+  flex-direction: column;
+  border-top: 4px solid #4a90e2; /* Borde superior de acento */
 }
 
-/* --- Close Button for Modal --- */
+/* --- Close Button --- */
 .closeButton {
   position: absolute;
-  top: 15px;
-  right: 18px;
-  background: none; /* No background */
-  border: none; /* No border */
-  font-size: 28px; /* Larger 'X' */
+  top: 18px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 30px;
   cursor: pointer;
-  color: #888; /* Muted color */
-  transition: color 0.2s ease, transform 0.2s ease; /* Smooth transitions */
+  color: #a0aec0; /* Gris más suave */
+  transition: all 0.3s ease;
 }
 
 .closeButton:hover {
-  color: #dc3545; /* Red on hover */
-  transform: rotate(90deg); /* Spins on hover */
+  color: #e53e3e; /* Rojo más intenso */
+  transform: rotate(90deg) scale(1.1);
 }
 
 /* --- Modal Title --- */
 .modal h2 {
   text-align: center;
-  color: #007bff; /* Primary blue */
-  margin-bottom: 30px;
-  font-size: 2.2em;
+  margin-bottom: 35px;
+  font-size: 2.5em;
   font-weight: 700;
   line-height: 1.2;
+  /* Efecto de texto con gradiente */
+  background: linear-gradient(90deg, #4a90e2, #2a6ac9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
 }
 
-/* --- Form within the Modal --- */
+/* --- Form --- */
 .modal form {
   display: flex;
   flex-direction: column;
+  gap: 15px; /* Espacio entre grupos de formulario */
 }
 
 /* Label Styling */
 .modal label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600; /* Semi-bold */
-  color: #495057; /* Darker grey */
-  font-size: 1.05em;
-  margin-top: 20px; /* Space above each form group */
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 1em;
 }
 
 /* Input and Select Field Common Styles */
@@ -95,15 +100,15 @@
 .modal input[type="date"],
 .modal select {
   width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 20px; /* Space below each input */
-  border: 1px solid #dee2e6; /* Light grey border */
-  border-radius: 8px; /* Consistent rounded corners */
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   box-sizing: border-box;
   font-size: 1em;
-  color: #495057;
-  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  -webkit-appearance: none; /* Remove default browser styling */
+  color: #2d3748;
+  background-color: #f7fafc; /* Fondo sutil para los inputs */
+  transition: all 0.2s ease-in-out;
+  -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 }
@@ -112,117 +117,130 @@
 .modal input[type="number"]:focus,
 .modal input[type="date"]:focus,
 .modal select:focus {
-  border-color: #007bff; /* Blue border on focus */
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow on focus */
-  outline: none; /* Remove default outline */
+  outline: none;
+  border-color: #4a90e2;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+  transform: translateY(-1px); /* Efecto de elevación */
 }
 
-/* Individual Gasto Item Container */
+/* Gasto Item Container */
 .gastoItem {
-  border: 1px solid #e9ecef; /* Light border around each expense block */
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #4a90e2; /* Borde izquierdo de acento */
   border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 25px; /* Space between each expense item */
-  background-color: #fcfdfe; /* Very light background for distinction */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* Subtle shadow */
-}
-
-.gastoItem label { /* Adjust label inside gasto item */
-  margin-top: 0; /* Remove top margin if already inside a section */
-}
-
-.gastoItem hr {
-  border: none;
-  border-top: 1px dashed #e9ecef;
-  margin: 25px 0 0; /* More space above the HR within a gasto item */
-}
-
-/* Specific File Input Styling */
-.modal input[type="file"] {
-  padding: 10px 0;
-  margin-bottom: 10px; /* If file name paragraph follows */
-  border: none;
-}
-
-/* Style for the paragraph showing file name */
-/* Note: Your component uses a direct <p> and then <i className="fas fa-paperclip icono"></i>
-   I recommend adding a specific class like .fileName for this paragraph.
-   For now, I'll assume `styles.fileName` is used. */
-.fileName {
-  font-size: 0.9em;
-  color: #6c757d;
-  margin-top: 5px;
+  padding: 25px;
   margin-bottom: 20px;
-  display: flex;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
+}
+
+.gastoItem:focus-within {
+  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.1);
+}
+
+/* --- Custom File Input --- */
+/* Wrapper para el input de archivo */
+.fileInputWrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  color: #718096;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.fileInputWrapper:hover {
+  border-color: #4a90e2;
+  color: #4a90e2;
+  background-color: #f0f5fa;
+}
+
+/* El input real, oculto */
+.fileInputWrapper input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Párrafo con nombre de archivo */
+.fileName {
+  font-size: 0.95em;
+  color: #28a745;
+  background-color: #eaf7ed;
+  border: 1px solid #b8e9c4;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 15px;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Style for the icon within the file name paragraph */
-/* If you keep the `icono` global class, this targets it. */
-.fileName :global .icono {
-  font-size: 1em; /* Smaller icon for inline text */
-  color: #28a745; /* Green for attachment */
-}
-
-/* Button to add another expense */
-.modal button[type="button"] { /* Target the "Agregar otro gasto" button specifically */
-  background-color: #6c757d; /* Muted grey for a secondary action */
-  color: white;
+/* --- Buttons --- */
+/* Botón para agregar otro gasto (Secundario) */
+.addButton {
+  background-color: transparent;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
   padding: 12px 25px;
-  border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1.05em;
   font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex; /* Use flex to align icon and text */
+  transition: all 0.3s ease;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 20px auto 0; /* Center button and add top margin */
-  width: fit-content; /* Size to content */
+  margin: 15px auto 0;
+  width: fit-content;
 }
 
-.modal button[type="button"]:hover {
-  background-color: #5a6268;
+.addButton:hover {
+  border-color: #4a5568;
+  background-color: #f7fafc;
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.modal button[type="button"]:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* Submit Button */
-.saveButton { /* This class is already used in your component */
-  background-color: #007bff; /* Primary blue */
+/* Botón de Guardar (Principal) */
+.saveButton {
+  background: linear-gradient(45deg, #4a90e2, #2a6ac9);
   color: white;
-  padding: 16px 35px;
+  padding: 18px 40px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.15em;
+  font-size: 1.2em;
   font-weight: 700;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin: 30px auto 0; /* Center button and add more top margin */
-  width: fit-content; /* Size to content */
+  margin: 30px auto 0;
+  width: fit-content;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
 }
 
 .saveButton:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(74, 144, 226, 0.4);
 }
 
 .saveButton:active {
   transform: translateY(0);
-  box-shadow: none;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
 }
 
 
@@ -233,73 +251,34 @@
 }
 
 @keyframes slideIn {
-  from { transform: translateY(-50px) scale(0.95); opacity: 0; }
+  from { transform: translateY(-30px) scale(0.98); opacity: 0; }
   to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
   .modal {
-    padding: 25px 30px;
-    max-width: 90%;
+    padding: 30px 25px;
   }
   .modal h2 {
-    font-size: 1.8em;
-    margin-bottom: 25px;
+    font-size: 2em;
   }
-  .closeButton {
-    font-size: 24px;
-    top: 10px;
-    right: 12px;
-  }
-  .modal input[type="text"],
-  .modal input[type="number"],
-  .modal input[type="date"],
-  .modal select {
-    padding: 10px 12px;
-    font-size: 0.95em;
-  }
-  .gastoItem {
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-  .modal button[type="button"], .saveButton {
-    padding: 12px 20px;
-    font-size: 1em;
-    width: 100%; /* Full width buttons on smaller screens */
-    margin-top: 15px;
-  }
-  .modal button[type="button"] { /* Specific override for add button if needed */
-    margin: 15px 0 0; /* Remove auto margins to allow full width */
-  }
-  .saveButton {
-    margin: 25px 0 0; /* Remove auto margins to allow full width */
+  .addButton, .saveButton {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
 @media (max-width: 480px) {
   .modal {
-    padding: 20px;
-    border-radius: 10px;
+    padding: 25px 15px;
+    border-radius: 12px;
   }
   .modal h2 {
-    font-size: 1.6em;
-    margin-bottom: 20px;
-  }
-  .closeButton {
-    font-size: 22px;
-    top: 8px;
-    right: 10px;
-  }
-  .modal label {
-    font-size: 1em;
-    margin-top: 15px;
+    font-size: 1.8em;
   }
   .gastoItem {
-    padding: 10px;
-    margin-bottom: 15px;
-  }
-  .fileName {
-    font-size: 0.85em;
+    padding: 20px 15px;
   }
 }

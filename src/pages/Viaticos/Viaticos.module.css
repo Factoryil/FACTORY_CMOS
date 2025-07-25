@@ -1,39 +1,40 @@
-/* Viaticos.module.css */
+/* Viaticos.module.css - Versión Mejorada */
 
 /* --- Global Styles --- */
-/* These styles apply broadly. In a larger app, you might put them in a dedicated global.css */
 :global body {
   font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f4f6f9;
-  color: #333;
+  background-color: #f8f9fa; /* Tono de gris ligeramente más claro */
+  color: #343a40; /* Gris oscuro para mejor contraste */
   margin: 0;
   padding: 0;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* --- Main Container --- */
 .container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 30px;
+  max-width: 1300px;
+  margin: 50px auto;
+  padding: 40px; /* Más espaciado interno */
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px; /* Bordes más redondeados */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.06); /* Sombra más pronunciada */
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 40px; /* Mayor separación entre elementos */
+  border: 1px solid #e9ecef;
 }
 
 /* --- Page Title --- */
 .title {
   text-align: center;
   color: #2c3e50;
-  font-size: 2.5em;
-  margin-bottom: 25px;
+  font-size: 3em; /* Título más grande */
+  font-weight: 700;
+  margin-bottom: 20px;
   position: relative;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 }
 
 .title::after {
@@ -42,180 +43,214 @@
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background-color: #3498db;
-  border-radius: 2px;
+  width: 100px; /* Línea más ancha */
+  height: 5px; /* Línea más gruesa */
+  background: linear-gradient(90deg, #3498db, #2980b9); /* Gradiente llamativo */
+  border-radius: 3px;
+}
+
+/* --- Controles Superiores (Botón y Filtros) --- */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.botonAgregar {
+  background: linear-gradient(45deg, #1976d2, #2196f3); /* Gradiente para el botón */
+  color: white;
+  padding: 12px 22px; /* Botón más grande */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.botonAgregar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.35);
+}
+
+.filtros {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.searchInput,
+.selectFiltro {
+  padding: 10px 14px; /* Inputs más grandes */
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  font-size: 0.95em;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchInput:focus,
+.selectFiltro:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
 }
 
 /* --- Table Styles --- */
 .table {
   width: 100%;
-  border-collapse: separate; /* Use separate to allow border-radius on cells if needed */
-  border-spacing: 0; /* Remove space between cells */
-  margin-top: 20px;
-  overflow: hidden; /* Ensures rounded corners are applied */
-  border: 1px solid #e0e0e0; /* Overall table border */
-  border-radius: 8px; /* Rounded corners for the table */
+  border-collapse: collapse; /* Collapse para un look más limpio */
+  margin-top: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil para la tabla */
+  border-radius: 12px;
+  overflow: hidden; /* Necesario para que el border-radius funcione en las celdas */
 }
 
 .table th,
 .table td {
-  padding: 15px;
+  padding: 18px 20px; /* Celdas más espaciosas */
   text-align: left;
-  border-bottom: 1px solid #e0e0e0; /* Separator for rows */
+  border-bottom: 1px solid #e9ecef;
 }
 
 .table th {
-  background-color: #eff3f6;
-  color: #555;
+  background: linear-gradient(90deg, #4a5568, #2d3748); /* Encabezado oscuro y profesional */
+  color: #ffffff;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.9em;
-  letter-spacing: 0.5px;
-}
-
-/* Specific styling for the first and last header cells for rounded corners */
-.table th:first-child {
-  border-top-left-radius: 8px;
-}
-
-.table th:last-child {
-  border-top-right-radius: 8px;
-}
-
-.table tbody tr:last-child td {
-  border-bottom: none; /* No border for the last row's cells */
-}
-
-/* Specific styling for the first and last data cells in the last row for rounded corners */
-.table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 8px;
-}
-
-.table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 8px;
+  letter-spacing: 0.8px;
 }
 
 .table tbody tr {
-  transition: background-color 0.2s ease-in-out;
-}
-
-.table tbody tr:nth-child(even) {
-  background-color: #fcfcfc;
+  background-color: #ffffff;
+  transition: background-color 0.25s ease, transform 0.25s ease;
 }
 
 .table tbody tr:hover {
   background-color: #eef5fc;
+  transform: scale(1.015); /* Efecto de zoom sutil al pasar el mouse */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1); /* Sombra en hover */
 }
 
-/* Style for currency column */
-.table td:nth-child(4) { /* Assuming 'Valor' is the 4th column */
-  font-weight: bold;
-  color: #28a745; /* Green for monetary values */
+.table tbody tr:last-child td {
+  border-bottom: none;
 }
 
-/* Style for the support link */
+/* Estilo para columna de valor monetario */
+.table td:nth-child(4) { /* Ajusta el índice si 'Valor' es otra columna */
+  font-weight: 700;
+  font-size: 1.1em;
+  color: #20c997; /* Verde más brillante */
+}
+
+/* Estilo para el enlace de soporte */
 .table td a {
-  color: #3498db;
+  color: #007bff;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease-in-out;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  position: relative;
+  padding: 4px 0;
+}
+
+.table td a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #0056b3;
+  transition: width 0.3s ease;
+}
+
+.table td a:hover::after {
+  width: 100%;
 }
 
 .table td a:hover {
-  color: #216ba5;
-  text-decoration: underline;
+  color: #0056b3;
 }
-.botonAgregar {
-  background-color: #1976d2;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 1rem;
-}
-
 
 /* --- Responsive Design --- */
 @media (max-width: 992px) {
   .container {
-    padding: 20px;
-    margin: 20px auto;
+    padding: 25px;
+    margin: 25px auto;
   }
   .title {
-    font-size: 2em;
+    font-size: 2.4em;
   }
-  .table th, .table td {
-    padding: 12px;
-    font-size: 0.85em;
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filtros {
+    justify-content: space-between;
   }
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 15px;
-    margin: 15px auto;
-  }
-  .title {
-    font-size: 1.8em;
-  }
   .table {
     display: block;
-    overflow-x: auto;
-    white-space: nowrap; /* Prevent content wrapping in table cells */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    border: none;
+    box-shadow: none;
   }
-  .table thead, .table tbody, .table th, .table td, .table tr {
+  .table thead {
+    display: none; /* Ocultar encabezado tradicional */
+  }
+  .table tbody, .table tr, .table td {
     display: block;
   }
-  .table thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-  }
   .table tr {
-    border: 1px solid #e0e0e0;
-    margin-bottom: 10px;
-    border-radius: 8px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #e9ecef;
   }
   .table td {
-    border: none;
-    border-bottom: 1px solid #eee;
+    padding: 15px;
+    padding-left: 45%; /* Espacio para la etiqueta */
     position: relative;
-    padding-left: 50%; /* Space for the label */
     text-align: right;
+    border-bottom: 1px solid #e9ecef;
+  }
+  .table td:first-child {
+    background: linear-gradient(90deg, #4a5568, #2d3748);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding-left: 15px;
   }
   .table td:last-child {
     border-bottom: none;
   }
   .table td::before {
-    content: attr(data-label); /* Use data-label for mobile headers */
+    content: attr(data-label);
     position: absolute;
-    left: 10px;
-    width: 45%;
+    left: 15px;
+    width: 40%;
     padding-right: 10px;
     white-space: nowrap;
     text-align: left;
-    font-weight: bold;
-    color: #444;
+    font-weight: 600;
+    color: #495057;
+  }
+  .table td:first-child::before {
+    display: none; /* No mostrar etiqueta en la "celda de título" */
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    padding: 10px;
-    margin: 10px auto;
+    padding: 15px;
+    margin: 15px;
   }
   .title {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-  }
-  .table td::before {
-    font-size: 0.85em;
-  }
-  .table th, .table td {
-    font-size: 0.8em;
+    font-size: 2em;
   }
 }

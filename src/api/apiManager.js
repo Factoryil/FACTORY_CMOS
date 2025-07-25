@@ -778,14 +778,7 @@ export const apiManager = {
       throw error;
     }
   },
-  addvehiculo: async (datos) => {
-    try {
-      const response = await api.post("viaticos/vehiculos", datos);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
+
 
   // =====================================================
   // MÉTODOS POST (AGREGAR / EDITAR)
@@ -801,7 +794,7 @@ export const apiManager = {
   },
   viaticosVehiculoAgregar: async (datos) => {
     try {               
-      const response = await api.post("viaticos/vehiculos", datos);
+      const response = await api.post("/viaticos/vehiculos", datos);
       return response.data;
     } catch (error) {
       throw error;  

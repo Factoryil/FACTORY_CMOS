@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { apiManager } from '../../api/apiManager';
 import styles from './Viaticos.module.css';
 import Agregarviaticos from '../../components/ModalAgregarViaticos/Guardarviaticosvehiculos';
