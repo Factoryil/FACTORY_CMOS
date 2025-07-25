@@ -1,3 +1,4 @@
+
 import api from "./instance";
 
 export const apiManager = {
@@ -52,6 +53,14 @@ export const apiManager = {
    viaticosListar: async () => {
      try {
       const response = await api.get(`/viaticos/personas`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+   },
+    viaticosVehiculoListar: async () => {
+     try {
+      const response = await api.get(`/viaticos/vehiculos`);
       return response.data;
     } catch (error) {
       throw error;
@@ -769,6 +778,14 @@ export const apiManager = {
       throw error;
     }
   },
+  addvehiculo: async (datos) => {
+    try {
+      const response = await api.post("viaticos/vehiculos", datos);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   // =====================================================
   // MÉTODOS POST (AGREGAR / EDITAR)
@@ -780,6 +797,14 @@ export const apiManager = {
       return response.data;
     } catch (error) {
       throw error;
+    }
+  },
+  viaticosVehiculoAgregar: async (datos) => {
+    try {               
+      const response = await api.post("viaticos/vehiculos", datos);
+      return response.data;
+    } catch (error) {
+      throw error;  
     }
   },
   activarEtiquetaContacto: async (datos) => {

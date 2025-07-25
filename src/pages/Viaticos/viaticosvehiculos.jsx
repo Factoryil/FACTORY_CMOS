@@ -1,100 +1,83 @@
+import React, { useEffect, useState } from 'react';
+import { apiManager } from '../../api/apiManager';
+import styles from './Viaticos.module.css';
+import Agregarviaticos from '../../components/ModalAgregarViaticos/Guardarviaticosvehiculos';
 
-import './viaticos.module.css';
+const BASE_URL = "http://localhost/API_FACTORY";
 
-const Viaticosvehiculos = () => {
-  const [gastos, setGastos] = useState([
-    { tipo: '', nombrePeaje: '', valor: '', soporte: null }
-  ]);
+const ViaticosVehiculo = () => {
+  const [viaticos, setViaticos] = useState([]);
+  const [mostrarModal, setMostrarModal] = useState(false);
 
-  const handleChangeGasto = (index, e) => {
-    const nuevos = [...gastos];
-    if (e.target.name === 'soporte') {
-      nuevos[index][e.target.name] = e.target.files[0];
-    } else {
-      nuevos[index][e.target.name] = e.target.value;
-    }
-    setGastos(nuevos);
-  };
+  useEffect(() => {
+    cargarViaticosVehiculo();
+  }, []);
 
-  const agregarGasto = () => {
-    setGastos([...gastos, { tipo: '', nombrePeaje: '', valor: '', soporte: null }]);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Gastos:', gastos);
-    alert('Gastos enviados correctamente');
+  const cargarViaticosVehiculo = () => {
+    apiManager.viaticosVehiculoListar()
+      .then(data => setViaticos(data))
+      .catch(err => console.error('Error cargando viáticos de vehículos:', err));
   };
 
   return (
-    <form className="formulario" onSubmit={handleSubmit}>
-      <h2><i className="fas fa-file-invoice-dollar icono"></i> Registrar Gastos</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Listado de Viáticos por Vehículo</h2>
 
-      {gastos.map((gasto, index) => (
-        <div className="subgrupo" key={index}>
-          <label>Selecciona el tipo de gasto</label>
-          <select
-            name="tipo"
-            value={gasto.tipo}
-            onChange={(e) => handleChangeGasto(index, e)}
-            required
-          >
-            <option value="">-- Selecciona --</option>
-            <option value="peaje">Peaje</option>
-            <option value="combustible">Combustible</option>
-            <option value="hospedaje">Hospedaje</option>
-            <option value="alimentacion">Alimentación</option>
-          </select>
-
-          {gasto.tipo === 'peaje' && (
-            <>
-              <label>Nombre del peaje</label>
-              <input
-                type="text"
-                name="nombrePeaje"
-                value={gasto.nombrePeaje}
-                onChange={(e) => handleChangeGasto(index, e)}
-                required
-              />
-            </>
-          )}
-
-          <label>Valor</label>
-          <input
-            type="number"
-            name="valor"
-            value={gasto.valor}
-            onChange={(e) => handleChangeGasto(index, e)}
-            required
-          />
-
-          <label>Soporte (imagen)</label>
-          <input
-            type="file"
-            name="soporte"
-            accept="image/*"
-            onChange={(e) => handleChangeGasto(index, e)}
-            required
-          />
-
-          {gasto.soporte && (
-            <p><i className="fas fa-image icono"></i> {gasto.soporte.name}</p>
-          )}
-          <hr />
-        </div>
-      ))}
-
-      <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-        <button type="button" onClick={agregarGasto}>
-          <i className="fas fa-plus-circle icono"></i> Agregar otro gasto
+      <div className={styles.barraSuperior}>
+        <button className={styles.botonAgregar} onClick={() => setMostrarModal(true)}>
+          Agregar Viático
         </button>
       </div>
 
-      <div style={{ textAlign: 'center' }}>
-        <button type="submit"><i className="fas fa-paper-plane icono"></i> Enviar</button>
-      </div>
-    </form>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Placa</th>
+            <th>Tipo de Gasto</th>
+            <th>Nombre Peaje</th>
+            <th>Valor</th>
+            <th>Fecha del Gasto</th>
+            <th>Soporte</th>
+          </tr>
+        </thead>
+        <tbody>
+          {viaticos.map((item, index) => (
+            <tr key={item.id}>
+              <td>{index + 1}</td>
+              <td>{item.placa}</td>
+              <td>{item.tipo}</td>
+              <td>{item.tipo === "peaje" ? item.nombre_peaje : '-'}</td>
+              <td>${Number(item.valor).toLocaleString('es-CO')}</td>
+              <td>{item.fecha_soporte}</td>
+              <td>
+                {item.soporte_imagen ? (
+                  <a
+                    href={`${BASE_URL}/${item.soporte_imagen}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Ver soporte
+                  </a>
+                ) : (
+                  'Sin soporte'
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {mostrarModal && (
+        <Agregarviaticos
+          onClose={() => {
+            setMostrarModal(false);
+            cargarViaticosVehiculo(); // Refrescar tabla al cerrar modal
+          }}
+        />
+      )}
+    </div>
   );
 };
 
-export default Viaticosvehiculos;
+export default ViaticosVehiculo;
