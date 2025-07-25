@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { apiManager } from '../../api/apiManager';
 import styles from './Viaticos.module.css';
 import Agregarviaticos from '../../components/ModalAgregarViaticos/Guardarviaticosvehiculos';
+    
 
-const BASE_URL = "http://localhost/API_FACTORY";
+const BASE_URL = "http://localhost/api_cmos";
 
 const ViaticosVehiculo = () => {
   const [viaticos, setViaticos] = useState([]);
