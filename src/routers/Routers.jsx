@@ -35,7 +35,7 @@ import Inspecciones from "../pages/GestionVehiculos/Inspecciones/Inspecciones";
 import VerAutorizaciones from "../pages/GestionTrabajos/VerAutorizaciones/VerAutorizaciones";
 import Viaticospersonas from "../pages/Viaticos/viaticospersonas";
 import Viaticosvehiculos from "../pages/Viaticos/viaticosvehiculos";
-
+import IngresoPublico from "../pages/Viaticos/IngresoPublico";
 
 // Componente de carga mientras se cargan los componentes diferidos
 
@@ -91,6 +91,7 @@ function Routers() {
         
           </Route>
         </Route>
+        <Route path="/ingreso-viaticos" element={<IngresoPublico />} />
         <Route path="/login" element={<Login />} />
 
         <Route path="/logout" element={<Logout />} />

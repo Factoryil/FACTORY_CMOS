@@ -3,7 +3,7 @@ import { apiManager } from '../../api/apiManager';
 import styles from './Viaticos.module.css';
 import Agregarviaticos from '../../components/ModalAgregarViaticos/Guardarviaticos';
 
-const BASE_URL = "http://localhost/api_cmos";
+const BASE_URL = "http://localhost/API_FACTORY";
 
 const Viaticospersonas = () => {
   const [viaticos, setViaticos] = useState([]);

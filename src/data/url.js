@@ -1,1 +1,1 @@
-export const url = "http://localhost/api_cmos";
+export const url = "http://localhost/API_FACTORY";

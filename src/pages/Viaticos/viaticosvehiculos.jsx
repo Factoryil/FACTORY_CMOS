@@ -4,7 +4,7 @@ import styles from './Viaticos.module.css';
 import Agregarviaticos from '../../components/ModalAgregarViaticos/Guardarviaticosvehiculos';
     
 
-const BASE_URL = "http://localhost/api_cmos";
+const BASE_URL = "http://localhost/api_cmos"; //este no sirve
 
 const ViaticosVehiculo = () => {
   const [viaticos, setViaticos] = useState([]);
